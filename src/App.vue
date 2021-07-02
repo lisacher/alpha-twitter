@@ -1,14 +1,13 @@
 <template>
-  <div id="twitter">
-    <main>
-      <router-view />
-    </main>
+  <div id="app">
+
+    <router-view/>
   </div>
 </template>
 
 <script>
-
 export default {
   name: 'App'
+  
 }
 </script>
