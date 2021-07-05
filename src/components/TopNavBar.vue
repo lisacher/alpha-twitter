@@ -57,5 +57,7 @@ export default {
 
   .follows-count {
     font-size: 12px;
+    color: #657786;
+    line-height: 10px;
   }
 </style>
