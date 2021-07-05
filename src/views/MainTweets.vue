@@ -4,10 +4,15 @@
       <SideNavBar 
         class="col-3"
       />
-      <div class="col-6">
-        TopNavBar
+      <div class="col-5 p-0">
+        <TopNavBar 
+          class="border"
+          msg="首頁"
+          :show="true"
+          :tweetsCount="4"
+        />
       </div>
-      <div class="col-3">
+      <div class="col-4">
         RecFollowingList
       </div>
     </div>
@@ -16,11 +21,13 @@
 
 <script>
 import SideNavBar from './../components/SideNavBar.vue'
+import TopNavBar from './../components/TopNavBar.vue'
 
 export default {
   name: 'main-tweets',
   components: {
-    SideNavBar
+    SideNavBar,
+    TopNavBar
   }
 }
 </script>
