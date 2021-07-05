@@ -1,15 +1,26 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Start from './../views/Start.vue'
 import Main from './../views/MainTweets.vue'
+import UserLogin from './../views/UserLogin'
+import Register from '../views/Register.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'start',
-    component: Start
+    path: '/login',
+    name: 'login',
+    component: UserLogin
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
+  },
+  {
+    path: '/usersetting',
+    name: 'user-setting',
+    component: () => import('../views/UserSetting.vue')
   },
   {
     path: '/main',
