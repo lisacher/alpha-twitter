@@ -1,30 +1,33 @@
 <template>
-  <div id="UserSetting">
-    <SideNavBar />
-    <div class="UserSettingPanel">
+<div class="container">
+  <div class="row">
+    <div id="UserSetting">
+      <SideNavBar />
+    <div class="UserSettingPanel border">
       <div class="title">
-        <h1>帳戶設定</h1>
+        <TopNavBar 
+          msg="帳戶設定"
+          :show="false" />
       </div>
-
-      <RegistEditForm :isSignUp="isSignUp"/>
+      <RegistEditForm :isSignUp="false"/>
     </div>
   </div>
+</div>
+</div>
+  
 </template>
 
 <script>
 import SideNavBar from "../components/SideNavBar.vue"
 import RegistEditForm from "../components/RegistEditForm.vue"
+import TopNavBar from './../components/TopNavBar.vue'
 
 export default {
   name: "UserSetting",
-  data() {
-    return {
-      isSignUp: false,
-    };
-  },
   components: {
     SideNavBar,
     RegistEditForm,
+    TopNavBar
   }
 }
 </script>

@@ -20,7 +20,7 @@
             </router-link>
           </li>
           <li class="nav-item mb-3">
-            <router-link to="/" class="nav-link d-flex">
+            <router-link to="/usersetting" class="nav-link d-flex">
               <div class="setting-image"></div>
               <div class="nav-item-text">設定</div>
             </router-link>
@@ -38,7 +38,7 @@
             </div>
           </li>
           <li class="nav-item mb-3 nav-item-logout">
-            <router-link to="/" class="nav-link d-flex">
+            <router-link to="/login" class="nav-link d-flex">
               <div class="logout-image"></div>
               <div class="nav-item-text">登出</div>
             </router-link>

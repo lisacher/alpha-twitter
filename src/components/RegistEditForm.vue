@@ -94,6 +94,12 @@
 
 export default {
   name: "RegistEditForm",
+  props: {
+    isSignUp: {
+        type: Boolean,
+        default: false
+      }
+  },
   data() {
     return {
       form: {
@@ -102,7 +108,7 @@ export default {
         email: '',
         password: '',
         passwordCheck: '',
-      },
+      }
     }
   },
   methods: {

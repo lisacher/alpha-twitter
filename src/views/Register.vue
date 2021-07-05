@@ -6,7 +6,7 @@
     <div class="title">
       <h1>建立你的帳號</h1>
     </div>
-    <RegistEditForm :isSignUp="isSignUp"/>
+    <RegistEditForm :isSignUp="true"/>
   </div>
 </template>
 
@@ -14,11 +14,6 @@
 import RegistEditForm from '../components/RegistEditForm.vue'
 export default {
     name:'Register',
-    data() {
-    return {
-      isSignUp: false,
-    };
-  },
     components: {
         RegistEditForm
     }
