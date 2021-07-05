@@ -2,7 +2,11 @@
   <div>
     <nav class="container">
       <div class="nav-logo mb-4">
-        <img src="./../assets/Logo.png" alt="" />
+        <router-link
+          to="/"  
+        >
+          <img src="./../assets/Logo.png" alt="" />
+        </router-link>
       </div>
       <div class="nav-list">
         <ul class="nav flex-column me-3 pe-4">
@@ -20,7 +24,7 @@
             </router-link>
           </li>
           <li class="nav-item mb-3">
-            <router-link to="/" class="nav-link d-flex">
+            <router-link to="/usersetting" class="nav-link d-flex">
               <div class="setting-image"></div>
               <div class="nav-item-text">設定</div>
             </router-link>
@@ -38,7 +42,7 @@
             </div>
           </li>
           <li class="nav-item mb-3 nav-item-logout">
-            <router-link to="/" class="nav-link d-flex">
+            <router-link to="/login" class="nav-link d-flex">
               <div class="logout-image"></div>
               <div class="nav-item-text">登出</div>
             </router-link>
@@ -73,7 +77,7 @@
                 id="" 
                 cols="50" 
                 rows="5" 
-                :placeholder="user.name">
+                :placeholder="currentUser.name | adjustAddTweetPlaceholder">
               </textarea>
             </div>
             <div class="modal-footer">
@@ -98,9 +102,15 @@ const currentUser = {
 
 export default {
   name: 'SideNavBar',
+  props: {
+    currentUser: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
-      user: {
+      User: {
         id: -1,
         name: '',
         account: '',
@@ -114,13 +124,16 @@ export default {
     this.fetchUser()
   },
   methods: {
-    fetchUser() {
-      this.user = {
-        ...this.user,
+     fetchUser() {
+      this.currentUser = {
+        ...this.currentUser,
         ...currentUser
       }
     },
     handleSubmit() {
+      if(!this.text) {
+        return
+      }
       this.comments.push({
         id: uuidv4(),
         User: {
@@ -133,6 +146,11 @@ export default {
         createdAt: new Date()
       })
       this.text = ''
+    }
+  },
+  filters: {
+    adjustAddTweetPlaceholder(userName) {
+      return `${userName}，有什麼新鮮事呢？`
     }
   }
 }

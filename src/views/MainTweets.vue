@@ -7,8 +7,11 @@
       <div class="col-5 p-0 border">
         <TopNavBar 
           msg="首頁"
-          :show="true"
-          :tweetsCount="16"
+          :show="false"
+          :tweetsCount="0"
+        />
+        <TweetContent 
+          :current-user="currentUser"
         />
       </div>
       <div class="col-4">
@@ -22,6 +25,14 @@
 import SideNavBar from './../components/SideNavBar.vue'
 import RecFollowingList from './../components/RecFollowingsList.vue';
 import TopNavBar from './../components/TopNavBar.vue'
+import TweetContent from './../components/TweetContent.vue'
+
+const currentUser = {
+  id: 1,
+  name: 'Teddy',
+  account: 'teddy0323',
+  image: ''
+}
 
 
 export default {
@@ -29,8 +40,31 @@ export default {
   components: {
     SideNavBar,
     RecFollowingList,
-    TopNavBar
+    TopNavBar,
+    TweetContent
+  },
+  data() {
+    return {
+      currentUser: {
+        id: -1,
+        name: '',
+        account: '',
+        image: ''
+      }
+    }
+    
+  },
 
+  created() {
+    this.fetchUser()
+  },
+  methods: {
+    fetchUser() {
+      this.currentUser = {
+        ...this.currentUser,
+        ...currentUser
+      }
+    },
   }
 }
 </script>

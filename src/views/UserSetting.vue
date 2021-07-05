@@ -1,19 +1,21 @@
 <template>
-  <div id="UserSetting">
-    <SideNavBar />
-    <div class="UserSettingPanel">
-      <div class="title">
-        <h1>帳戶設定</h1>
-      </div>
+  <div id="UserSetting" class="container main-container">
+    <div class="row">
+      <SideNavBar class="col-3"/>
+      <div class="UserSettingPanel col-9 border">
+        <div class="title">
+          <h1>帳戶設定</h1>
+        </div>
 
-      <RegistEditForm :isSignUp="isSignUp"/>
+        <RegistEditForm :isSignUp="isSignUp" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import SideNavBar from "../components/SideNavBar.vue"
-import RegistEditForm from "../components/RegistEditForm.vue"
+import SideNavBar from "../components/SideNavBar.vue";
+import RegistEditForm from "../components/RegistEditForm.vue";
 
 export default {
   name: "UserSetting",
@@ -25,17 +27,20 @@ export default {
   components: {
     SideNavBar,
     RegistEditForm,
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-#UserSetting {
-  display: flex;
+
+.main-container {
+  height: 100%;
 }
-.UserSettingPanel {
-  flex: 1;
+
+.row {
+  height: 100%;
 }
+
 .title {
   height: 55px;
   border-bottom: 1px solid #e6ecf0;
