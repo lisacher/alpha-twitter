@@ -5,7 +5,7 @@
         <img src="./../assets/Logo.png" alt="" />
       </div>
       <div class="nav-list">
-        <ul class="nav flex-column me-3 pe-5">
+        <ul class="nav flex-column me-3 pe-4">
           <li class="nav-item mb-3">
             <router-link to="/main" class="nav-link d-flex">
               <div class="home-image"></div>
@@ -55,23 +55,23 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header py-2">
             <button
               type="button"
-              class="btn-close mx-0"
+              class="btn close-btn p-0"
               data-bs-dismiss="modal"
               aria-label="Close"
-            ></button>
+            ><img src="./../assets/icon_close@2x.png" alt=""></button>
           </div>
           <div class="modal-body d-flex">
             <img src="./../assets/Logo.png" alt="">
             <textarea 
+              v-model="text"
               name="" 
               id="" 
               cols="50" 
-              rows="10" 
+              rows="5" 
               placeholder="有什麼新鮮事？">
-
             </textarea>
           </div>
           <div class="modal-footer">
@@ -82,6 +82,17 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'SideNavBar',
+  data () {
+    return {
+      text: ''
+    }
+  }
+}
+</script>
 
 <style scoped>
 
@@ -199,15 +210,14 @@ img {
   background-image: url(./../assets/setting-hover@2x.png);
 }
 
-
-img.logout {
-  width: 18px;
-  height: 16px;
-}
-
 .modal-content {
   border-radius: 14px;
   border: 0;
+}
+
+.modal-header img {
+  height: 15px;
+  width: 15px;
 }
 
 .modal-body {
