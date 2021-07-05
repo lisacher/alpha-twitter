@@ -6,22 +6,22 @@
       </div>
       <div class="nav-list">
         <ul class="nav flex-column me-3 pe-5">
-          <li class="nav-item mb-2">
-            <router-link to="/main" class="nav-link">
-              <img class="me-3 home" src="./../assets/home@2x.png" alt="">
-              <span>首頁</span>
+          <li class="nav-item mb-3">
+            <router-link to="/main" class="nav-link d-flex">
+              <div class="home-image"></div>
+              <div class="nav-item-text">首頁</div>
             </router-link>
           </li>
-          <li class="nav-item mb-2">
-            <router-link to="/" class="nav-link">
-              <img class="me-3 profile" src="./../assets/profile@2x.png" alt="">
-              <span>個人資料</span>
+          <li class="nav-item mb-3">
+            <router-link to="/" class="nav-link d-flex">
+              <div class="profile-image"></div>
+              <div class="nav-item-text">個人資料</div>
             </router-link>
           </li>
-          <li class="nav-item mb-2">
-            <router-link to="/" class="nav-link">
-              <img class="me-3 setting" src="./../assets/Setting@2x.png" alt="">
-              <span>設定</span>
+          <li class="nav-item mb-3">
+            <router-link to="/" class="nav-link d-flex">
+              <div class="setting-image"></div>
+              <div class="nav-item-text">設定</div>
             </router-link>
           </li>
           <li class="nav-item mt-2">
@@ -37,9 +37,9 @@
             </div>
           </li>
           <li class="nav-item mb-3 nav-item-logout">
-            <router-link to="/" class="nav-link">
-              <img class="me-3 logout" src="./../assets/logout@2x.png" alt="">
-              <span>登出</span>
+            <router-link to="/" class="nav-link d-flex">
+              <div class="logout-image"></div>
+              <div class="nav-item-text">登出</div>
             </router-link>
           </li>
         </ul>
@@ -106,19 +106,22 @@ img {
   height: 100%;
 }
 
-.nav-item span {
+.nav-item .nav-item-text  {
+  line-height: 20px;
+  display: inline-block;
   font-size: 14px;
   font-weight: 700;
   color: #000;
 }
 
-.nav-item:hover span{
+.nav-item:hover .nav-item-text{
   color: #ff6600;
 }
 
-.active span {
+.active .nav-item-text {
   color: #ff6600;
 }
+
 
 .nav-item button.tweet-button {
   background: #ff6600;
@@ -134,20 +137,68 @@ img {
   left: 0px;
 }
 
-img.profile {
-  height: 20.34px;
-  width: 16.7px;
+.home-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-image: url(./../assets/home@2x.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
 }
 
-img.home {
-  width: 22.2px;
-  height: 20.25px;
+.active .home-image {
+  background-image: url(./../assets/home-hover@2x.png);
 }
 
-img.setting {
-  height: 20.75px;
-  width: 20.75px;
+.profile-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-image: url(./../assets/profile@2x.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
 }
+
+.active .profile-image {
+  background-image: url(./../assets/profile-hover@2x.png);
+}
+
+.setting-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-image: url(./../assets/Setting@2x.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+.active .setting-image {
+  background-image: url(./../assets/setting-hover@2x.png);
+}
+
+.logout-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-image: url(./../assets/logout@2x.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 20px;
+  width: 20px;
+}
+
+.nav-item:hover .home-image {
+  background-image: url(./../assets/home-hover@2x.png);
+}
+.nav-item:hover .profile-image {
+  background-image: url(./../assets/profile-hover@2x.png);
+}
+.nav-item:hover .setting-image {
+  background-image: url(./../assets/setting-hover@2x.png);
+}
+
 
 img.logout {
   width: 18px;
