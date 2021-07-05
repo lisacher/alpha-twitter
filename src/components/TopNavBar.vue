@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-top d-flex align-items-center border ">
+  <div class="nav-top d-flex align-items-center ">
     <div class="back">
       <button 
         type="button" 
@@ -41,7 +41,6 @@ export default {
 
   .nav-top {
     height: 50px ;
-    width: 548px;
     position: absolute;
   }
 

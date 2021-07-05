@@ -5,25 +5,30 @@
     </div>
     <div class="text-container mt-2 flex-grow-1">
       <div class="header">
-        <div class="name d-inline-block pe-2">{{tweet.User.name}}</div>
-        <div class="account d-inline-block">{{tweet.User.account | accountDeco}}</div>
-        <div class="createdAt d-inline-block">{{tweet.createdAt | fromNow }}</div>
+        <div class="name d-inline-block pe-2">{{data.User.name}}</div>
+        <div class="account d-inline-block">@{{data.User.account}}</div>
+        <div class="createdAt d-inline-block">・{{data.createdAt | fromNow }}</div>
       </div>
-      <div class="body tweet-content">
-        {{tweet.text}}
+      <div class="body">
+        <div v-if="repliedTo" class="replied-to mt-1">
+          回覆 <span>@{{repliedTo}}</span>
+        </div>
+        <div class="text">
+          {{data.text}}
+        </div>
       </div>
       <div class="footer d-flex my-2">
         <div class="comment d-flex align-items-center me-5">
           <div class="btn comment-img"></div>
-          <div class="comments-count">{{tweet.repliesCount}}</div>
+          <div class="comments-count">{{data.repliesCount}}</div>
         </div>
         <div class="liked d-flex align-items-center">
           <div 
             class="btn liked-img"
-            :class="{activeLiked: tweet.isLiked}"
+            :class="{activeLiked: data.isLiked}"
             @click.prevent.stop="toggleLiked"
           ></div>
-          <div class="likes-count">{{tweet.likesCount}}</div>
+          <div class="likes-count">{{data.likesCount}}</div>
         </div>
       </div>
 
@@ -37,9 +42,13 @@ import moment from 'moment'
 export default {
   name: 'TweetsCard',
   props: {
-    tweet: {
+    data: {
       type: Object,
       required: true
+    },
+    repliedTo: {
+      type: String,
+      default: '',
     }
   },
   methods: {
@@ -55,9 +64,6 @@ export default {
           return moment(time).fromNow() 
         }
         return moment(time).format('MMM Do')
-      },
-      accountDeco(account) {
-        return `@${account}・`
       }
     }
 
@@ -82,8 +88,12 @@ export default {
     font-size: 15px;
   }
 
-  .account, .createdAt, .footer {
+  .account, .createdAt, .footer, .replied-to {
     color:#657786 ;
+  }
+
+  .replied-to span {
+    color: #FF6600;
   }
 
   .footer {

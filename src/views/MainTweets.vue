@@ -6,7 +6,7 @@
         <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
         <div class="tweets-container">
           <TweetContent :current-user="currentUser" />
-          <TweetsCard v-for="tweet in tweets" :key="tweet.id" :tweet="tweet" />
+          <TweetsCard v-for="tweet in tweets" :key="tweet.id" :data="tweet" />
         </div>
       </div>
       <div class="col-4">
