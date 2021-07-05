@@ -9,7 +9,8 @@
           <li class="nav-item mb-3">
             <router-link to="/main" class="nav-link d-flex">
               <div class="home-image"></div>
-              <div class="nav-item-text">首頁</div>
+              <div class="nav-item-text">首頁
+              </div>
             </router-link>
           </li>
           <li class="nav-item mb-3">
@@ -63,20 +64,22 @@
               aria-label="Close"
             ><img src="./../assets/icon_close@2x.png" alt=""></button>
           </div>
-          <div class="modal-body d-flex">
-            <img src="./../assets/Logo.png" alt="">
-            <textarea 
-              v-model="text"
-              name="" 
-              id="" 
-              cols="50" 
-              rows="5" 
-              placeholder="有什麼新鮮事？">
-            </textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">推文</button>
-          </div>
+          <form class="modal-body" @submit.prevent.stop="handleSubmit">
+            <div class="d-flex">
+              <img src="./../assets/Logo.png" alt="">
+              <textarea 
+                v-model="text"
+                name="" 
+                id="" 
+                cols="50" 
+                rows="5" 
+                :placeholder="user.name">
+              </textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">推文</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -84,11 +87,52 @@
 </template>
 
 <script>
+import {v4 as uuidv4} from 'uuid'
+
+const currentUser = {
+  id: 1,
+  name: 'Teddy',
+  account: 'teddy0323',
+  image: ''
+}
+
 export default {
   name: 'SideNavBar',
   data () {
     return {
-      text: ''
+      user: {
+        id: -1,
+        name: '',
+        account: '',
+        image: ''
+      },
+      text: '',
+      comments: []
+    }
+  },
+  created() {
+    this.fetchUser()
+  },
+  methods: {
+    fetchUser() {
+      this.user = {
+        ...this.user,
+        ...currentUser
+      }
+    },
+    handleSubmit() {
+      this.comments.push({
+        id: uuidv4(),
+        User: {
+          id: this.user.id,
+          name: this.user.name,
+          account: this.user.account,
+          image: this.user.image
+        },
+        text: this.text,
+        createdAt: new Date()
+      })
+      this.text = ''
     }
   }
 }
