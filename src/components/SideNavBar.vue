@@ -102,12 +102,7 @@ const currentUser = {
 
 export default {
   name: 'SideNavBar',
-  props: {
-    currentUser: {
-      type: Object,
-      required: true
-    }
-  },
+
   data () {
     return {
       User: {

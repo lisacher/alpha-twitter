@@ -13,6 +13,7 @@
         <TweetContent 
           :current-user="currentUser"
         />
+        <TweetsCard />
       </div>
       <div class="col-4">
         <RecFollowingList />
@@ -26,6 +27,7 @@ import SideNavBar from './../components/SideNavBar.vue'
 import RecFollowingList from './../components/RecFollowingsList.vue';
 import TopNavBar from './../components/TopNavBar.vue'
 import TweetContent from './../components/TweetContent.vue'
+import TweetsCard from './../components/TweetsCard.vue'
 
 const currentUser = {
   id: 1,
@@ -41,7 +43,8 @@ export default {
     SideNavBar,
     RecFollowingList,
     TopNavBar,
-    TweetContent
+    TweetContent,
+    TweetsCard
   },
   data() {
     return {
