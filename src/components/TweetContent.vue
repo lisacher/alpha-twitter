@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="border">
     <form class="tweet-form border-top" @submit.prevent.stop="handleSubmit">
       <div class="d-flex">
         <img src="./../assets/Logo.png" alt="" />
