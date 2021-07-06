@@ -30,16 +30,10 @@
             </router-link>
           </li>
           <li class="nav-item mt-2">
-            <div class="d-grid gap-2">
-              <button
-                class="btn tweet-button"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#tweetModal"
-              >
-                推文
-              </button>
-            </div>
+            <AddTweetCard 
+              :current-user="currentUser"
+              @after-create-tweet="afterCreateTweet"
+            />
           </li>
           <li class="nav-item mb-3 nav-item-logout">
             <router-link to="/login" class="nav-link d-flex">
@@ -50,48 +44,11 @@
         </ul>
       </div>
     </nav>
-    <!-- tweet modal -->
-    <div
-      class="modal fade"
-      id="tweetModal"
-      tabindex="-1"
-      aria-labelledby="tweet-modal"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header py-2">
-            <button
-              type="button"
-              class="btn close-btn p-0"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ><img src="./../assets/icon_close@2x.png" alt=""></button>
-          </div>
-          <form class="modal-body" @submit.prevent.stop="handleSubmit">
-            <div class="d-flex">
-              <img src="./../assets/Logo.png" alt="">
-              <textarea 
-                v-model="text"
-                name="" 
-                id="" 
-                cols="50" 
-                rows="5" 
-                :placeholder="currentUser.name | adjustAddTweetPlaceholder">
-              </textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">推文</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid'
+import AddTweetCard from './../components/AddTweetCard.vue'
 
 const currentUser = {
   id: 1,
@@ -111,9 +68,11 @@ export default {
         account: '',
         image: ''
       },
-      text: '',
       comments: []
     }
+  },
+  components: {
+    AddTweetCard
   },
   created() {
     this.fetchUser()
@@ -125,27 +84,14 @@ export default {
         ...currentUser
       }
     },
-    handleSubmit() {
-      if(!this.text) {
-        return
-      }
+    afterCreateTweet(payload) {
+      console.log('payload', payload);
+      const { id, text } = payload
       this.comments.push({
-        id: uuidv4(),
-        User: {
-          id: this.user.id,
-          name: this.user.name,
-          account: this.user.account,
-          image: this.user.image
-        },
-        text: this.text,
+        id,
+        text,
         createdAt: new Date()
       })
-      this.text = ''
-    }
-  },
-  filters: {
-    adjustAddTweetPlaceholder(userName) {
-      return `${userName}，有什麼新鮮事呢？`
     }
   }
 }
@@ -190,14 +136,6 @@ img {
   color: #ff6600;
 }
 
-
-.nav-item button.tweet-button {
-  background: #ff6600;
-  color: #fff;
-  border-radius: 100px;
-  font-size: 14px;
-  margin-left: 20px;
-}
 
 .nav-item-logout {
   position: absolute;
@@ -267,37 +205,4 @@ img {
   background-image: url(./../assets/setting-hover@2x.png);
 }
 
-.modal-content {
-  border-radius: 14px;
-  border: 0;
-}
-
-.modal-header img {
-  height: 15px;
-  width: 15px;
-}
-
-.modal-body {
-  padding-top: 15px;
-}
-
-.modal-body textarea {
-  border: 0;
-  resize: none;
-  transform: translateY(10px);
-}
-
-.modal-body textarea:focus {
-  outline: 0;
-}
-
-.modal-footer {
-  border-top: 0;
-}
-
-.modal-footer button {
-  background: #FF6600;
-  border: 0 solid #000;
-  border-radius: 100px;
-}
 </style>

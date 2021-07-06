@@ -10,11 +10,16 @@
           cols="50"
           rows="1"
           :placeholder="currentUser.name | adjustAddTweetPlaceholder"
+          maxlength="150"
         >
         </textarea>
       </div>
       <div class="submit d-flex justify-content-end mt-3 mb-2 pe-3">
-        <button type="submit" class="btn btn-primary">推文</button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          :disabled="!text"
+        >推文</button>
       </div>
     </form>
   </div>
