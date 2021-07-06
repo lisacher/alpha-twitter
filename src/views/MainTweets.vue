@@ -5,7 +5,7 @@
       <div class="col-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
         <div class="tweets-container">
-          <TweetContent :current-user="currentUser" />
+          <CreateTweet :current-user="currentUser" />
           <TweetsCard v-for="tweet in tweets" :key="tweet.id" :initial-data="tweet" />
         </div>
       </div>
@@ -20,7 +20,7 @@
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
-import TweetContent from "./../components/TweetContent.vue";
+import CreateTweet from "../components/CreateTweet.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
 
 const currentUser = {
@@ -137,7 +137,7 @@ export default {
     SideNavBar,
     RecFollowingList,
     TopNavBar,
-    TweetContent,
+    CreateTweet,
     TweetsCard,
   },
   data() {
