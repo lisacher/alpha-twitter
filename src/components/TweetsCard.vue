@@ -42,7 +42,7 @@ import moment from 'moment'
 export default {
   name: 'TweetsCard',
   props: {
-    data: {
+    initialData: {
       type: Object,
       required: true
     },
@@ -51,9 +51,19 @@ export default {
       default: '',
     }
   },
+  data() {
+    return {
+      data: this.initialData
+    }
+  },
   methods: {
     toggleLiked() {
-      this.tweet.isLiked = !this.tweet.isLiked
+      if(this.data.isLiked) {
+        this.data.likesCount -= 1
+      } else {
+        this.data.likesCount += 1
+      }
+      this.data.isLiked = !this.data.isLiked
     },
 
   },

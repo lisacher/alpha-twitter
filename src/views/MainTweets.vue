@@ -6,7 +6,7 @@
         <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
         <div class="tweets-container">
           <TweetContent :current-user="currentUser" />
-          <TweetsCard v-for="tweet in tweets" :key="tweet.id" :data="tweet" />
+          <TweetsCard v-for="tweet in tweets" :key="tweet.id" :initial-data="tweet" />
         </div>
       </div>
       <div class="col-4">
@@ -85,7 +85,7 @@ const dummyTweets = [
     createdAt: new Date(2021, 5, 11, 10, 10),
     repliesCount: 0,
     likesCount: 0,
-    isLiked: true,
+    isLiked: false,
   },
   {
     id: 12,
