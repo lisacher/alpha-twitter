@@ -19,7 +19,11 @@
       </div>
       <div class="footer d-flex my-2">
         <div class="comment d-flex align-items-center me-5">
-          <div class="btn comment-img"></div>
+          <div class="btn comment-img "
+            data-bs-toggle="modal"
+            data-bs-target="#tweetReplyModal">
+          </div>
+          <TweetReplyModal :initial-data="data"/>
           <div class="comments-count">{{data.repliesCount}}</div>
         </div>
         <div class="liked d-flex align-items-center">
@@ -38,9 +42,13 @@
 
 <script>
 import moment from 'moment'
+import TweetReplyModal from "../components/TweetReplyModal.vue"
 
 export default {
   name: 'TweetsCard',
+  components: {
+    TweetReplyModal
+  },
   props: {
     initialData: {
       type: Object,
@@ -85,7 +93,7 @@ export default {
     width: 50px;
   }
   .comment-img {
-    background-image: url(./../assets/comment.png);
+    background-image: url(../assets/comment.png);
     height: 12px;
     width: 12px;
     background-size: contain;

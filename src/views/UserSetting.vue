@@ -1,15 +1,18 @@
 <template>
 <div class="container">
   <div class="row">
-    <div id="UserSetting">
+    <div class="as" id="UserSetting">
       <SideNavBar />
-    <div class="UserSettingPanel border">
-      <div class="title">
-        <TopNavBar 
+    <div class="UserSettingPanel border-start">
+      <div class="title border-bottom">
+          <TopNavBar 
           msg="帳戶設定"
-          :show="false" />
+          :show="false"
+          class="" 
+          />
       </div>
-      <RegistEditForm :isSignUp="false"/>
+      <RegistEditForm :isSignUp="false"
+      />
     </div>
   </div>
 </div>
@@ -33,7 +36,10 @@ export default {
 </script>
 
 <style scoped>
-
+.as {
+  display: flex;
+  flex-direction: row;
+}
 .main-container {
   height: 100%;
 }
@@ -44,7 +50,6 @@ export default {
 
 .title {
   height: 55px;
-  border-bottom: 1px solid #e6ecf0;
   padding: 10px 15px;
   display: flex;
   align-items: center;

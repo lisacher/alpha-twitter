@@ -17,7 +17,7 @@
               aria-label="Close"
             >
             <span aria-hidden="true"
-              ><img src="../assets/icon_close@2x.png" alt=""
+              ><img src="../assets/icon_close@2x.png" class="close-image" alt=""
             /></span>
           </button>
         </div>
@@ -31,23 +31,23 @@
             <div class="tweetInfo">
               <div class="userInfo">
                 <p class="userName">
-                  apple
+                  {{tweet.User.name}}
                 </p>
                 <p class="userAccount">
-                  @apple123
+                  @{{ tweet.User.account }}
                 </p>
                 <span class="mx-1">&#xb7;</span>
                 <p class="tweetUpdateAt">
-                  2021/08
+                  {{tweet.createdAt | fromNow}}
                 </p>
               </div>
               <div class="tweetContent">
-                <p>text</p>
+                <p>{{tweet.text}}</p>
               </div>
               <div class="panel">
                 <p>
                   回覆給
-                  <span> @ apple123 </span>
+                  <span> @ {{tweet.User.account}} </span>
                 </p>
               </div>
             </div>
@@ -68,6 +68,7 @@
                   autofocus
                   maxlength="140"
                   required
+                  v-model="replyContent"
                   placeholder="推你的回覆"
                 ></textarea>
               </div>
@@ -80,7 +81,10 @@
             <button
               type="button"
               class="btn"
+              :disabled="!replyContent"
+              @click="createReply()"
             >
+             回覆
             </button>
           </div>
         </div>
@@ -92,22 +96,42 @@
 <script>
 import { emptyImageFilter } from "../utils/mixins"
 import { fromNowFilter } from "../utils/mixins"
-
-// const dummyData = {
-// 	user: {
-// 		id: 1,
-// 		name: 'Jay',
-// 		account: 'jay123',
-// 		image: 'https://tse4.mm.bing.net/th?id=OIP.-C08ivJ6oLNEELI4SkjElgHaHa&pid=Api&P=0&w=300&h=300',
-//         text: 'Hello您好～',
-//         createdAt: '2021-07-01T09:58:39.000Z',
-//     }
-// }
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "TweetReplyModal",
   mixins: [emptyImageFilter, fromNowFilter],
+  props: {
+    initialData: {
+      type: Object,
+      required: true
+    },
+  },
+  data() {
+    return {
+      replyContent: '',
+      comment: [],
+      tweet: this.initialData
+    }
+  },
   methods: {
+    createReply() {
+      this.replyContentCheck(this.replyContent)
+      if(!this.replyContent) {
+        return
+      }
+      this.replyContent = ''
+    },
+    replyContentCheck(replyContent) {
+      if (replyContent.length > 140) {
+        Toast.fire({
+          icon: "error",
+          title: "回覆字數不得超過 140 個字！",
+        });
+        return false;
+      }
+      return true;
+    },
   }
 }
 </script>
@@ -118,6 +142,17 @@ export default {
   padding: 10px 15px;
   display: flex;
 }
+.modal-content {
+    border-radius: 14px;
+}
+.close-image {
+    width: 20px;
+    height: 20px;
+}
+.modal-header {
+  height: 54px;  
+}
+
 /* replyTarget */
 .replyTarget {
   position: relative;

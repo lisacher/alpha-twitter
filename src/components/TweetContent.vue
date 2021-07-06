@@ -25,8 +25,8 @@
       <p class="tweetUpdateAt">{{ tweet.createdAt | exactDate }}</p>
     </div>
     <div class="feedbackCount">
-      <p>{{ tweet.replies.length }} <span>回復 </span></p>
-      <p>{{ tweet.likeCount }} <span>喜歡次數</span></p>
+      <p>{{ tweet.replies.length }} <span>回覆 </span></p>
+      <p>{{ tweet.likesCount }} <span>喜歡次數</span></p>
     </div>
     <div class="tweetPanel">
       <div class="comments">
@@ -63,15 +63,16 @@ import { emptyImageFilter } from "../utils/mixins"
 import { exactDateFilter } from "../utils/mixins"
 import TweetReplyModal from "../components/TweetReplyModal.vue"
 
+
 const dummyData = {
 	user: {
 		id: 1,
-		name: 'Jay',
-		account: 'jay123',
+    name: "Teddy",
+    account: "teddy0323",
 		image: 'https://tse4.mm.bing.net/th?id=OIP.-C08ivJ6oLNEELI4SkjElgHaHa&pid=Api&P=0&w=300&h=300',
-        text: 'Hello您好～',
+        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         createdAt: '2021-07-01T09:58:39.000Z',
-        likeCount: 1,
+        likesCount: 1,
         isLiked: false,
         replies: [
             {
@@ -110,7 +111,7 @@ export default {
     },
     data() {
         return {
-            tweet: []
+          tweet: []
         }
     },
     created() {
@@ -119,21 +120,23 @@ export default {
     methods: {
         getUserTweet() {
             this.tweet = dummyData.user
-            console.log(this.tweet.isLiked.length)
         },
         like(tweet) {
             tweet.isLiked = true
-            tweet.likeCount +1
+            tweet.likesCount += 1
         },
         disLike(tweet) {
             tweet.isLiked = false
-            tweet.likeCount -1
+            tweet.likesCount -= 1
         }
     }
 }
 </script>
 
 <style scoped>
+*{
+  text-decoration: none;
+}
 .container {
   border-bottom: 1px solid #e6ecf0;
   padding: 15px;
