@@ -37,7 +37,7 @@
                 cols="50"
                 rows="5"
                 :placeholder="currentUser.name | adjustAddTweetPlaceholder"
-                maxlength="150"
+                maxlength="140"
               >
               </textarea>
             </div>
