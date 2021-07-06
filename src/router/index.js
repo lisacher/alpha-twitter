@@ -6,6 +6,10 @@ import Register from '../views/Register.vue'
 
 Vue.use(VueRouter)
 
+// Test 
+
+const currentUserId = 1
+
 const routes = [
   {
     path:'/',
@@ -33,9 +37,20 @@ const routes = [
     component: MainTweets
   },
   {
+    // 為了讓Profile的button 在切換NavPills的時候都是part-active.
+    path: '/users',
+    name: 'users',
+    redirect: `/users/${currentUserId}/tweets`
+  },
+  {
     path: '/users/:id/tweets',
     name: 'user-tweets',
     component: () => import('./../views/UserProfileTweets.vue')
+  },
+  {
+    path: '/users/:id/likes',
+    name: 'user-likes',
+    component: () => import('./../views/UserProfileLikes.vue')
   },
   {
     path: '*',
@@ -46,6 +61,7 @@ const routes = [
 
 const router = new VueRouter({
   linkExactActiveClass: 'active',
+  linkActiveClass: 'part-active',
   routes
 })
 

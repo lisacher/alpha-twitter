@@ -10,9 +10,9 @@
           />
           <TwittererNavPills />
           <TweetsCard
-            v-for="tweet in tweets"
-            :key="tweet.id"
-            :initial-data="tweet"
+            v-for="like in likes"
+            :key="like.id"
+            :initial-data="like"
           />
         </div>
       </div>
@@ -46,7 +46,7 @@ const user =
   }
 ;
 
-const dummyTweets = [
+const dummyLikes = [
   {
     id: 11,
     User: {
@@ -90,34 +90,6 @@ const dummyTweets = [
     isLiked: true,
   },
   {
-    id: 18,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 0,
-    likesCount: 0,
-    isLiked: false,
-  },
-  {
-    id: 12,
-    User: {
-      id: 2,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 2, 10, 10),
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: false,
-  },
-  {
     id: 13,
     User: {
       id: 3,
@@ -130,21 +102,7 @@ const dummyTweets = [
     repliesCount: 5,
     likesCount: 7,
     isLiked: true,
-  },
-  {
-    id: 14,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 6,
-    likesCount: 2,
-    isLiked: false,
-  },
+  }
 ];
 
 export default {
@@ -169,7 +127,7 @@ export default {
         followingsCounts: 0,
         followersCounts: 0,
       },
-      tweets: [],
+      likes: [],
     };
   },
 
@@ -185,7 +143,7 @@ export default {
       };
     },
     fetchTweets() {
-      this.tweets = dummyTweets;
+      this.likes = dummyLikes;
     },
   },
 };

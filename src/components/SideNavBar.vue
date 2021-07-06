@@ -19,7 +19,7 @@
           </li>
           <li class="nav-item mb-3">
             <router-link 
-              :to="{ name: 'user-tweets', params: { id: currentUser.id}}"
+              to="/users"
               class="nav-link d-flex"
             >
               <div class="profile-image"></div>
@@ -135,7 +135,7 @@ img {
   color: #ff6600;
 }
 
-.active .nav-item-text {
+.active .nav-item-text, .part-active .nav-item-text {
   color: #ff6600;
 }
 
@@ -170,9 +170,10 @@ img {
   width: 20px;
 }
 
-.active .profile-image {
+.active .profile-image, .part-active .profile-image {
   background-image: url(./../assets/profile-hover@2x.png);
 }
+
 
 .setting-image {
   display: inline-block;

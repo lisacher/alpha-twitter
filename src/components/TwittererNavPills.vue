@@ -38,7 +38,7 @@ export default {
         {
           id:uuidv4(),
           title: '喜歡的內容',
-          path:'/'
+          path: { name: 'user-likes', params: { id: 1}}
         }
       ]
     }
