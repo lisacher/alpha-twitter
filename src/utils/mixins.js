@@ -28,3 +28,11 @@ export const emptyImageFilter = {
       }
     }
   }
+
+  export const timerFilter = {
+    filters: {
+      fromNow (time) {
+        return time ? moment(time).fromNow() : '-'
+      }
+    }
+  }

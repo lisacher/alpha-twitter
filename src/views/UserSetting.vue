@@ -33,12 +33,15 @@ export default {
 </script>
 
 <style scoped>
-#UserSetting {
-  display: flex;
+
+.main-container {
+  height: 100%;
 }
-.UserSettingPanel {
-  flex: 1;
+
+.row {
+  height: 100%;
 }
+
 .title {
   height: 55px;
   border-bottom: 1px solid #e6ecf0;

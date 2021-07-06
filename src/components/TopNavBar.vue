@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-top d-flex align-items-center">
+  <div class="nav-top d-flex align-items-center ">
     <div class="back">
       <button 
         type="button" 
@@ -40,7 +40,8 @@ export default {
 <style scoped>
 
   .nav-top {
-    height: 55px ;
+    height: 50px ;
+    position: absolute;
   }
 
   .back-button {

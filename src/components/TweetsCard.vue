@@ -38,10 +38,11 @@
 
 <script>
 import moment from 'moment'
+
 export default {
   name: 'TweetsCard',
   props: {
-    data: {
+    initialData: {
       type: Object,
       required: true
     },
@@ -50,10 +51,21 @@ export default {
       default: '',
     }
   },
+  data() {
+    return {
+      data: this.initialData
+    }
+  },
   methods: {
     toggleLiked() {
-      this.tweet.isLiked = !this.tweet.isLiked
+      if(this.data.isLiked) {
+        this.data.likesCount -= 1
+      } else {
+        this.data.likesCount += 1
+      }
+      this.data.isLiked = !this.data.isLiked
     },
+
   },
   filters: {
       fromNow (time) {
@@ -79,29 +91,37 @@ export default {
     background-size: contain;
     background-repeat: no-repeat;
   }
+
   .header, .body{
     font-size: 15px;
   }
+
   .account, .createdAt, .footer, .replied-to {
     color:#657786 ;
   }
+
   .replied-to span {
     color: #FF6600;
   }
+
   .footer {
     font-size: 13px;
   }
+
   .comment, .liked {
     width: 50px;
   }
+
   .liked-img {
-    background-image: url(../assets/isLiked.png);
+    background-image: url(./../assets/isLiked.png);
     height: 12px;
     width: 12px;
     background-size: contain;
     background-repeat: no-repeat;
   }
+
   .activeLiked {
-    background-image: url(../assets/isLiked-active.png);
+    background-image: url(./../assets/isLiked-active.png);
   }
+
 </style>
