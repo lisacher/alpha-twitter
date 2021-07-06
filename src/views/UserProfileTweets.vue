@@ -8,6 +8,7 @@
           <TweetererImformation 
             :initial-user="User"
           />
+          <TwittererNavPills />
           <TweetsCard
             v-for="tweet in tweets"
             :key="tweet.id"
@@ -28,6 +29,7 @@ import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
 import TweetererImformation from "./../components/TwittererInfomation.vue";
+import TwittererNavPills from './../components/TwittererNavPills.vue'
 
 const user = 
   {
@@ -152,6 +154,7 @@ export default {
     TopNavBar,
     TweetsCard,
     TweetererImformation,
+    TwittererNavPills
   },
   data() {
     return {
