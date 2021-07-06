@@ -33,11 +33,11 @@ import TwittererNavPills from './../components/TwittererNavPills.vue'
 
 const user = 
   {
-    id: 2,
+    id: 1,
     name: "Yun",
     account: "lisacher",
     avatar: "",
-    cover: "",
+    cover: "https://fakeimg.pl/200x200",
     bio: "ABBC.",
     tweetsCount: 7,
     followingsCounts: 22,

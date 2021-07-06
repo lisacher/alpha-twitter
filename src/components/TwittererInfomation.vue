@@ -1,10 +1,10 @@
 <template>
   <div class="container border-top px-0">
     <div class="cover-container">
-      <img src="https://fakeimg.pl/200x200" alt="" />
+      <img :src="user.cover" alt="" />
     </div>
     <div class="avatar-container">
-      <img src="./../assets/Logo.png" alt="" />
+      <img :src="user.avatar | emptyImage" alt="" />
     </div>
     <div class="description-container px-3">
       <div
@@ -12,6 +12,7 @@
       >
         <UserProfileEditForm 
           v-if="currentUser.id === user.id"
+          :initail-user="initialUser"
         />
         <template v-else>
           <button class="btn button dm-button me-2"></button>
@@ -47,6 +48,7 @@
 
 <script>
 import UserProfileEditForm from './../components/UserProfileEditForm.vue'
+import { emptyImageFilter } from './../utils/mixins'
 
 const dummycurrentUser = {
   id: 1,
@@ -70,6 +72,7 @@ export default {
   components: {
     UserProfileEditForm
   },
+  mixins: [emptyImageFilter],
   data() {
     return {
       currentUser: {},
