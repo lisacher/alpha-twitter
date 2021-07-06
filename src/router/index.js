@@ -23,6 +23,11 @@ const routes = [
     component: () => import('../views/UserSetting.vue')
   },
   {
+    path: '/tweet',
+    name: 'tweet',
+    component: () => import('../views/Tweet.vue')
+  },
+  {
     path: '/main',
     name: 'main',
     component: Main
