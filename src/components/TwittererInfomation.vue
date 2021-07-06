@@ -10,12 +10,9 @@
       <div
         class="button-container d-flex justify-content-end align-items-center"
       >
-        <button
+        <UserProfileEditForm 
           v-if="currentUser.id === user.id"
-          class="btn btn-primary button edit-profile"
-        >
-          編輯個人資料
-        </button>
+        />
         <template v-else>
           <button class="btn button dm-button me-2"></button>
           <button class="btn button noti-button me-2"></button>
@@ -49,6 +46,7 @@
 </template>
 
 <script>
+import UserProfileEditForm from './../components/UserProfileEditForm.vue'
 
 const dummycurrentUser = {
   id: 1,
@@ -68,6 +66,9 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  components: {
+    UserProfileEditForm
   },
   data() {
     return {
