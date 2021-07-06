@@ -11,14 +11,17 @@
       <div class="nav-list">
         <ul class="nav flex-column me-3 pe-4">
           <li class="nav-item mb-3">
-            <router-link to="/main" class="nav-link d-flex">
+            <router-link to="/tweets" class="nav-link d-flex">
               <div class="home-image"></div>
               <div class="nav-item-text">首頁
               </div>
             </router-link>
           </li>
           <li class="nav-item mb-3">
-            <router-link to="/" class="nav-link d-flex">
+            <router-link 
+              :to="{ name: 'user-tweets', params: { id: currentUser.id}}"
+              class="nav-link d-flex"
+            >
               <div class="profile-image"></div>
               <div class="nav-item-text">個人資料</div>
             </router-link>
@@ -62,7 +65,7 @@ export default {
 
   data () {
     return {
-      User: {
+      currentUser: {
         id: -1,
         name: '',
         account: '',
