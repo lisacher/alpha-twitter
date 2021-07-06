@@ -19,10 +19,20 @@
         <template v-else>
           <button class="btn button dm-button me-2"></button>
           <button class="btn button noti-button me-2"></button>
-          <button v-if="user.isLiked" class="btn button">
+          <button 
+            v-if="user.isFollowed" 
+            type="button"
+            class="btn button"
+            @click.prevent.stop="deleteFollow"
+            >
             取消追蹤
           </button>
-          <button v-else class="btn button isactive">追蹤</button>
+          <button 
+            v-else 
+            type="button"
+            class="btn button is-active"
+            @click.prevent.stop="addFollow"
+          >追蹤</button>
         </template>
       </div>
       <div class="info-container mb-5">
@@ -39,6 +49,7 @@
 </template>
 
 <script>
+
 const dummycurrentUser = {
   id: 1,
   name: "Teddy",
@@ -74,6 +85,20 @@ export default {
     },
     fetchUser() {
       this.user = this.initialUser;
+    },
+    addFollow() {
+      this.user = {
+        ...this.user,
+        isFollowed: true,
+        followersCounts: this.user.followersCounts + 1
+      }
+    },
+    deleteFollow() {
+      this.user = {
+        ...this.user,
+        isFollowed: false,
+        followersCounts: this.user.followersCounts - 1
+      }
     },
   },
 };
@@ -123,6 +148,11 @@ export default {
   color: #f60;
   border: 1px solid #f60;
   border-radius: 100px;
+}
+
+.button-container button.is-active {
+  background-color: #f60;
+  color: #fff;
 }
 
 .button-container button.dm-button {

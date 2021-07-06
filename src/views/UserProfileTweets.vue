@@ -39,7 +39,7 @@ const user =
     bio: "ABBC.",
     followingsCounts: 22,
     followersCounts: 25,
-    isLiked: false
+    isFollowed: false
   }
 ;
 
