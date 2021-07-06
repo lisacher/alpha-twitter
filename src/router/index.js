@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Main from './../views/MainTweets.vue'
+import MainTweets from './../views/MainTweets.vue'
 import UserLogin from './../views/UserLogin'
 import Register from '../views/Register.vue'
 
@@ -10,7 +10,7 @@ const routes = [
   {
     path:'/',
     name:'root',
-    redirect: '/main'
+    redirect: '/tweets'
   },
   {
     path: '/login',
@@ -28,9 +28,14 @@ const routes = [
     component: () => import('../views/UserSetting.vue')
   },
   {
-    path: '/main',
-    name: 'main',
-    component: Main
+    path: '/tweets',
+    name: 'tweets',
+    component: MainTweets
+  },
+  {
+    path: '/users/:id/tweets',
+    name: 'user-tweets',
+    component: () => import('./../views/UserProfileTweets.vue')
   },
   {
     path: '*',
