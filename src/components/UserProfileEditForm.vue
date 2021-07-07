@@ -5,6 +5,7 @@
       type="button"
       data-bs-toggle="modal"
       data-bs-target="#editFormModal"
+      @click.stop.prevent="cachedUserData"
     >
       編輯個人資料
     </button>
@@ -17,67 +18,111 @@
       aria-hidden="true"
     >
       <div class="modal-dialog">
-        <div class="modal-content">
-          <div
-            class="modal-header justify-content-start align-items-center py-2"
-          >
-            <button
-              type="button"
-              class="btn close-btn p-0 d-flex align-items-center"
-              data-bs-dismiss="modal"
-              aria-label="Close"
+        <form @submit.prevent.stop="handelSubmit">
+          <div class="modal-content">
+            <div
+              class="modal-header justify-content-start align-items-center py-2"
             >
-              <img src="./../assets/icon_close@2x.png" alt="" />
-            </button>
-            <p class="ms-4">編輯個人資料</p>
-            <button class="btn save ms-auto">儲存</button>
+              <button
+                type="button"
+                class="btn close-btn p-0 d-flex align-items-center"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                @click.prevent.stop="handleCancel"
+              >
+                <img src="./../assets/icon_close@2x.png" alt="" />
+              </button>
+              <p class="ms-4">編輯個人資料</p>
+              <button 
+                class="btn save ms-auto" 
+                type="submit"
+                data-bs-toggle="modal"
+                data-bs-target="#editFormModal"
+              >儲存</button>
+            </div>
+            <!-- form  content -->
+            <div class="modal-body p-0">
+              <div class="cover-container">
+                <div class="form-group">
+                  <label for="cover"
+                    ><img
+                      src="./../assets/picture.png"
+                      alt=""
+                      class="edit-cover-picture"
+                  /></label>
+                  <img :src="user.cover | emptyImage" alt="" />
+                  <input
+                    type="file"
+                    id="cover"
+                    name="cover"
+                    accept="image/*"
+                    class="cover-input d-none"
+                    @change="handleFileChange"
+                  />
+                  <button
+                    class="btn delete-cover-button"
+                    type="button"
+                    @click.prevent.stop="deleteCover"
+                  >
+                    <img
+                      src="./../assets/close.png"
+                      alt=""
+                      class="delete-cover-picture"
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div class="avatar-container">
+                <div class="form-group">
+                  <label for="avatar"
+                    ><img
+                      src="./../assets/picture.png"
+                      alt=""
+                      class="edit-avatar-picture"
+                  /></label>
+                  <img :src="user.avatar | emptyImage" alt="" class="avatar" />
+                  <input
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    accept="image/*"
+                    class="cover-input d-none"
+                    @change="handleFileChange"
+                  />
+                </div>
+              </div>
+
+              <div class="description-container px-3 pb-5">
+                <div class="form-group">
+                  <label for="name">名稱</label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    maxlength="50"
+
+                    v-model="user.name"
+                  />
+                  <div class="info text-end">{{ user.name.length }}/50</div>
+                </div>
+
+                <div class="form-group">
+                  <label for="bio">自我介紹</label>
+                  <textarea
+                    id="bio"
+                    name="bio"
+                    type="text"
+                    rows="5"
+                    maxlength="160"
+                    v-model="user.bio"
+                  />
+                  <div class="info text-end">{{ user.bio.length }}/160</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <!-- form -->
-          <form class="modal-body p-0">
-
-            <div class="cover-container">
-              <img :src="user.cover" alt="" />
-            </div>
-
-            <div class="avatar-container">
-              <img :src="user.avatar | emptyImage" alt="" />
-            </div>
-
-            <div class="description-container px-3 pb-5">
-              <div class="row">
-                <label for="name">名稱</label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  maxlength="50"
-                  required
-                  :value="user.name"
-                />
-                <div class="info text-end">
-                  {{user.name.length}}/50
-                </div>
-              </div>
-
-              <div class="row">
-                <label for="name">自我介紹</label>
-                <textarea
-                  id="name"
-                  name="bio"
-                  type="text"
-                  rows="5"
-                  maxlength="160"
-                  :value="user.bio"
-                />
-                <div class="info text-end">
-                  {{user.bio.length}}/160
-                </div>
-              </div>
-            </div>
-
-            
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -85,6 +130,7 @@
 
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "UserProfileEditForm",
@@ -98,6 +144,7 @@ export default {
   data() {
     return {
       user: {},
+      userCached: {}
     };
   },
   created() {
@@ -105,8 +152,69 @@ export default {
   },
   methods: {
     fetchUser() {
-      this.user = this.initailUser;
+      this.user = {
+        ...this.user,
+        ...this.initailUser,
+      };
     },
+    cachedUserData() {
+      this.userCached = {
+        ...this.userCached,
+        ...this.user
+      }
+    },
+    handleFileChange(e) {
+      const id = e.target.id;
+      const { files } = e.target;
+      // change cover
+      if (id === "cover") {
+        if (files.length === 0) {
+          return (this.user.cover = "");
+        }
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.user.cover = imageURL;
+      } else if (id === "avatar") {
+        if (files.length === 0) {
+          return (this.user.avatar = "");
+        }
+        const imageURL = window.URL.createObjectURL(files[0]);
+        this.user.avatar = imageURL;
+      }
+    },
+
+    deleteCover() {
+      this.user.cover = "";
+    },
+
+    handelSubmit(e) {
+      if (!this.user.name) {
+        Toast.fire({
+          icon: "warning",
+          title: "姓名請勿空白",
+        });
+        return;
+      }
+
+      if (!this.user.bio) {
+        this.user.bio = "未填寫任何自我介紹";
+      }
+
+      const form = e.target;
+      const formData = new FormData(form);
+      this.$emit('after-form-submit', formData)
+
+      Toast.fire({
+        icon: 'success',
+        title: '儲存成功！'
+      })
+    },
+
+    handleCancel() {
+      this.user = {
+        ...this.user,
+        ...this.userCached
+      }
+    }
   },
 };
 </script>
@@ -155,6 +263,44 @@ button.save {
   padding-top: 15px;
 }
 
+.form-group {
+  position: relative;
+}
+
+.form-group .edit-cover-picture {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 250px;
+  top: 100px;
+  transform: translate(-150%, -50%);
+  cursor: pointer;
+}
+
+.form-group .delete-cover-button {
+  padding: 0;
+  border: none;
+}
+
+.form-group .edit-avatar-picture {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 70px;
+  top: 70px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.form-group .delete-cover-picture {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 250px;
+  top: 100px;
+  transform: translate(50%, -50%);
+}
+
 .cover-container img {
   height: 200px;
   width: 100%;
@@ -169,7 +315,7 @@ button.save {
   transform: translateY(-50%);
 }
 
-.avatar-container img {
+.avatar-container .avatar {
   width: 140px;
   height: 140px;
   object-fit: cover;
@@ -195,7 +341,8 @@ button.save {
   display: block;
   width: 100%;
 }
-.row input, .row textarea {
+.row input,
+.row textarea {
   padding-left: 11px;
   font-weight: 500;
   font-size: 19px;

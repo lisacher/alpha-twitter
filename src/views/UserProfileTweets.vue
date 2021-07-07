@@ -7,6 +7,7 @@
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
+            @after-form-submit="afterFormSubmit"
           />
           <TwittererNavPills />
           <TweetsCard
@@ -33,7 +34,7 @@ import TwittererNavPills from './../components/TwittererNavPills.vue'
 
 const user = 
   {
-    id: 2,
+    id: 1,
     name: "Yun",
     account: "lisacher",
     avatar: "",
@@ -148,7 +149,7 @@ const dummyTweets = [
 ];
 
 export default {
-  name: "main-tweets",
+  name: "UserProfileTweets",
   components: {
     SideNavBar,
     RecFollowingList,
@@ -187,6 +188,11 @@ export default {
     fetchTweets() {
       this.tweets = dummyTweets;
     },
+    afterFormSubmit(formData) {
+      for (let [name, value] of formData.entries()) {
+        console.log(name + ": " + value);
+      }
+    }
   },
 };
 </script>

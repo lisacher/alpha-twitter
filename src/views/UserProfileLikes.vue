@@ -7,6 +7,7 @@
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
+            @after-form-submit="afterFormSubmit"
           />
           <TwittererNavPills />
           <TweetsCard
@@ -106,7 +107,7 @@ const dummyLikes = [
 ];
 
 export default {
-  name: "main-tweets",
+  name: "UserProfileLikes",
   components: {
     SideNavBar,
     RecFollowingList,
@@ -145,6 +146,11 @@ export default {
     fetchTweets() {
       this.likes = dummyLikes;
     },
+    afterFormSubmit(formData) {
+      for (let [name, value] of formData.entries()) {
+        console.log(name + ": " + value);
+      }
+    }
   },
 };
 </script>

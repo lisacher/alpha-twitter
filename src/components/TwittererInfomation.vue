@@ -13,6 +13,7 @@
         <UserProfileEditForm 
           v-if="currentUser.id === user.id"
           :initail-user="initialUser"
+          @after-form-submit="afterFormSubmit"
         />
         <template v-else>
           <button class="btn button dm-button me-2"></button>
@@ -104,6 +105,9 @@ export default {
         followersCounts: this.user.followersCounts - 1
       }
     },
+    afterFormSubmit(formData) {
+      this.$emit('after-form-submit', formData)
+    }
   },
 };
 </script>
