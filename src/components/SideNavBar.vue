@@ -27,7 +27,7 @@
             </router-link>
           </li>
           <li class="nav-item mb-4">
-            <router-link to="/usersetting" class="nav-link d-flex">
+            <router-link to="/setting" class="nav-link d-flex">
               <div class="setting-image"></div>
               <div class="nav-item-text">設定</div>
             </router-link>

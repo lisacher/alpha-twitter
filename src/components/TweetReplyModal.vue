@@ -123,6 +123,14 @@ export default {
       this.replyContent = ''
     },
     replyContentCheck(replyContent) {
+      const checkTarget = replyContent.trim();
+      if (!checkTarget) {
+        Toast.fire({
+          icon: "error",
+          title: "尚未輸入推文內容！",
+        });
+        return false;
+      }
       if (replyContent.length > 140) {
         Toast.fire({
           icon: "error",

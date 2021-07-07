@@ -39,8 +39,13 @@
         <p class="account">@{{ user.account }}</p>
         <p class="bio my-2">{{ user.bio }}</p>
         <div class="follow-container">
+          <router-link :to="{name: 'user-followings', params:{ id: user.id}}">
           <p class="me-3">{{ user.followingsCounts }}<span>個跟隨中</span></p>
-          <p>{{ user.followersCounts }}<span>位跟隨者</span></p>
+          </router-link>
+          <router-link :to="{name: 'user-followers', params:{ id: user.id}}">
+            <p>{{ user.followersCounts }}<span>位跟隨者</span></p>
+          </router-link>
+          
         </div>
       </div>
     </div>

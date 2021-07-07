@@ -178,9 +178,6 @@ export default {
   height: 100%;
 }
 
-.side-nav-row {
-  height: 100%;
-}
 .tweets-container {
   overflow: scroll;
   height: calc(100% - 50px);

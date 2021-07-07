@@ -27,7 +27,7 @@ const routes = [
     component: Register
   },
   {
-    path: '/usersetting',
+    path: '/setting',
     name: 'user-setting',
     component: () => import('../views/UserSetting.vue')
   },
@@ -51,6 +51,16 @@ const routes = [
     path: '/users/:id/likes',
     name: 'user-likes',
     component: () => import('./../views/UserProfileLikes.vue')
+  },
+  {
+    path: '/users/:id/followers',
+    name: 'user-followers',
+    component: () => import('./../views/UserProfileFollowers.vue')
+  },
+  {
+    path: '/users/:id/followings',
+    name: 'user-followings',
+    component: () => import('./../views/UserProfileFollowings.vue')
   },
   {
     path: '/tweet',
