@@ -10,7 +10,7 @@
       </div>
       <div class="text-container mt-2 flex-grow-1">
         <div class="header">
-          <div class="name d-inline-block pe-2">{{ data.User.name }}</div>
+          <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
           <div class="account d-inline-block">@{{ data.User.account }}</div>
           <div class="createdAt d-inline-block">
             ・{{ data.createdAt | fromNow }}
