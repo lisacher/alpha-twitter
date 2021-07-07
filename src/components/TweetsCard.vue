@@ -23,6 +23,15 @@
           <div class="text">
             {{ data.text }}
           </div>
+      </div>
+      <div class="footer d-flex my-2">
+        <div class="comment d-flex align-items-center me-5">
+          <div class="btn comment-img "
+            data-bs-toggle="modal"
+            data-bs-target="#tweetReplyModal">
+          </div>
+          <TweetReplyModal :initial-data="data"/>
+          <div class="comments-count">{{data.repliesCount}}</div>
         </div>
         <div class="footer d-flex my-2">
           <div class="comment d-flex align-items-center me-5">
@@ -47,9 +56,13 @@
 
 <script>
 import moment from "moment";
+import TweetReplyModal from "../components/TweetReplyModal.vue";
 
 export default {
   name: "TweetsCard",
+  components: {
+    TweetReplyModal,
+  },
   props: {
     initialData: {
       type: Object,
@@ -90,7 +103,7 @@ export default {
 <style scoped>
 .tweet-link {
   text-decoration: none;
-  color: #000 ;
+  color: #000;
 }
 
 .img-container img {
@@ -139,19 +152,19 @@ export default {
   background-repeat: no-repeat;
 }
 
-.liked:hover .liked-img{
+.liked:hover .liked-img {
   background-image: url(./../assets/isLiked-active.png);
 }
 
-.liked:hover .likes-count{
-  color: #E0245E;
+.liked:hover .likes-count {
+  color: #e0245e;
 }
 
-.activeLiked .liked-img{
+.activeLiked .liked-img {
   background-image: url(./../assets/isLiked-active.png);
 }
 
 .activeLiked .likes-count {
-  color: #E0245E;
+  color: #e0245e;
 }
 </style>

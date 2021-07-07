@@ -1,38 +1,45 @@
 <template>
-  <div id="UserSetting" class="container main-container">
-    <div class="row">
-      <SideNavBar class="col-3"/>
-      <div class="UserSettingPanel col-9 border">
-        <div class="title">
-          <h1>帳戶設定</h1>
-        </div>
-
-        <RegistEditForm :isSignUp="isSignUp" />
+<div class="container">
+  <div class="row">
+    <div class="as" id="UserSetting">
+      <SideNavBar />
+    <div class="UserSettingPanel border-start">
+      <div class="title border-bottom">
+          <TopNavBar 
+          msg="帳戶設定"
+          :show="false"
+          class="" 
+          />
       </div>
+      <RegistEditForm :isSignUp="false"
+      />
     </div>
   </div>
+</div>
+</div>
+  
 </template>
 
 <script>
-import SideNavBar from "../components/SideNavBar.vue";
-import RegistEditForm from "../components/RegistEditForm.vue";
+import SideNavBar from "../components/SideNavBar.vue"
+import RegistEditForm from "../components/RegistEditForm.vue"
+import TopNavBar from './../components/TopNavBar.vue'
 
 export default {
   name: "UserSetting",
-  data() {
-    return {
-      isSignUp: false,
-    };
-  },
   components: {
     SideNavBar,
     RegistEditForm,
-  },
-};
+    TopNavBar
+  }
+}
 </script>
 
 <style scoped>
-
+.as {
+  display: flex;
+  flex-direction: row;
+}
 .main-container {
   height: 100%;
 }
@@ -43,7 +50,6 @@ export default {
 
 .title {
   height: 55px;
-  border-bottom: 1px solid #e6ecf0;
   padding: 10px 15px;
   display: flex;
   align-items: center;

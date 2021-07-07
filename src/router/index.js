@@ -53,6 +53,11 @@ const routes = [
     component: () => import('./../views/UserProfileLikes.vue')
   },
   {
+    path: '/tweet',
+    name: 'tweet',
+    component: () => import('../views/Tweet.vue')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: () => import('./../views/NotFound.vue')
