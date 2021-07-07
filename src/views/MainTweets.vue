@@ -172,7 +172,7 @@ export default {
       this.tweets = dummyTweets;
     },
     afterCreateTweet({ text }) {
-      this.tweets.push({
+      this.tweets.unshift({
         id: uuidv4(),
         User: {
           id: this.currentUser.id,
