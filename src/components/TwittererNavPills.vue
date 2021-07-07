@@ -21,13 +21,19 @@ import {v4 as uuidv4} from 'uuid'
 
 export default {
   name: 'TwittererNavPills',
+  props: {
+    id: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       tabs: [
         {
           id: uuidv4(),
           title: '推文',
-          path: { name: 'user-tweets', params: { id: 1}}
+          path: { name: 'user-tweets', params: { id: this.id}}
         },
         {
           id:uuidv4(),
@@ -38,7 +44,7 @@ export default {
         {
           id:uuidv4(),
           title: '喜歡的內容',
-          path: { name: 'user-likes', params: { id: 1}}
+          path: { name: 'user-likes', params: { id: this.id}}
         }
       ]
     }

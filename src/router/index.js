@@ -38,8 +38,8 @@ const routes = [
   },
   {
     // 為了讓Profile的button 在切換NavPills的時候都是part-active.
-    path: '/users',
-    name: 'users',
+    path: `/users/${currentUserId}`,
+    name: 'user',
     redirect: `/users/${currentUserId}/tweets`
   },
   {

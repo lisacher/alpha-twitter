@@ -1,7 +1,11 @@
 <template>
   <div class="d-flex border">
     <div class="img-container">
-      <img src="./../assets/Logo.png" alt="">
+      <router-link
+        :to="{ name: 'user-tweets', params:{ id: data.User.id }}"
+      >
+        <img src="./../assets/Logo.png" alt="">
+      </router-link>
     </div>
     <div class="text-container mt-2 flex-grow-1">
       <div class="header">

@@ -19,7 +19,7 @@
           </li>
           <li class="nav-item mb-3">
             <router-link 
-              to="/users"
+              :to="{name: 'user', params:{ id: currentUser.id}}"
               class="nav-link d-flex"
             >
               <div class="profile-image"></div>

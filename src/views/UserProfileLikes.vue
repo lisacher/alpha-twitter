@@ -9,7 +9,9 @@
             :initial-user="User"
             @after-form-submit="afterFormSubmit"
           />
-          <TwittererNavPills />
+          <TwittererNavPills 
+            :id="User.id"
+          />
           <TweetsCard
             v-for="like in likes"
             :key="like.id"
