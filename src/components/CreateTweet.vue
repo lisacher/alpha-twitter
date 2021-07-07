@@ -5,12 +5,13 @@
         <img src="./../assets/Logo.png" alt="" />
         <textarea
           v-model="text"
-          name=""
-          id=""
+          name="text"
+          id="text"
           cols="50"
           rows="1"
           :placeholder="currentUser.name | adjustAddTweetPlaceholder"
           maxlength="140"
+          required
         >
         </textarea>
       </div>
@@ -26,7 +27,7 @@
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid'
+import { Toast } from './../utils/helpers'
 
 export default {
   name: 'CreateTweet',
@@ -45,20 +46,17 @@ export default {
   methods: {
     handleSubmit() {
       if(!this.text) {
+        Toast.fire({
+          icon: 'error',
+          title: '請填寫推文內容！'
+        })
         return
       }
-      this.comments.push({
-        id: uuidv4(),
-        User: {
-          id: this.currentUser.id,
-          name: this.currentUser.name,
-          account: this.currentUser.account,
-          image: this.currentUser.image
-        },
-        text: this.text,
-        createdAt: new Date()
+      this.$emit('after-create-tweet', {
+        text: this.text
       })
       this.text = ''
+
     }
   },
   filters: {

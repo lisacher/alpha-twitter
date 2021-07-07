@@ -5,7 +5,10 @@
       <div class="col-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
         <div class="tweets-container">
-          <CreateTweet :current-user="currentUser" />
+          <CreateTweet 
+            :current-user="currentUser" 
+            @after-create-tweet="afterCreateTweet"
+          />
           <TweetsCard v-for="tweet in tweets" :key="tweet.id" :initial-data="tweet" />
         </div>
       </div>
@@ -17,6 +20,8 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
@@ -166,6 +171,23 @@ export default {
     fetchTweets() {
       this.tweets = dummyTweets;
     },
+    afterCreateTweet({ text }) {
+      this.tweets.push({
+        id: uuidv4(),
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          account: this.currentUser.account,
+          image: this.currentUser.image
+
+        },
+        text,
+        createdAt: new Date(),
+        isLiked: false,
+        likesCount: 0,
+        repliesCount: 0
+      })
+    }
   },
 };
 </script>
