@@ -27,12 +27,23 @@ export const emptyImageFilter = {
         return src || 'https://via.placeholder.com/1000x1000/ccc/fff'
       }
     }
-  }
+}
 
-  export const timerFilter = {
-    filters: {
-      fromNow (time) {
-        return time ? moment(time).fromNow() : '-'
+export const daytimeFilter = {
+  filters: {
+    fromNow(time) {
+      moment.locale('zh-tw')
+      const now = new Date()
+
+      if(!time) {
+        return '-'
       }
+
+      if(now - time < 8640000) {
+        return moment(time).fromNow()
+      }
+
+      return moment(time).format('M月D日')
     }
   }
+}

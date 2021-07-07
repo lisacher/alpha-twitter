@@ -49,11 +49,12 @@
 </template>
 
 <script>
-import moment from "moment";
 import TweetReplyModal from "../components/TweetReplyModal.vue";
+import { daytimeFilter } from './../utils/mixins'
 
 export default {
   name: "TweetsCard",
+  mixins: [daytimeFilter],
   components: {
     TweetReplyModal,
   },
@@ -80,15 +81,6 @@ export default {
         this.data.likesCount += 1;
       }
       this.data.isLiked = !this.data.isLiked;
-    },
-  },
-  filters: {
-    fromNow(time) {
-      const now = new Date();
-      if (now - time < 86400000) {
-        return moment(time).fromNow();
-      }
-      return moment(time).format("MMM Do");
     },
   },
 };
