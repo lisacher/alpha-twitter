@@ -195,7 +195,6 @@ export default {
 <style scoped>
 .main-container {
   height: 100%;
-  position: relative;
 }
 
 .main-component {
@@ -203,7 +202,6 @@ export default {
 }
 
 .tweets-container {
-  margin-top: 50px;
   height: calc(100% - 50px);
   overflow: scroll;
 }

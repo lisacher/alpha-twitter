@@ -1,5 +1,5 @@
 <template>
-  <router-link to="/" class="tweet-link">
+  <router-link to="/tweet" class="tweet-link">
     <div class="d-flex border">
       <div class="img-container">
         <router-link
@@ -23,29 +23,23 @@
           <div class="text">
             {{ data.text }}
           </div>
-      </div>
-      <div class="footer d-flex my-2">
-        <div class="comment d-flex align-items-center me-5">
-          <div class="btn comment-img "
-            data-bs-toggle="modal"
-            data-bs-target="#tweetReplyModal">
-          </div>
-          <TweetReplyModal :initial-data="data"/>
-          <div class="comments-count">{{data.repliesCount}}</div>
         </div>
         <div class="footer d-flex my-2">
           <div class="comment d-flex align-items-center me-5">
-            <div class="btn comment-img"></div>
+            <div
+              class="btn comment-img"
+              data-bs-toggle="modal"
+              data-bs-target="#tweetReplyModal"
+            ></div>
+            <TweetReplyModal :initial-data="data" />
             <div class="comments-count">{{ data.repliesCount }}</div>
           </div>
-          <div 
+
+          <div
             class="liked d-flex align-items-center"
             :class="{ activeLiked: data.isLiked }"
           >
-            <div
-              class="btn liked-img"
-              @click.prevent.stop="toggleLiked"
-            ></div>
+            <div class="btn liked-img" @click.prevent.stop="toggleLiked"></div>
             <div class="likes-count">{{ data.likesCount }}</div>
           </div>
         </div>

@@ -168,7 +168,6 @@ export default {
 }
 
 .tweets-container {
-  margin-top: 50px;
   height: calc(100% - 50px);
   overflow: scroll;
 }

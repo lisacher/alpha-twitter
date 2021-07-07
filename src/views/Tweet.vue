@@ -5,11 +5,11 @@
             class="col-3 border-end"/>
 
             <!-- ReplyDetail -->
-            <div class="col-5 p-0">
+            <div class="col-5 p-0 main-container">
                 <TopNavBar 
-                msg="推文"
-                :show="true"
-                class="border-bottom position-relative"/>
+                  msg="推文"
+                  :show="true"
+                />
             <!-- Tweet Detail -->
             <div class="tweets-container">
               <TweetContent />
@@ -183,6 +183,6 @@ export default {
 }
 .tweets-container {
   overflow: scroll;
-  height: 550px;
+  height: calc(100% - 50px);
 }
 </style>

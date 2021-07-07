@@ -10,14 +10,14 @@
       </div>
       <div class="nav-list">
         <ul class="nav flex-column me-3 pe-4">
-          <li class="nav-item mb-3">
+          <li class="nav-item mb-4">
             <router-link to="/tweets" class="nav-link d-flex">
               <div class="home-image"></div>
               <div class="nav-item-text">首頁
               </div>
             </router-link>
           </li>
-          <li class="nav-item mb-3">
+          <li class="nav-item mb-4">
             <router-link 
               :to="{name: 'user', params:{ id: currentUser.id}}"
               class="nav-link d-flex"
@@ -26,7 +26,7 @@
               <div class="nav-item-text">個人資料</div>
             </router-link>
           </li>
-          <li class="nav-item mb-3">
+          <li class="nav-item mb-4">
             <router-link to="/usersetting" class="nav-link d-flex">
               <div class="setting-image"></div>
               <div class="nav-item-text">設定</div>
@@ -126,7 +126,7 @@ img {
 .nav-item .nav-item-text  {
   line-height: 20px;
   display: inline-block;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   color: #000;
 }

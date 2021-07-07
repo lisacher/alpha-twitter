@@ -3,7 +3,11 @@
     <div class="row">
       <SideNavBar class="col-3" />
       <div class="col-5 p-0 border main-component">
-        <TopNavBar :msg="User.name" :show="true" :tweetsCount="User.tweetsCount" />
+        <TopNavBar 
+          :msg="User.name" 
+          :show="true" 
+          :tweetsCount="User.tweetsCount" 
+        />
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
@@ -202,7 +206,6 @@ export default {
 <style scoped>
 .main-container {
   height: 100%;
-  position: relative;
 }
 
 .main-component {
@@ -210,7 +213,6 @@ export default {
 }
 
 .tweets-container {
-  margin-top: 50px;
   height: calc(100% - 50px);
   overflow: scroll;
 }

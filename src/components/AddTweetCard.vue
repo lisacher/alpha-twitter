@@ -102,7 +102,7 @@ button.tweet-button {
   background: #ff6600;
   color: #fff;
   border-radius: 100px;
-  font-size: 14px;
+  font-size: 18px;
   margin-left: 20px;
 }
 
