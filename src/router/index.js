@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import MainTweets from './../views/MainTweets.vue'
 import UserLogin from './../views/UserLogin'
 import Register from '../views/Register.vue'
+import AdminLogin from './../views/AdminLogin.vue'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,7 @@ const routes = [
   {
     path: '/admin',
     name: 'admin-login',
-    component: () => import('../views/AdminLogin.vue')
+    component: AdminLogin
   },
   {
     path: '/setting',

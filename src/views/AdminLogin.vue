@@ -89,7 +89,7 @@ export default {
           })
           return
         }
-        this.$router.push("/")
+        this.$router.push("/admin/tweets")
     },
   },
 }

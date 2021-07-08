@@ -6,23 +6,20 @@
     <hr />
     <div class="users">
       <ul class="usersList">
-          <li class="user" v-for="user in recTwitterer" :key="user.id">
+        <li class="user" v-for="user in recTwitterer" :key="user.id">
+          <router-link
+            :to="{ name: 'user-tweets', params: { id: user.id }}"
+          >
             <div class="userContent">
               <div class="avatar">
-                <router-link to="#">
-                  <img :src="user.avatar | emptyImage" alt="" />
-                </router-link>
+                <img :src="user.avatar | emptyImage" alt="" />
               </div>
               <div class="info">
                 <div class="name">
-                  <router-link to="#">
-                    <h2 class="userName">{{ user.name }} </h2>
-                  </router-link>
+                  <h2 class="userName">{{ user.name }}</h2>
                 </div>
                 <div class="account">
-                  <router-link to="">
-                    <h2>{{ user.account }}</h2>
-                  </router-link>
+                  <h2>{{ user.account }}</h2>
                 </div>
               </div>
               <div class="toggleFollow">
@@ -43,7 +40,8 @@
               </div>
             </div>
             <hr />
-          </li>
+          </router-link>
+        </li>
       </ul>
     </div>
 
@@ -56,41 +54,41 @@
 <script>
 import { emptyImageFilter } from "../utils/mixins";
 const dummyUser = {
-    'users': [
+  users: [
     {
-    'id': 1,
-    'name': 'root',
-    'account': 'root01',
-    'email': 'root@example.com',
-    'isAdmin': true,
-    'image': 'https://i.imgur.com/58ImzMM.png',
-    'isFollowed': false
+      id: 1,
+      name: "root",
+      account: "root01",
+      email: "root@example.com",
+      isAdmin: true,
+      image: "https://i.imgur.com/58ImzMM.png",
+      isFollowed: false,
     },
     {
-        'id': 2,
-        'name': 'user1',
-        'account': 'user1234',
-        'email': 'user1@example.com',
-        'isAdmin': false,
-        'image': 'https://i.imgur.com/Q14p2le.jpg',
-        'isFollowed': false
+      id: 2,
+      name: "user1",
+      account: "user1234",
+      email: "user1@example.com",
+      isAdmin: false,
+      image: "https://i.imgur.com/Q14p2le.jpg",
+      isFollowed: false,
     },
     {
-        'id': 3,
-        'name': 'user2',
-        'account': 'user234',
-        'email': 'user2@example.com',
-        'isAdmin': false,
-        'image': 'https://i.imgur.com/OezkRwO.jpg',
-        'isFollowed': false
-    }
-    ]
-}
+      id: 3,
+      name: "user2",
+      account: "user234",
+      email: "user2@example.com",
+      isAdmin: false,
+      image: "https://i.imgur.com/OezkRwO.jpg",
+      isFollowed: false,
+    },
+  ],
+};
 export default {
   name: "RecFollowingsList",
   mixins: [emptyImageFilter],
   created() {
-    this.fetchRecFollowers()
+    this.fetchRecFollowers();
   },
   data() {
     return {
@@ -99,20 +97,20 @@ export default {
   },
   methods: {
     fetchRecFollowers() {
-        this.recTwitterer = dummyUser.users
+      this.recTwitterer = dummyUser.users;
     },
     followUser(user) {
-      user.isFollowed = true
+      user.isFollowed = true;
     },
     unfollowUser(user) {
-      user.isFollowed = false
-    }
-  }
-}
+      user.isFollowed = false;
+    },
+  },
+};
 </script>
 
 <style scoped>
-*{
+* {
   list-style: none;
   text-decoration: none;
 }
@@ -136,7 +134,7 @@ hr {
   margin: 0;
 }
 .userName {
-    color: black;
+  color: black;
 }
 .usersList {
   margin: 0;

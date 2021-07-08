@@ -45,6 +45,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
+            <div>您確定要刪除此則推文嗎？</div>
             <button
               type="button"
               class="btn-close"
@@ -52,7 +53,7 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body text-center">您確定要刪除此則推文嗎？</div>
+          <div class="modal-body text-center">推文刪除後將無法復原</div>
           <div class="modal-footer">
             <button
               type="button"
@@ -250,11 +251,16 @@ export default {
 .createdAt {
   color: #657786;
 }
+.modal-header {
+  font-size: 16px;
+  font-weight: 700;
+}
 
 .modal-body {
   height: 150px;
   line-height: 118px;
   font-size: 18px;
   font-weight: 700;
+  color: red;
 }
 </style>

@@ -17,9 +17,9 @@
           </div>
         </div>
         <div class="body">
-          <div v-if="repliedTo" class="replied-to mt-1">
+          <!-- <div v-if="repliedTo" class="replied-to mt-1">
             回覆 <span>@{{ repliedTo }}</span>
-          </div>
+          </div> -->
           <div class="text">
             {{ data.text }}
           </div>
@@ -32,7 +32,7 @@
               data-bs-target="#tweetReplyModal"
             ></div>
             <TweetReplyModal :initial-data="data" 
-            @after-create-tweet="afterCreateTweet"/>
+            />
             <div class="comments-count">{{ data.repliesCount }}</div>
           </div>
 

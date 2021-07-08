@@ -2,28 +2,22 @@
   <div>
     <nav class="container">
       <div class="nav-logo mb-4">
-        <router-link
-          to="/"  
-        >
+        <router-link to="/">
           <img src="./../assets/Logo.png" alt="" />
         </router-link>
       </div>
       <!-- if is user -->
-      <div 
-        class="nav-list"
-        v-if="!isAdmin"
-      >
+      <div class="nav-list" v-if="!isAdmin">
         <ul class="nav flex-column me-3 pe-4">
           <li class="nav-item mb-4">
             <router-link to="/tweets" class="nav-link d-flex">
               <div class="home-image"></div>
-              <div class="nav-item-text">首頁
-              </div>
+              <div class="nav-item-text">首頁</div>
             </router-link>
           </li>
           <li class="nav-item mb-4">
-            <router-link 
-              :to="{name: 'user', params:{ id: currentUser.id}}"
+            <router-link
+              :to="{ name: 'user', params: { id: currentUser.id } }"
               class="nav-link d-flex"
             >
               <div class="profile-image"></div>
@@ -37,24 +31,25 @@
             </router-link>
           </li>
           <li class="nav-item mt-2">
-            <AddTweetCard 
+            <AddTweetCard
               :current-user="currentUser"
               @after-create-tweet="afterCreateTweet"
             />
           </li>
           <li class="nav-item mb-3 nav-item-logout">
-            <router-link to="/login" class="nav-link d-flex">
+            <button
+              class="btn nav-link d-flex"
+              data-bs-toggle="modal"
+              data-bs-target="#logoutModal"
+            >
               <div class="logout-image"></div>
               <div class="nav-item-text">登出</div>
-            </router-link>
+            </button>
           </li>
         </ul>
       </div>
       <!-- if is Admin -->
-      <div 
-        class="nav-list"
-        v-else
-      >
+      <div class="nav-list" v-else>
         <ul class="nav flex-column me-3 pe-4">
           <li class="nav-item mb-4">
             <router-link to="/admin/tweets" class="nav-link d-flex">
@@ -63,85 +58,124 @@
             </router-link>
           </li>
           <li class="nav-item mb-4">
-            <router-link 
-              to="/admin/users"
-              class="nav-link d-flex"
-            >
+            <router-link to="/admin/users" class="nav-link d-flex">
               <div class="profile-image"></div>
               <div class="nav-item-text">使用者列表</div>
             </router-link>
           </li>
           <li class="nav-item mb-3 nav-item-logout">
-            <router-link to="/admin/logout" class="nav-link d-flex">
+            <button
+              class="btn nav-link d-flex"
+              data-bs-toggle="modal"
+              data-bs-target="#logoutModal"
+            >
               <div class="logout-image"></div>
               <div class="nav-item-text">登出</div>
-            </router-link>
+            </button>
           </li>
         </ul>
       </div>
     </nav>
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-body text-center">您確定要登出嗎？</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#logoutModal"
+              @click.prevent.stop="logOut()"
+            >
+              登出
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import AddTweetCard from './../components/AddTweetCard.vue'
+import AddTweetCard from "./../components/AddTweetCard.vue";
 
 const currentUser = {
   id: 1,
-  name: 'Teddy',
-  account: 'teddy0323',
-  image: ''
-}
+  name: "Teddy",
+  account: "teddy0323",
+  image: "",
+};
 
 export default {
-  name: 'SideNavBar',
+  name: "SideNavBar",
   props: {
     isAdmin: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
-  data () {
+  data() {
     return {
       currentUser: {
         id: -1,
-        name: '',
-        account: '',
-        image: ''
+        name: "",
+        account: "",
+        image: "",
       },
-      comments: []
-    }
+      comments: [],
+      
+    };
   },
   components: {
-    AddTweetCard
+    AddTweetCard,
   },
   created() {
-    this.fetchUser()
+    this.fetchUser();
   },
   methods: {
-     fetchUser() {
+    fetchUser() {
       this.currentUser = {
         ...this.currentUser,
-        ...currentUser
-      }
+        ...currentUser,
+      };
     },
     afterCreateTweet(payload) {
-      console.log('payload', payload);
-      const { id, text } = payload
+      console.log("payload", payload);
+      const { id, text } = payload;
       this.comments.push({
         id,
         text,
-        createdAt: new Date()
-      })
-    }
-  }
-}
+        createdAt: new Date(),
+      });
+    },
+    logOut() {
+      if (this.isAdmin) {
+        this.$router.push("/admin");
+        return
+      }
+      this.$router.push("/login");
+    },
+  },
+};
 </script>
 
 <style scoped>
-
-.container  {
-  height: 100%
+.container {
+  height: 100%;
 }
 
 img {
@@ -161,7 +195,7 @@ img {
   height: 100%;
 }
 
-.nav-item .nav-item-text  {
+.nav-item .nav-item-text {
   line-height: 20px;
   display: inline-block;
   font-size: 18px;
@@ -169,14 +203,14 @@ img {
   color: #000;
 }
 
-.nav-item:hover .nav-item-text{
+.nav-item:hover .nav-item-text {
   color: #ff6600;
 }
 
-.active .nav-item-text, .part-active .nav-item-text {
+.active .nav-item-text,
+.part-active .nav-item-text {
   color: #ff6600;
 }
-
 
 .nav-item-logout {
   position: absolute;
@@ -208,10 +242,10 @@ img {
   width: 20px;
 }
 
-.active .profile-image, .part-active .profile-image {
+.active .profile-image,
+.part-active .profile-image {
   background-image: url(./../assets/profile-hover@2x.png);
 }
-
 
 .setting-image {
   display: inline-block;
@@ -247,4 +281,12 @@ img {
   background-image: url(./../assets/setting-hover@2x.png);
 }
 
+.modal-body {
+  height: 100px;
+  line-height: 100px;
+}
+
+.modal-footer {
+  border-top: none;
+}
 </style>
