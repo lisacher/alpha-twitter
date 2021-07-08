@@ -1,23 +1,20 @@
 <template>
-<div class="container">
-  <div class="row">
-    <div class="as" id="UserSetting">
-      <SideNavBar />
-    <div class="UserSettingPanel border-start">
-      <div class="title border-bottom">
-          <TopNavBar 
+<div class="container main-container">
+    <div class="row" id="UserSetting">
+      <SideNavBar class="col-3" />
+      <div class="col-9 p-0 border-start main-component">
+       <TopNavBar 
           msg="帳戶設定"
           :show="false"
-          class="" 
+          class="border-bottom"
+        />
+        <div class="regist-container">
+          <RegistEditForm :isSignUp="false"
           />
+        </div>
       </div>
-      <RegistEditForm :isSignUp="false"
-      />
     </div>
-  </div>
-</div>
-</div>
-  
+  </div>  
 </template>
 
 <script>
@@ -36,10 +33,7 @@ export default {
 </script>
 
 <style scoped>
-.as {
-  display: flex;
-  flex-direction: row;
-}
+
 .main-container {
   height: 100%;
 }
@@ -48,15 +42,7 @@ export default {
   height: 100%;
 }
 
-.title {
-  height: 55px;
-  padding: 10px 15px;
-  display: flex;
-  align-items: center;
-}
-.title h1 {
-  font-weight: 700;
-  font-size: 19px;
-  margin: 0;
+.main-component {
+  height: 100%;
 }
 </style>

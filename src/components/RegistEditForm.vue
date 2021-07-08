@@ -136,6 +136,9 @@ form {
   font-weight: 700;
   display: block;
   width: 100%;
+  background-color: #F5F8FA;
+  width: 642px;
+  height: 19px;
 }
 .row input {
   padding-left: 11px;
@@ -145,6 +148,9 @@ form {
   width: 100%;
   border: none;
   border-bottom: 2px solid #657786;
+}
+input:focus,textarea:focus {
+    outline: none
 }
 .note {
   font-size: 15px;
