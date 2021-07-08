@@ -4,7 +4,7 @@
         <img src="../assets/Logo.png" alt="" />
       </div>
       <div class="title">
-        <h1>登入 Alphitter</h1>
+        <h1>後台登入</h1>
       </div>
 
       <div class="row">
@@ -12,8 +12,8 @@
         <input
           id="account"
           name="account"
-          type="text"
           v-model="account"
+          type="text"
           required
         />
       </div>
@@ -30,36 +30,35 @@
       </div>
 
       <div class="row mt-4">
-        <button class="btn login" type="submit">
+        <button class="btn signin" type="submit">
           登入
         </button>
       </div>
       <div class="row link-btns-container">
-        <div class="link-btns">
-          <router-link class="routerLink" to="/register"
-            >註冊 Alphitter</router-link
-          >
-          <span> &#xb7; </span>
-          <router-link class="routerLink" to="/admin"
-            >後台登入</router-link
-          >
-        </div>
+          <div class="link-btns login">
+        <p>
+          <router-link class="routerLink" 
+          to="/login">前台登入</router-link>
+        </p>
       </div>
+      </div>
+      
     </form>
 </template>
 
 <script>
 import { Toast } from "../utils/helpers"
 
-const dummyUser = {
+const dummyAdmin = {
     id: 3,
     account: 'root',
-    password: '1234'
+    password: '1234',
+    isAdmin: true
 
 }
 
 export default {
-  name: "UserLogin",
+  name: "AdminLogin",
   data() {
     return {
       account: "",
@@ -72,7 +71,7 @@ export default {
   },
   methods: {
     fetchUser() {
-        this.user = dummyUser
+        this.user = dummyAdmin
     },
     handleSubmit() {
         if (!this.user.account || !this.user.password) {
@@ -83,10 +82,10 @@ export default {
           return
         }
 
-        if (this.password !== this.user.password) {
+        if (this.user.password !== this.password) {
           Toast.fire({
             icon: "warning",
-            title: "您尚未加入會員！",
+            title: "您非管理者身分!",
           })
           return
         }
@@ -143,7 +142,7 @@ input:focus,textarea:focus {
   border-radius: 50px;
   height: 50px;
 }
-button.login {
+button.signin {
   background-color: #ff6600;
   color: #fff;
   font-size: 18px;
@@ -152,8 +151,6 @@ button.login {
 .link-btns-container {
   position: relative;
   height: 26px;
-  text-align: right;
-  padding-top: 20px;
 }
 .link-btns {
   position: absolute;
@@ -167,6 +164,13 @@ button.login {
 .link-btns-container span {
   color: #0099ff;
   font-weight: 700;
-}
 
+}
+form .login {
+  position: relative;
+  height: 26px;
+  font-weight: 700;
+  text-align: right;
+  padding-top: 20px;
+}
 </style>

@@ -31,7 +31,8 @@
               data-bs-toggle="modal"
               data-bs-target="#tweetReplyModal"
             ></div>
-            <TweetReplyModal :initial-data="data" />
+            <TweetReplyModal :initial-data="data" 
+            @after-create-tweet="afterCreateTweet"/>
             <div class="comments-count">{{ data.repliesCount }}</div>
           </div>
 
@@ -63,14 +64,11 @@ export default {
       type: Object,
       required: true,
     },
-    repliedTo: {
-      type: String,
-      default: "",
-    },
   },
   data() {
     return {
       data: this.initialData,
+      tweet: []
     };
   },
   methods: {
@@ -81,7 +79,7 @@ export default {
         this.data.likesCount += 1;
       }
       this.data.isLiked = !this.data.isLiked;
-    },
+    }
   },
 };
 </script>

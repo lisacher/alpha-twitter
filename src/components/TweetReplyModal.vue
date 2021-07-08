@@ -106,6 +106,10 @@ export default {
       type: Object,
       required: true
     },
+    repliedTo: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -118,10 +122,18 @@ export default {
     createReply() {
       this.replyContentCheck(this.replyContent)
       if(!this.replyContent) {
+        Toast.fire({
+          icon: 'error',
+          title: '請填寫推文內容！'
+        })
         return
       }
+      this.$emit('after-create-tweet', {
+        replyContent: this.replyContent
+      })
       this.replyContent = ''
-    },
+    }
+  },
     replyContentCheck(replyContent) {
       const checkTarget = replyContent.trim();
       if (!checkTarget) {
@@ -140,7 +152,6 @@ export default {
       }
       return true;
     },
-  }
 }
 </script>
 
@@ -260,5 +271,8 @@ export default {
   border-radius: 100px;
   font-weight: 500;
   font-size: 18px;
+}
+.input:focus,textarea:focus {
+    outline: none
 }
 </style>
