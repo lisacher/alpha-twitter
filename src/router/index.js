@@ -68,6 +68,11 @@ const routes = [
     component: () => import('../views/Tweet.vue')
   },
   {
+    path: '/admin/tweets',
+    name: 'admin-tweets',
+    component: () => import('./../views/AdminTweetsList.vue')
+  },
+  {
     path: '*',
     name: 'not-found',
     component: () => import('./../views/NotFound.vue')

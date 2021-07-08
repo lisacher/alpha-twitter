@@ -8,7 +8,11 @@
           <img src="./../assets/Logo.png" alt="" />
         </router-link>
       </div>
-      <div class="nav-list">
+      <!-- if is user -->
+      <div 
+        class="nav-list"
+        v-if="!isAdmin"
+      >
         <ul class="nav flex-column me-3 pe-4">
           <li class="nav-item mb-4">
             <router-link to="/tweets" class="nav-link d-flex">
@@ -46,6 +50,35 @@
           </li>
         </ul>
       </div>
+      <!-- if is Admin -->
+      <div 
+        class="nav-list"
+        v-else
+      >
+        <ul class="nav flex-column me-3 pe-4">
+          <li class="nav-item mb-4">
+            <router-link to="/admin/tweets" class="nav-link d-flex">
+              <div class="home-image"></div>
+              <div class="nav-item-text">推文清單</div>
+            </router-link>
+          </li>
+          <li class="nav-item mb-4">
+            <router-link 
+              to="/admin/users"
+              class="nav-link d-flex"
+            >
+              <div class="profile-image"></div>
+              <div class="nav-item-text">使用者列表</div>
+            </router-link>
+          </li>
+          <li class="nav-item mb-3 nav-item-logout">
+            <router-link to="/admin/logout" class="nav-link d-flex">
+              <div class="logout-image"></div>
+              <div class="nav-item-text">登出</div>
+            </router-link>
+          </li>
+        </ul>
+      </div>
     </nav>
   </div>
 </template>
@@ -62,7 +95,12 @@ const currentUser = {
 
 export default {
   name: 'SideNavBar',
-
+  props: {
+    isAdmin: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       currentUser: {
