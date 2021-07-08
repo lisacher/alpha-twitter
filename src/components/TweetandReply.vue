@@ -81,6 +81,9 @@ export default {
 .tweetReply:hover {
   background-color: #f7f7f7;
 }
+.name {
+    font-weight: 700;
+}
 .tweet-link {
   text-decoration: none;
   color: #000;

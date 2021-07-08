@@ -1,6 +1,6 @@
 <template>
   <router-link to="/tweet" class="tweet-link">
-    <div class="d-flex border">
+    <div class="d-flex border tweet-card">
       <div class="img-container">
         <router-link
           :to="{ name: 'user-tweets', params: { id: data.User.id } }"
@@ -83,6 +83,9 @@ export default {
 .tweet-link {
   text-decoration: none;
   color: #000;
+}
+.tweet-card:hover {
+  background-color: #f7f7f7;
 }
 
 .img-container img {
