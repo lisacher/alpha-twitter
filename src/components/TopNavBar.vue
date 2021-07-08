@@ -1,5 +1,5 @@
 <template>
-  <div class="nav-top d-flex align-items-center">
+  <div class="nav-top d-flex align-items-center border-bottom">
     <div class="back">
       <button 
         type="button" 
