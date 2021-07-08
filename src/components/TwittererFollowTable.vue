@@ -1,36 +1,31 @@
 <template>
   <div class="container">
-    <div
-      class="follower-container"
-    >
+    <div class="follower-container">
       <div class="avatar">
-        <router-link :to="{name: 'user-tweets', params:{ id: follower.id}}">
-        <img :src="follower.avatar | emptyImage" alt="" />
+        <router-link :to="{ name: 'user-tweets', params: { id: follower.id } }">
+          <img :src="follower.avatar | emptyImage" alt="" />
         </router-link>
       </div>
       <div class="follower-info">
         <div class="isfollowed-info">
-          <router-link :to="{name: 'user-tweets', params:{ id: follower.id}}">
-          <div class="follower-title">
+          <router-link
+            :to="{ name: 'user-tweets', params: { id: follower.id } }"
+          >
+            <div class="follower-title">
               <div class="name text-dark">{{ follower.name }}</div>
-            <div class="account">@{{ follower.account }}</div>
-          </div>
+              <div class="account">@{{ follower.account }}</div>
+            </div>
           </router-link>
-        
 
           <div class="toggleFollow">
             <button
               class="btn isFollowing"
               v-if="follower.isFollowed"
-              @click.stop.prevent="unfollowUser(user)"
+              @click.stop.prevent="unfollowUser()"
             >
               正在跟隨
             </button>
-            <button
-              class="btn"
-              v-else
-              @click.stop.prevent="followUser(user)"
-            >
+            <button class="btn" v-else @click.stop.prevent="followUser()">
               跟隨
             </button>
           </div>
@@ -42,47 +37,42 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins"
+import { emptyImageFilter } from "../utils/mixins";
 import { Toast } from "../utils/helpers";
 
-
 export default {
-    name: "TwittererFollowTable",
-    mixins: [emptyImageFilter],
-    props: {
-        initialData: {
-            type: Object,
-            required: true,
-        },
+  name: "TwittererFollowTable",
+  mixins: [emptyImageFilter],
+  props: {
+    initialData: {
+      type: Object,
+      required: true,
     },
-    data() {
-        return {
-            follower: this.initialData,
-        }
-    },
-    created() {
+  },
+  data() {
+    return {
+      follower: this.initialData,
+    };
+  },
+  created() {},
+  methods: {
+    followUser() {
+      this.follower.isFollowed = true;
 
+      Toast.fire({
+        icon: "success",
+        title: "追蹤成功！",
+      });
     },
-    methods: {
-      followUser() {
-        this.follower.isFollowed = true
-
-        Toast.fire({
-            icon: "success",
-            title: "追蹤成功！",
-        })
-      },
-      unfollowUser() {
-        this.follower.isFollowed = false
-        Toast.fire({
-            icon: "success",
-            title: "已取消追蹤",
-        })
-      }
-        
-      
-    }
-}
+    unfollowUser() {
+      this.follower.isFollowed = false;
+      Toast.fire({
+        icon: "success",
+        title: "已取消追蹤",
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
