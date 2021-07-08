@@ -51,7 +51,39 @@ const dummyTweets = [
     repliesCount: 13,
     likesCount: 4,
     isLiked: true,
-  },
+    Replies: [
+            {
+                id: 5,
+                content: "user1的回覆",
+                isLiked: 1,
+                User: {
+                    avatar: null,
+                    name: "root",
+                    account: "@root"
+                }
+            },
+            {
+                id: 6,
+                content: "user2的回覆",
+                isLiked: 0,
+                User: {
+                    avatar: null,
+                    name: "user1",
+                    account: "@user1"
+                }
+            },
+            {
+                id: 7,
+                content: "user3的回覆",
+                isLiked: 1,
+                User: {
+                    avatar: null,
+                    name: "user2",
+                    account: "@user2"
+                }
+            }
+        ]
+    },
   {
     id: 16,
     User: {
@@ -154,7 +186,7 @@ export default {
         account: "",
         image: "",
       },
-      tweet: []
+      tweets: []
     }
   },
   created() {

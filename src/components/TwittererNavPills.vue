@@ -38,7 +38,7 @@ export default {
         {
           id:uuidv4(),
           title: '推文與回覆',
-          path: '/',
+          path: { name: 'user-reply', params: { id: this.id}}
 
         },
         {
