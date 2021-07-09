@@ -9,7 +9,13 @@
             :current-user="currentUser" 
             @after-create-tweet="afterCreateTweet"
           />
-          <TweetsCard v-for="tweet in tweets" :key="tweet.id" :initial-data="tweet" />
+          <TweetsCard 
+            v-for="tweet in tweets" 
+            :key="tweet.id" 
+            :initial-data="tweet" 
+            @after-click-modal="afterClickModal"
+          />
+          <TweetReplyModal :target-tweet="modalContent" />
         </div>
       </div>
       <div class="col-4">
@@ -27,6 +33,7 @@ import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
 import CreateTweet from "../components/CreateTweet.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
+import TweetReplyModal from './../components/TweetReplyModal.vue'
 
 const currentUser = {
   id: 1,
@@ -144,6 +151,7 @@ export default {
     TopNavBar,
     CreateTweet,
     TweetsCard,
+    TweetReplyModal
   },
   data() {
     return {
@@ -154,6 +162,7 @@ export default {
         image: "",
       },
       tweets: [],
+      modalContent: {},
     };
   },
 
@@ -187,7 +196,13 @@ export default {
         likesCount: 0,
         repliesCount: 0
       })
-    }
+    },
+    afterClickModal(data) {
+      this.modalContent = {
+        ...this.modalContent,
+        ...data,
+      };
+    },
   },
 };
 </script>

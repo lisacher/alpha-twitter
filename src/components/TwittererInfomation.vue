@@ -39,11 +39,17 @@
         <p class="account">@{{ user.account }}</p>
         <p class="bio my-2">{{ user.bio }}</p>
         <div class="follow-container">
-          <router-link :to="{name: 'user-followings', params:{ id: user.id}}">
-          <p class="me-3">{{ user.followingsCounts }}<span>個跟隨中</span></p>
+          <router-link 
+            :to="{name: 'user-followings', params:{ id: user.id}}"
+            class="follow-link"
+          >
+            <p class="me-3">{{ user.followingsCounts }} 個<span>跟隨中</span></p>
           </router-link>
-          <router-link :to="{name: 'user-followers', params:{ id: user.id}}">
-            <p>{{ user.followersCounts }}<span>位跟隨者</span></p>
+          <router-link 
+            :to="{name: 'user-followers', params:{ id: user.id}}"
+            
+          >
+            <p>{{ user.followersCounts }} 位<span>跟隨者</span></p>
           </router-link>
           
         </div>
@@ -223,5 +229,9 @@ export default {
 
 .follow-container span {
   color: #657786;
+}
+
+.follow-container a {
+  color: #000;
 }
 </style>

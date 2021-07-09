@@ -102,20 +102,54 @@ export default {
   name: "TweetReplyModal",
   mixins: [emptyImageFilter, fromNowFilter],
   props: {
-    initialData: {
+    targetTweet: {
       type: Object,
-      required: true
-    },
-    repliedTo: {
-      type: String,
-      default: "",
-    },
+      default:() => {
+        return {
+          id: -1,
+          User: {
+            id: -1,
+            account: '',
+            name: '',
+            image: ''
+          },
+          text: '',
+          likesCount: 0,
+          repliesCount: 0,
+          createdAt: '',
+          isLiked: false,
+          Replies: {}
+        }
+      }
+    }
   },
   data() {
     return {
       replyContent: '',
       comment: [],
-      tweet: this.initialData
+      tweet: {
+        id: -1,
+          User: {
+            id: -1,
+            account: '',
+            name: '',
+            image: ''
+          },
+          text: '',
+          likesCount: 0,
+          repliesCount: 0,
+          createdAt: '',
+          isLiked: false,
+          Replies: {}
+      }
+    }
+  },
+  created() {
+    this.fetchModalContent()
+  },
+  watch: {
+    targetTweet() {
+      this.fetchModalContent()
     }
   },
   methods: {
@@ -132,8 +166,7 @@ export default {
         replyContent: this.replyContent
       })
       this.replyContent = ''
-    }
-  },
+    },
     replyContentCheck(replyContent) {
       const checkTarget = replyContent.trim();
       if (!checkTarget) {
@@ -152,6 +185,13 @@ export default {
       }
       return true;
     },
+    fetchModalContent() {
+      this.tweet = {
+        ...this.tweet,
+        ...this.targetTweet
+      }
+    },
+  }
 }
 </script>
 

@@ -63,6 +63,7 @@ const dummyReplies = [
       content: "root的回覆，片片蝶衣輕，點點猩紅小。道是天公不惜花，百種千般巧。朝見樹頭繁，暮見枝頭少。道是天公果惜花，雨洗風吹了。",
       createdAt: new Date(2021, 6, 5, 10, 10),
       ReplyUser: {
+        id: 3,
         avatar: null,
         name: "root",
         account: "@root"
@@ -87,6 +88,7 @@ const dummyReplies = [
       content: "小貓咪的回覆",
       createdAt: new Date(2021, 6, 5, 10, 10),
       ReplyUser: {
+        id: 4,
         avatar: null,
         name: "cat",
         account: "@cat2344"
@@ -111,6 +113,7 @@ const dummyReplies = [
       content: "Cathy的回覆，問訊湖邊春色，重來又是三年。東風吹我過湖船。楊柳絲絲拂面。",
       createdAt: new Date(2021, 6, 5, 10, 10),
       ReplyUser: {
+        id: 6,
         avatar: null,
         name: "Cathy",
         account: "@cathy"
@@ -135,6 +138,7 @@ const dummyReplies = [
       content: "daisy的回覆，新月曲如眉，未有團圞意。紅豆不堪看，滿眼相思淚。終日劈桃穰，人在心兒裏。兩耳隔牆花，早晚成連理。",
       createdAt: new Date(2021, 6, 5, 10, 10),
       ReplyUser: {
+        id: 8,
         avatar: null,
         name: "daisy",
         account: "@daisy"

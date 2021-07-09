@@ -3,41 +3,45 @@
   <div class="container">
     <div class="userInfo">
       <div class="avatar">
-        <router-link to="#">
-          <img :src='tweet.image | emptyImage' alt="" />
+        <router-link
+          :to="{ name: 'user-tweets', params: { id: tweet.User.id } }"
+        >
+          <img :src="tweet.User.image | emptyImage" alt="" />
         </router-link>
       </div>
       <div class="userTitle">
-        <router-link to="#">
+        <router-link
+          :to="{ name: 'user-tweets', params: { id: tweet.User.id } }"
+        >
           <p class="text-dark">
-            {{ tweet.name }}
+            {{ tweet.User.name }}
           </p>
-        </router-link>
 
-        <p>@{{ tweet.account }}</p>
+          <p>@{{ tweet.User.account }}</p>
+        </router-link>
       </div>
     </div>
 
     <div class="textContent">
-      <p>{{ tweet. text }}</p>
+      <p>{{ tweet.text }}</p>
     </div>
     <div class="updatedAt">
       <p class="tweetUpdateAt">{{ tweet.createdAt | exactDate }}</p>
     </div>
     <div class="feedbackCount">
-      <p>{{ tweet.replies.length }} <span>回覆 </span></p>
+      <p>{{ tweet.repliesCount }} <span>回覆 </span></p>
       <p>{{ tweet.likesCount }} <span>喜歡次數</span></p>
     </div>
     <div class="tweetPanel">
       <div class="comments">
         <img
-            data-bs-toggle="modal"
-            data-bs-target="#tweetReplyModal"
-            src="../assets/comment.png"
-            alt=""
+          data-bs-toggle="modal"
+          data-bs-target="#tweetReplyModal"
+          src="../assets/comment.png"
+          alt=""
+          @click.prevent.stop="clickModalButton(tweet)"
         />
       </div>
-      <TweetReplyModal />
       <div class="likes">
         <img
           src="../assets/isLiked-active.png"
@@ -53,88 +57,42 @@
         />
         <p></p>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins"
-import { exactDateFilter } from "../utils/mixins"
-import TweetReplyModal from "../components/TweetReplyModal.vue"
-
-
-const dummyData = {
-	user: {
-		id: 1,
-    name: "Teddy",
-    account: "teddy0323",
-		image: 'https://tse4.mm.bing.net/th?id=OIP.-C08ivJ6oLNEELI4SkjElgHaHa&pid=Api&P=0&w=300&h=300',
-        text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        createdAt: '2021-07-01T09:58:39.000Z',
-        likesCount: 1,
-        isLiked: false,
-        replies: [
-            {
-                id: 1,
-                User: {
-                    id: 2,
-                    name: 'Lena',
-                    account: 'lena234',
-                    image: 'https://twgreatdaily.com/images/elastic/yuE/yuEse3AB3uTiws8KSeho.jpg',
-                },
-                createdAt: '2021-07-01T10:58:39.000Z',
-                text: 'wow~',
-                isLiked: true
-            },
-            {
-                id: 1,
-                User: {
-                    id: 3,
-                    name: 'Jason',
-                    account: 'jason888',
-                    image: 'https://tse1.mm.bing.net/th?id=OIP.9UKmWkY6tpNAJs-ifJOKmAHaH0&pid=Api&P=0&w=300&h=300',
-                },
-                createdAt: '2021-07-02T12:58:39.000Z',
-                text: 'haha~!',
-                isLiked: false
-            },
-	]
-    }
-}
+import { emptyImageFilter } from "../utils/mixins";
+import { exactDateFilter } from "../utils/mixins";
 
 export default {
-    name: 'TweetContent',
-    mixins: [emptyImageFilter,exactDateFilter],
-    components: {
-        TweetReplyModal,
+  name: "TweetContent",
+  mixins: [emptyImageFilter, exactDateFilter],
+  components: {},
+  props: {
+    tweet: {
+      type: Object,
+      required: true,
     },
-    data() {
-        return {
-          tweet: []
-        }
+  },
+  methods: {
+    like(tweet) {
+      tweet.isLiked = true;
+      tweet.likesCount += 1;
     },
-    created() {
-        this.getUserTweet()
+    disLike(tweet) {
+      tweet.isLiked = false;
+      tweet.likesCount -= 1;
     },
-    methods: {
-        getUserTweet() {
-            this.tweet = dummyData.user
-        },
-        like(tweet) {
-            tweet.isLiked = true
-            tweet.likesCount += 1
-        },
-        disLike(tweet) {
-            tweet.isLiked = false
-            tweet.likesCount -= 1
-        }
-    }
-}
+    clickModalButton(data) {
+      this.$emit("after-click-modal", data);
+    },
+  },
+};
 </script>
 
 <style scoped>
-*{
+* {
   text-decoration: none;
 }
 .container {

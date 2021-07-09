@@ -1,7 +1,10 @@
 <template>
   <div class="tweetReply">
       <!-- Other User's Tweet -->
-    <router-link to="/tweet" class="tweet-link">
+    <router-link 
+      :to="{ name:'tweet', params: { id: data.id} }"
+      class="tweet-link"
+    >
     <div class="d-flex">
       <div class="img-container">
         <router-link
@@ -31,7 +34,7 @@
     <div class="d-flex border-bottom">
       <div class="img-container">
         <router-link
-          :to="{ name: 'user-tweets', params: { id: data.User.id } }"
+          :to="{ name: 'user-tweets', params: { id: Replies.ReplyUser.id } }"
         >
           <img src="./../assets/Logo.png" alt="" />
         </router-link>

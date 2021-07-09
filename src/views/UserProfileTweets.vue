@@ -20,7 +20,9 @@
             v-for="tweet in tweets"
             :key="tweet.id"
             :initial-data="tweet"
+            @after-click-modal="afterClickModal"
           />
+          <TweetReplyModal :target-tweet="modalContent" />
         </div>
       </div>
       <div class="col-4">
@@ -37,6 +39,7 @@ import TopNavBar from "./../components/TopNavBar.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
 import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
+import TweetReplyModal from "../components/TweetReplyModal.vue";
 
 const user = 
   {
@@ -162,7 +165,8 @@ export default {
     TopNavBar,
     TweetsCard,
     TweetererImformation,
-    TwittererNavPills
+    TwittererNavPills,
+    TweetReplyModal
   },
   data() {
     return {
@@ -177,10 +181,12 @@ export default {
         followersCounts: 0,
       },
       tweets: [],
+      modalContent : {}
     };
   },
 
   created() {
+    // const { id } = this.$route.params
     this.fetchUser();
     this.fetchTweets();
   },
@@ -198,7 +204,13 @@ export default {
       for (let [name, value] of formData.entries()) {
         console.log(name + ": " + value);
       }
-    }
+    },
+    afterClickModal(data) {
+      this.modalContent = {
+        ...this.modalContent,
+        ...data,
+      };
+    },
   },
 };
 </script>
