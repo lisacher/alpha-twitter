@@ -30,7 +30,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 17,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -41,7 +41,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 10,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -52,7 +52,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 8,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -63,7 +63,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 26,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -73,7 +73,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 128,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -84,7 +84,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 73,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -95,7 +95,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 160,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -106,7 +106,7 @@ const dummyUser = [
 		account: 'teddy0323',
 		avatar: '',
 		cover: '',
-		tweetsCount: 12,
+		tweetsCount: 88,
 		beLikedCount: 23,
 		followersCount: 33,
 		followingsCount: 44
@@ -185,10 +185,14 @@ export default {
   },
   methods: {
     fetchUser() {
-      this.users = {
+      this.users = [
         ...this.users,
         ...dummyUser
-      }
+      ]
+
+			this.users.sort((a, b) => {
+				return b.tweetsCount - a.tweetsCount
+			})
     }
   }
 }
