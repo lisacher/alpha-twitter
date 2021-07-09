@@ -34,13 +34,20 @@ export const daytimeFilter = {
     fromNow(time) {
       moment.locale('zh-tw')
       const now = new Date()
+      const timeDate = new Date(time)
+      const year = 1000 * 60 * 60 * 24 * 365
+
 
       if(!time) {
         return '-'
       }
 
-      if(now - time < 8640000) {
+      if(now.getTime() - timeDate.getTime() < 86400000) {
         return moment(time).fromNow()
+      }
+
+      if(now.getTime() - timeDate.getTime() > year ) {
+        return '1 年以前'
       }
 
       return moment(time).format('M月D日')
