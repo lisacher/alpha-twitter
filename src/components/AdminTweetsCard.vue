@@ -20,7 +20,7 @@
         </div>
         <div class="body">
           <div class="text">
-            {{ tweet.text }}
+            {{ tweet.text | textEllipsis }}
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@ const dummyTweets = [
       account: "debbie8820",
       image: "./../assets/Logo.png",
     },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
+    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
     createdAt: new Date(2021, 5, 11, 10, 10),
   },
   {
@@ -112,7 +112,7 @@ const dummyTweets = [
       account: "debbie8820",
       image: "./../assets/Logo.png",
     },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
+    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
     createdAt: new Date(2021, 5, 11, 10, 10),
   },
   {
@@ -123,7 +123,7 @@ const dummyTweets = [
       account: "debbie8820",
       image: "./../assets/Logo.png",
     },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
+    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
     createdAt: new Date(2021, 5, 11, 10, 10),
   },
   {
@@ -229,6 +229,15 @@ export default {
       this.tweets = this.tweets.filter((tweet) => tweet.id !== targetId);
     },
   },
+  filters: {
+    textEllipsis(text) {
+      const strictLength = 50
+      if(text.length <= strictLength) {
+        return text
+      }
+      return text.substring(0, strictLength ) + '...'
+    }
+  }
 };
 </script>
 
