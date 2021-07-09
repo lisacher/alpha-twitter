@@ -10,6 +10,7 @@
                   :msg="User.name"
                   :show="true"
                   :tweetsCount="User.tweetsCount"
+                  class="border-bottom-0"
                 />
                 <TwittererFollowNavPills 
                 :id="User.id"/>

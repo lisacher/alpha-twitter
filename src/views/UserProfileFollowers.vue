@@ -5,11 +5,12 @@
             class="col-3 border-end"/>
 
             <!-- ReplyDetail -->
-            <div class="col-5 p-0 main-container border-0">
+            <div class="col-5 p-0 main-container">
                 <TopNavBar 
                   :msg="User.name"
                   :show="true"
                   :tweetsCount="User.tweetsCount"
+                  class="border-bottom-0"
                 />
                 <TwittererFollowNavPills 
                 :id="User.id"/>
