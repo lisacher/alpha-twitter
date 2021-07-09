@@ -52,7 +52,7 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date('July 20, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-09T09:42:23.000Z",
     repliesCount: 13,
     likesCount: 4,
     isLiked: true,
@@ -66,7 +66,7 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date('July 21, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-10T09:42:23.000Z",
     repliesCount: 13,
     likesCount: 66,
     isLiked: true,
@@ -80,7 +80,7 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date('July 20, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-08T09:42:23.000Z",
     repliesCount: 13,
     likesCount: 17,
     isLiked: true,
@@ -94,7 +94,7 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date('July 20, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-10T09:42:23.000Z",
     repliesCount: 0,
     likesCount: 0,
     isLiked: false,
@@ -108,7 +108,7 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date('July 25, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-02T09:42:23.000Z",
     repliesCount: 13,
     likesCount: 4,
     isLiked: false,
@@ -122,25 +122,25 @@ const dummyTweets = [
       image: "./../assets/Logo.png",
     },
     text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: new Date('July 20, 69 00:20:18 GMT+00:00'),
+    createdAt: "2021-07-03T09:42:23.000Z",
     repliesCount: 5,
     likesCount: 7,
     isLiked: true,
   },
   {
-    id: 14,
+    id: 70,
     User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
+      id: 3,
+      name: "Carlos",
+      account: "carlos811009",
       image: "./../assets/Logo.png",
     },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date('July 22, 69 00:20:18 GMT+00:00'),
-    repliesCount: 6,
-    likesCount: 2,
-    isLiked: false,
-  },
+    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
+    createdAt: "2021-06-03T09:42:23.000Z",
+    repliesCount: 5,
+    likesCount: 7,
+    isLiked: true,
+  }
 ];
 
 export default {
@@ -184,7 +184,9 @@ export default {
       ]
 
       this.tweets.sort((a, b) => {
-        return b.createdAt.getTime() - a.createdAt.getTime()
+        const aDate = new Date(a.createdAt)
+        const bDate = new Date(b.createdAt)
+        return bDate.getTime() - aDate.getTime()
       })
     },
     afterCreateTweet({ text }) {

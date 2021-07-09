@@ -7,19 +7,26 @@
           v-model="text"
           name="text"
           id="text"
-          cols="50"
-          rows="1"
+          rows="3"
           :placeholder="currentUser.name | adjustAddTweetPlaceholder"
+          class="flex-grow-1 pe-2"
           maxlength="140"
           required
         >
         </textarea>
       </div>
-      <div class="submit d-flex justify-content-end mt-3 mb-2 pe-3">
+      
+      <div class="submit d-flex mt-3 mb-2 pe-3">
+        <div
+          v-if="text.length > 140"
+          class="warning-content"
+        > 
+          字數請勿超過140字！
+        </div>
         <button 
           type="submit" 
-          class="btn btn-primary"
-          :disabled="!text"
+          class="btn btn-primary ms-auto"
+          :disabled="!text || text.length > 140"
         >推文</button>
       </div>
     </form>
@@ -45,13 +52,22 @@ export default {
   },
   methods: {
     handleSubmit() {
-      if(!this.text) {
+      if(!this.text.trim()) {
         Toast.fire({
           icon: 'error',
           title: '請填寫推文內容！'
         })
+        this.text = ''
         return
       }
+      if(this.text.length > 140) {
+        Toast.fire({
+          icon: 'warning',
+          title: '推文內容請勿超過140字'
+        })
+        return
+      }
+
       this.$emit('after-create-tweet', {
         text: this.text
       })
@@ -90,6 +106,13 @@ img {
 
 .submit {
   border-top: 0;
+}
+
+.warning-content {
+  line-height: 36px;
+  color: red;
+  font-weight: 700;
+  padding-left: 50px;
 }
 
 .submit button {

@@ -32,21 +32,27 @@
               <img src="./../assets/Logo.png" alt="" />
               <textarea
                 v-model="text"
-                name=""
-                id=""
-                cols="50"
-                rows="5"
+                name="text"
+                id="textModal"
+                rows="6"
                 :placeholder="currentUser.name | adjustAddTweetPlaceholder"
+                class="flex-grow-1 pe-2"
                 maxlength="140"
+                required
               >
               </textarea>
             </div>
-            <div class="modal-footer">
-              <button 
-                type="submit" 
-                class="btn btn-primary"
-                :disabled="!text"
-              >推文</button>
+            <div class="submit d-flex mt-3 mb-2 pe-3">
+              <div v-if="text.length > 140" class="warning-content">
+                字數請勿超過140字！
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary ms-auto"
+                :disabled="!text || text.length > 140"
+              >
+                推文
+              </button>
             </div>
           </form>
         </div>
@@ -56,45 +62,52 @@
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid'
-
+import { Toast } from './../utils/helpers'
 
 export default {
-  name: 'AddTweetCard',
+  name: "AddTweetCard",
   props: {
-    currentUser : {
+    currentUser: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      text: '',
-    }
+      text: "",
+    };
   },
   methods: {
-     handleSubmit() {
-      if(!this.text) {
+    handleSubmit() {
+      if(!this.text.trim()) {
+        Toast.fire({
+          icon: 'error',
+          title: '請填寫推文內容！'
+        })
+        this.text = ''
+        return
+      }
+      if(this.text.length > 140) {
+        Toast.fire({
+          icon: 'warning',
+          title: '推文內容請勿超過140字'
+        })
         return
       }
 
-      // TODO: 串接API儲存留言
-
-      this.$emit('after-create-tweet',{
-        id: uuidv4(),
-        text: this.text,
-
+      this.$emit('after-create-tweet', {
+        text: this.text
       })
       this.text = ''
+
     }
   },
   filters: {
     adjustAddTweetPlaceholder(userName) {
-      return `${userName}，有什麼新鮮事呢？`
-    }
-  }
-
-}
+      return `${userName}，有什麼新鮮事呢？`;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -135,12 +148,19 @@ form img {
   outline: 0;
 }
 
-.modal-footer {
+.submit {
   border-top: 0;
 }
 
-.modal-footer button {
-  background: #FF6600;
+.warning-content {
+  line-height: 36px;
+  color: red;
+  font-weight: 700;
+  padding-left: 50px;
+}
+
+.submit button {
+  background: #ff6600;
   border: 0 solid #000;
   border-radius: 100px;
 }
