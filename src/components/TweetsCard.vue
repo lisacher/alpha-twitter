@@ -152,6 +152,24 @@ export default {
 .comment,
 .liked {
   width: 50px;
+  position: relative;
+  z-index: 0;
+}
+
+.comment::after {
+  content: '';
+  height: 25px; 
+  width:25px;
+  background-color:#FF6600;
+  border-radius: 25px;
+  left: -5px;
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.comment:hover::after {
+  opacity: 0.2;
 }
 
 .liked-img {
@@ -162,8 +180,21 @@ export default {
   background-repeat: no-repeat;
 }
 
-.liked:hover .liked-img {
-  background-image: url(./../assets/isLiked-active.png);
+
+.liked::after {
+  content: '';
+  height: 25px; 
+  width:25px;
+  background-color: #e0245e;
+  border-radius: 25px;
+  left: -5px;
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.liked:hover::after {
+  opacity: 0.2;
 }
 
 .liked:hover .likes-count {
