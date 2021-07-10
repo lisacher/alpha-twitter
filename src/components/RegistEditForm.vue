@@ -67,6 +67,7 @@
         type="password"
         v-model="form.passwordCheck"
         required
+        maxLength="12"
       />
     </div>
 
@@ -172,6 +173,10 @@ export default {
         })
         return result
       }
+      Toast.fire({
+          icon: "success",
+          title: "已成功儲存！",
+      })
       return (result = true)
     },
   }
