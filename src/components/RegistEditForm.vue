@@ -1,5 +1,5 @@
 <template>
-<form >
+<form @submit.prevent.stop="formCheck()">
     <div class="row">
       <label for="account"
         >帳號<span class="note ml-5">*帳號長度不得大於 50 字元</span></label
@@ -8,6 +8,7 @@
         id="account"
         name="account"
         type="text"
+        v-model="form.account"
         required
         maxlength="50"
       />
@@ -21,6 +22,7 @@
         id="name"
         name="name"
         type="text"
+        v-model="form.name"
         maxlength="50"
         required
       />
@@ -34,6 +36,7 @@
         id="email"
         name="email"
         type="email"
+        v-model="form.email"
         maxlength="50"
         required
       />
@@ -47,6 +50,7 @@
         id="password"
         name="password"
         type="password"
+        v-model="form.password"
         required
         maxLength="12"
       />
@@ -61,7 +65,9 @@
         id="passwordCheck"
         name="passwordCheck"
         type="password"
+        v-model="form.passwordCheck"
         required
+        maxLength="12"
       />
     </div>
 
@@ -84,13 +90,14 @@
           type="submit"
         >
         </button>
-        <button class="btn update" >儲存</button>
+        <button class="btn update">儲存</button>
       </div>
     </template>
   </form>
 </template>
 
 <script>
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "RegistEditForm",
@@ -112,8 +119,65 @@ export default {
     }
   },
   methods: {
-      backToLogin() {
+    backToLogin() {
       this.$router.push("/login")
+    },
+    formCheck() {
+      let result = false
+      if (!this.form.account) {
+        Toast.fire({
+          icon: "info",
+          title: "請填寫帳號！",               
+        });
+        return result
+      }
+      if (!this.form.name) {
+        Toast.fire({
+          icon: "info",
+          title: "請填寫名稱！",
+        })
+        return result
+      }
+      if (!this.form.email) {
+        Toast.fire({
+          icon: "info",
+          title: "請填寫 Email！",
+        })
+        return result
+      }
+      if (!this.form.password) {
+        Toast.fire({
+          icon: "info",
+          title: "請填寫密碼！",
+        })
+        return result
+      }
+      if (this.form.password.length > 12 || this.form.password.length < 4) {
+        Toast.fire({
+          icon: "info",
+          title: "密碼長度不得小於 4 或超過 12！",
+        })
+        return result
+      }
+      if (!this.form.passwordCheck) {
+        Toast.fire({
+          icon: "info",
+          title: "請填寫密碼確認！",
+        })
+        return result
+      }
+      if (this.form.password !== this.form.passwordCheck) {
+        Toast.fire({
+          icon: "error",
+          title: "密碼不相符！",
+        })
+        return result
+      }
+      Toast.fire({
+          icon: "success",
+          title: "已成功儲存！",
+      })
+      return (result = true)
     },
   }
 }

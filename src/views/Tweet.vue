@@ -20,7 +20,8 @@
             :replyTweet="tweet"
             @after-click-modal="afterClickModal"
           />
-          <TweetReplyModal :target-tweet="modalContent" />
+          <TweetReplyModal :target-tweet="modalContent"
+          @after-create-reply="afterCreateReply"/>
         </div>
       </div>
 
@@ -39,6 +40,12 @@ import TweetContent from "./../components/TweetContent.vue";
 import TweetsCard from "../components/TweetsCard.vue";
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
+const currentUser = {
+  id: 4,
+  name: "Teddy",
+  account: "teddy0323",
+  image: "./../assets/Logo.png",
+}
 const dummyTweet = {
     id: 11,
     User: {
@@ -56,6 +63,7 @@ const dummyTweet = {
     Replies: [
       {
         id: 16,
+        UserId: 2,
         User: {
           id: 4,
           name: "Debbie",
@@ -70,6 +78,7 @@ const dummyTweet = {
       },
       {
         id: 17,
+        UserId: 3,
         User: {
           id: 4,
           name: "Debbie",
@@ -84,6 +93,7 @@ const dummyTweet = {
       },
       {
         id: 18,
+        UserId: 4,
         User: {
           id: 4,
           name: "Debbie",
@@ -98,6 +108,7 @@ const dummyTweet = {
       },
       {
         id: 12,
+        UserId: 1,
         User: {
           id: 2,
           name: "Yun",
@@ -112,6 +123,7 @@ const dummyTweet = {
       },
       {
         id: 13,
+        UserId: 7,
         User: {
           id: 3,
           name: "Carlos",
@@ -126,6 +138,7 @@ const dummyTweet = {
       },
       {
         id: 14,
+        UserId: 6,
         User: {
           id: 4,
           name: "Debbie",
@@ -154,12 +167,7 @@ export default {
   },
   data() {
     return {
-      currentUser: {
-        id: -1,
-        name: "",
-        account: "",
-        image: "",
-      },
+      currentUser,
       tweet: {},
       replies: [],
       modalContent: {},
@@ -182,6 +190,10 @@ export default {
         isLiked
       }
       this.replies = Replies
+      this.currentUser = {
+        ...this.currentUser,
+        ...currentUser,
+      };
     },
     afterClickModal(data) {
       this.modalContent = {
@@ -189,6 +201,25 @@ export default {
         ...data,
       };
     },
+    afterCreateReply (payload) {
+      const { id, UserId, text, likesCount, repliesCount, isLiked } = payload
+      this.replies.unshift({
+        id,
+        UserId: UserId,
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          account: this.currentUser.account,
+          image: this.currentUser.image
+        },
+        text,
+        createdAt: new Date(),
+        likesCount,
+        repliesCount,
+        isLiked,
+      })
+      this.tweet.repliesCount += 1
+    }
   },
 };
 </script>

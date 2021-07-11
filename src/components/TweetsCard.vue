@@ -37,7 +37,7 @@
         :to="{ name: 'tweet', params: { id: data.id }}" 
         class="tweet-link"
       >
-        <div class="body">
+        <div class="body me-3">
           <div class="text">
             {{ data.text }}
           </div>

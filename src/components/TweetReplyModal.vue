@@ -82,7 +82,7 @@
               type="button"
               class="btn"
               :disabled="!replyContent"
-              @click="createReply()"
+              @click.stop.prevent="createReply()"
             >
              回覆
             </button>
@@ -97,6 +97,7 @@
 import { emptyImageFilter } from "../utils/mixins"
 import { fromNowFilter } from "../utils/mixins"
 import { Toast } from "../utils/helpers";
+import {v4 as uuidv4} from 'uuid'
 
 export default {
   name: "TweetReplyModal",
@@ -121,12 +122,11 @@ export default {
           Replies: {}
         }
       }
-    }
+    },
   },
   data() {
     return {
       replyContent: '',
-      comment: [],
       tweet: {
         id: -1,
           User: {
@@ -146,11 +146,12 @@ export default {
   },
   created() {
     this.fetchModalContent()
+    
   },
   watch: {
     targetTweet() {
       this.fetchModalContent()
-    }
+    },
   },
   methods: {
     createReply() {
@@ -162,10 +163,7 @@ export default {
         })
         return
       }
-      this.$emit('after-create-tweet', {
-        replyContent: this.replyContent
-      })
-      this.replyContent = ''
+      this.clickModalButton()
     },
     replyContentCheck(replyContent) {
       const checkTarget = replyContent.trim();
@@ -191,6 +189,23 @@ export default {
         ...this.targetTweet
       }
     },
+    clickModalButton() {
+      this.$emit('after-create-reply', {
+        id: uuidv4(),
+        UserId: this.UserId,
+        text: this.replyContent,
+        likesCount: 0,
+        repliesCount: 0,
+        isLiked: false,
+      })
+      this.replyContent = ''
+      Toast.fire({
+          icon: 'success',
+          title: '已完成回覆！'
+      })
+      this.tweet.repliesCount += 1
+        return
+    }
   }
 }
 </script>
