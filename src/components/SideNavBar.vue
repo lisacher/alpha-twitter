@@ -112,13 +112,7 @@
 
 <script>
 import AddTweetCard from "./../components/AddTweetCard.vue";
-
-const currentUser = {
-  id: 1,
-  name: "Teddy",
-  account: "teddy0323",
-  image: "",
-};
+import { mapState } from 'vuex'
 
 export default {
   name: "SideNavBar",
@@ -130,29 +124,16 @@ export default {
   },
   data() {
     return {
-      currentUser: {
-        id: -1,
-        name: "",
-        account: "",
-        image: "",
-      },
-      comments: [],
-      
+      comments: [],   
     };
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   components: {
     AddTweetCard,
   },
-  created() {
-    this.fetchUser();
-  },
   methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...currentUser,
-      };
-    },
     afterCreateTweet(payload) {
       console.log("payload", payload);
       const { id, text } = payload;

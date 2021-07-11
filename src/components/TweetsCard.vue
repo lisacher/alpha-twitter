@@ -1,14 +1,17 @@
 <template>
   <div class="d-flex border tweet-card">
-    <div class="img-container">
-      <router-link :to="{ name: 'user-tweets', params: { id: data.User.id } }">
-        <img src="./../assets/Logo.png" alt="" />
+    <div class="img-container m-3">
+      <router-link 
+        to="/"
+      >
+         <!-- :to="{ name: 'user-tweets', params: { id: data.User.id }}" -->
+        <img :src="data.User.avatar | emptyImage" alt="" />
       </router-link>
     </div>
     <div class="text-container mt-2 flex-grow-1">
       <div class="header">
         <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
-        <div class="account d-inline-block">@{{ data.User.account }}</div>
+        <div class="account d-inline-block">{{ data.User.account }}</div>
         <div class="createdAt d-inline-block">
           ・{{ data.createdAt | fromNow }}
         </div>
@@ -39,7 +42,7 @@
       >
         <div class="body me-3">
           <div class="text">
-            {{ data.text }}
+            {{ data.description }}
           </div>
         </div>
       </router-link>
@@ -51,15 +54,15 @@
             data-bs-target="#tweetReplyModal"
             @click.prevent.stop="clickModalButton(data)"
           ></div>
-          <div class="comments-count">{{ data.repliesCount }}</div>
+          <div class="comments-count">{{ data.totalReplies }}</div>
         </div>
 
         <div
           class="liked d-flex align-items-center"
-          :class="{ activeLiked: data.isLiked }"
+          :class="{ activeLiked: data.isLiked ===  1}"
         >
           <div class="btn liked-img" @click.prevent.stop="toggleLiked"></div>
-          <div class="likes-count">{{ data.likesCount }}</div>
+          <div class="likes-count">{{ data.totalLikes }}</div>
         </div>
       </div>
     </div>
@@ -67,12 +70,12 @@
 </template>
 
 <script>
-
+import { emptyImageFilter } from './../utils/mixins'
 import { daytimeFilter } from "./../utils/mixins";
 
 export default {
   name: "TweetsCard",
-  mixins: [daytimeFilter],
+  mixins: [daytimeFilter, emptyImageFilter],
   components: {
 
   },
@@ -93,12 +96,13 @@ export default {
   },
   methods: {
     toggleLiked() {
-      if (this.data.isLiked) {
-        this.data.likesCount -= 1;
+      if (this.data.isLiked === 1 ) {
+        this.data.totalLikes -= 1;
+        this.data.isLiked = 0
       } else {
-        this.data.likesCount += 1;
+        this.data.totalLikes += 1;
+        this.data.isLiked = 1
       }
-      this.data.isLiked = !this.data.isLiked;
     }, 
     clickModalButton(data) {
       this.$emit('after-click-modal', data)
@@ -119,6 +123,7 @@ export default {
 .img-container img {
   height: 50px;
   width: 50px;
+  border-radius: 50%;
 }
 
 .comment-img {

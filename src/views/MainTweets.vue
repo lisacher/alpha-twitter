@@ -1,7 +1,9 @@
 <template>
   <div class="container main-container">
     <div class="row">
-      <SideNavBar class="col-3" />
+      <SideNavBar 
+        class="col-3" 
+      />
       <div class="col-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
         <div class="tweets-container">
@@ -35,113 +37,10 @@ import CreateTweet from "../components/CreateTweet.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
 import TweetReplyModal from './../components/TweetReplyModal.vue'
 
-const currentUser = {
-  id: 1,
-  name: "Teddy",
-  account: "teddy0323",
-  image: "",
-};
+import tweetsAPI from './../apis/tweets'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
-const dummyTweets = [
-  {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Teddy",
-      account: "teddy0323",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: "2021-07-09T09:42:23.000Z",
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: true,
-  },
-  {
-    id: 16,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: "2021-07-07T09:42:23.000Z",
-    repliesCount: 13,
-    likesCount: 66,
-    isLiked: true,
-  },
-  {
-    id: 17,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: "2020-07-08T09:42:23.000Z",
-    repliesCount: 13,
-    likesCount: 17,
-    isLiked: true,
-  },
-  {
-    id: 18,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: "2021-07-01T09:42:23.000Z",
-    repliesCount: 0,
-    likesCount: 0,
-    isLiked: false,
-  },
-  {
-    id: 12,
-    User: {
-      id: 2,
-      name: "Yun",
-      account: "lisacher",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: "2021-07-02T09:42:23.000Z",
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: false,
-  },
-  {
-    id: 13,
-    User: {
-      id: 3,
-      name: "Carlos",
-      account: "carlos811009",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: "2021-07-03T09:42:23.000Z",
-    repliesCount: 5,
-    likesCount: 7,
-    isLiked: true,
-  },
-  {
-    id: 70,
-    User: {
-      id: 3,
-      name: "Carlos",
-      account: "carlos811009",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: "2021-06-03T09:42:23.000Z",
-    repliesCount: 5,
-    likesCount: 7,
-    isLiked: true,
-  }
-];
 
 export default {
   name: "main-tweets",
@@ -155,39 +54,38 @@ export default {
   },
   data() {
     return {
-      currentUser: {
-        id: -1,
-        name: "",
-        account: "",
-        image: "",
-      },
       tweets: [],
       modalContent: {},
     };
   },
 
   created() {
-    this.fetchUser();
     this.fetchTweets();
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   methods: {
-    fetchUser() {
-      this.currentUser = {
-        ...this.currentUser,
-        ...currentUser,
-      };
-    },
-    fetchTweets() {
-      this.tweets = [
-        ...this.tweets,
-        ...dummyTweets
-      ]
+    async fetchTweets() {
+      try {
+        const { data } = await tweetsAPI.getTweets()
 
-      this.tweets.sort((a, b) => {
-        const aDate = new Date(a.createdAt)
-        const bDate = new Date(b.createdAt)
-        return bDate.getTime() - aDate.getTime()
-      })
+
+        this.tweets = data
+
+        this.tweets.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
+        })
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得推文資料，請稍後再試'
+        })
+      }
+
+      
     },
     afterCreateTweet({ text }) {
       this.tweets.unshift({
