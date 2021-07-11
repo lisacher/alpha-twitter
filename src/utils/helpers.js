@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
-const baseURL = ''
+const baseURL = 'https://twitter-api-for-2021.herokuapp.com/api'
 
 export const apiHelper = axios.create({
   baseURL
