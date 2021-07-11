@@ -85,19 +85,19 @@ export default {
           return
         }
 
-        const res = await authorizationAPI.signIn({
+        const { data } = await authorizationAPI.signIn({
           account: this.account,
           password: this.password
         })
-        
-        const data = res.data
 
-        console.log('res', res);
+        console.log('data', data);
 
         if(data.status !== 'success') {
           throw new Error(data.message)
         }
         localStorage.setItem('token', data.token)
+
+        this.$store.commit('setCurrentUser', data.user)
 
         this.$router.push("/tweets")
 

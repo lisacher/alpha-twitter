@@ -10,7 +10,7 @@
             @after-form-submit="afterFormSubmit"
           />
           <TwittererNavPills 
-            :id="User.id"
+            :initial-id="User.id"
           />
           <TweetsCard
             v-for="like in likes"
@@ -36,80 +36,9 @@ import TweetsCard from "./../components/TweetsCard.vue";
 import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
-const user = 
-  {
-    id: 1,
-    name: "Yun",
-    account: "lisacher",
-    avatar: "",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "ABBC.",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  }
-;
-
-const dummyLikes = [
-  {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 5, 10, 10),
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: true,
-  },
-  {
-    id: 16,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 66,
-    isLiked: true,
-  },
-  {
-    id: 17,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 17,
-    isLiked: true,
-  },
-  {
-    id: 13,
-    User: {
-      id: 3,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 5, 21, 10, 10),
-    repliesCount: 5,
-    likesCount: 7,
-    isLiked: true,
-  }
-];
 
 export default {
   name: "UserProfileLikes",
@@ -133,6 +62,7 @@ export default {
         bio: "",
         followingsCounts: 0,
         followersCounts: 0,
+        tweetsCount: 0
       },
       likes: [],
       modalContent: {},
@@ -140,18 +70,50 @@ export default {
   },
 
   created() {
-    this.fetchUser();
-    this.fetchTweets();
+    const { id: userId } = this.$route.params
+    this.fetchUser(userId);
+    this.fetchLikes(userId)
+  },
+  beforeRouteUpdate (to ,from, next) {
+    const { id: userId } = to.params
+    this.fetchUser(userId)
+    this.fetchLikes(userId)
+    next()
   },
   methods: {
-    fetchUser() {
-      this.User = {
-        ...this.User,
-        ...user,
-      };
+    async fetchUser(userId) {
+     try {
+       const { data } = await usersAPI.getUser({ userId })
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
+       this.User = {
+         ...this.User,
+         id,
+         name,
+         account,
+         avatar,
+         cover,
+         bio,
+         totalFollowers,
+         totalFollowings,
+         tweetsCount: Tweets.length
+       }
+     } catch(error) {
+       Toast.fire({
+         icon: 'error',
+         title: '無法取得資料，請稍後再試。'
+       })
+     }
     },
-    fetchTweets() {
-      this.likes = dummyLikes;
+    async fetchLikes(userId) {
+      try {
+        const res = await usersAPI.getUserLikes({ userId })
+        console.log('res', res);
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得喜歡的內容，請稍後再試。'
+        })
+      }
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {

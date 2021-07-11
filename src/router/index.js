@@ -4,12 +4,11 @@ import MainTweets from './../views/MainTweets.vue'
 import UserLogin from './../views/UserLogin'
 import Register from '../views/Register.vue'
 import AdminLogin from './../views/AdminLogin.vue'
+import store from './../store'
 
 Vue.use(VueRouter)
 
 // Test 
-
-const currentUserId = 1
 
 const routes = [
   {
@@ -44,9 +43,9 @@ const routes = [
   },
   {
     // 為了讓Profile的button 在切換NavPills的時候都是part-active.
-    path: `/users/${currentUserId}`,
+    path: `/users/:id`,
     name: 'user',
-    redirect: `/users/${currentUserId}/tweets`
+    redirect: `/users/:id/tweets`
   },
   {
     path: '/users/:id/tweets',
@@ -99,6 +98,11 @@ const router = new VueRouter({
   linkExactActiveClass: 'active',
   linkActiveClass: 'part-active',
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  store.dispatch('fetchCurrentUser')
+  next()
 })
 
 export default router

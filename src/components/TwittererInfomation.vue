@@ -1,7 +1,7 @@
 <template>
   <div class="container border-top px-0">
     <div class="cover-container">
-      <img :src="user.cover" alt="" />
+      <img :src="user.cover | emptyImage" alt="" />
     </div>
     <div class="avatar-container">
       <img :src="user.avatar | emptyImage" alt="" />
@@ -36,20 +36,20 @@
       </div>
       <div class="info-container mb-4">
         <p class="name">{{ user.name }}</p>
-        <p class="account">@{{ user.account }}</p>
+        <p class="account">{{ user.account }}</p>
         <p class="bio my-2">{{ user.bio }}</p>
         <div class="follow-container">
           <router-link 
             :to="{name: 'user-followings', params:{ id: user.id}}"
             class="follow-link"
           >
-            <p class="me-3">{{ user.followingsCounts }} 個<span>跟隨中</span></p>
+            <p class="me-3">{{ user.totalFollowings }} 個<span>跟隨中</span></p>
           </router-link>
           <router-link 
             :to="{name: 'user-followers', params:{ id: user.id}}"
             
           >
-            <p>{{ user.followersCounts }} 位<span>跟隨者</span></p>
+            <p>{{ user.totalFollowers }} 位<span>跟隨者</span></p>
           </router-link>
           
         </div>
@@ -61,17 +61,8 @@
 <script>
 import UserProfileEditForm from './../components/UserProfileEditForm.vue'
 import { emptyImageFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
 
-const dummycurrentUser = {
-  id: 1,
-  name: "Teddy",
-  account: "teddy0323",
-  avatar: "",
-  cover: "",
-  bio: "Have a nice day.",
-  followingsCounts: 13,
-  followersCounts: 25,
-};
 
 export default {
   name: "TwittererInformation",
@@ -87,18 +78,24 @@ export default {
   mixins: [emptyImageFilter],
   data() {
     return {
-      currentUser: {},
       user: {},
     };
   },
   created() {
-    this.fetchCurrentUser();
     this.fetchUser();
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
+  watch: {
+    initialUser(newValue) {
+      this.user = {
+        ...this.user,
+        ...newValue
+      }
+    }
+  },
   methods: {
-    fetchCurrentUser() {
-      this.currentUser = dummycurrentUser;
-    },
     fetchUser() {
       this.user = this.initialUser;
     },
