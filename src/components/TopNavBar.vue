@@ -13,9 +13,9 @@
     <div class="title ps-4">
       <div class="page-name">{{ msg }}</div>
       <div 
-        v-show="tweetsCount"
+        v-show="count >= 0 "
         class="follows-count"
-      > {{ tweetsCount }} 推文 </div>
+      > {{ count }} 推文 </div>
     </div>
   </div>
 </template>
@@ -34,6 +34,24 @@ export default {
       required: false
     }
   },
+  watch: {
+    tweetsCount(newValue) {
+      this.count = newValue
+    }
+  },
+  created() {
+    this.fetchCount()
+  },
+  data() {
+    return { 
+      count: null
+    }
+  },
+  methods: {
+    fetchCount() {
+      this.count = this.tweetsCount
+    }
+  }
 };
 </script>
 

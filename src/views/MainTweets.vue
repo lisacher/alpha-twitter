@@ -5,7 +5,7 @@
         class="col-3" 
       />
       <div class="col-5 p-0 border main-component">
-        <TopNavBar msg="首頁" :show="false" :tweetsCount="0" />
+        <TopNavBar msg="首頁" :show="false" />
         <div class="tweets-container">
           <CreateTweet 
             :current-user="currentUser" 

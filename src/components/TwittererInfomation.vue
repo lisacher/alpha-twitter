@@ -61,17 +61,8 @@
 <script>
 import UserProfileEditForm from './../components/UserProfileEditForm.vue'
 import { emptyImageFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
 
-const dummycurrentUser = {
-  id: 1,
-  name: "Teddy",
-  account: "teddy0323",
-  avatar: "",
-  cover: "",
-  bio: "Have a nice day.",
-  followingsCounts: 13,
-  followersCounts: 25,
-};
 
 export default {
   name: "TwittererInformation",
@@ -87,13 +78,14 @@ export default {
   mixins: [emptyImageFilter],
   data() {
     return {
-      currentUser: {},
       user: {},
     };
   },
   created() {
-    this.fetchCurrentUser();
     this.fetchUser();
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   watch: {
     initialUser(newValue) {
@@ -104,9 +96,6 @@ export default {
     }
   },
   methods: {
-    fetchCurrentUser() {
-      this.currentUser = dummycurrentUser;
-    },
     fetchUser() {
       this.user = this.initialUser;
     },

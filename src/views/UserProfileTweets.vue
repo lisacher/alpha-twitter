@@ -6,7 +6,7 @@
         <TopNavBar 
           :msg="User.name" 
           :show="true" 
-          :tweetsCount="tweets.length" 
+          :tweetsCount="User.tweetsCount" 
         />
         <div class="tweets-container">
           <TweetererImformation 
@@ -67,6 +67,7 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
+        tweetsCount: 0
       },
       tweets: [],
       modalContent : {}
@@ -77,11 +78,15 @@ export default {
     const { id: userId } = this.$route.params
     this.fetchUser(userId);
   },
+  beforeRouteUpdate (to ,from, next) {
+    const { id: userId } = to.params
+    this.fetchUser(userId)
+    next()
+  },
   methods: {
    async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       console.log('data', data);
        const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
        this.User = {
          ...this.User,
@@ -92,10 +97,10 @@ export default {
          cover,
          bio,
          totalFollowers,
-         totalFollowings
+         totalFollowings,
+         tweetsCount: Tweets.length
        }
        this.tweets = Tweets
-       console.log(this.tweets.length);
      } catch(error) {
        Toast.fire({
          icon: 'error',
