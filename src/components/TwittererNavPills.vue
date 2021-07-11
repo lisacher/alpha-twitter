@@ -1,15 +1,33 @@
 <template>
   <ul class="nav nav-tabs">
     <li
-      v-for="tab in tabs"
-      :key="tab.id"
       class="nav-item"
     >
       <router-link
-        :to="tab.path"
+        :to="{ name: 'user-tweets', params: { id: this.id }}"
         class="nav-link"
       >
-        {{tab.title}}
+      推文
+      </router-link>
+    </li>
+    <li
+      class="nav-item"
+    >
+      <router-link
+        :to="{ name: 'user-reply', params: { id: this.id }}"
+        class="nav-link"
+      >
+      推文與回覆
+      </router-link>
+    </li>
+    <li
+      class="nav-item"
+    >
+      <router-link
+        :to="{ name: 'user-likes', params: { id: this.id }}"
+        class="nav-link"
+      >
+      喜歡的內容
       </router-link>
     </li>
 
@@ -17,38 +35,32 @@
 </template>
 
 <script>
-import {v4 as uuidv4} from 'uuid'
-
 export default {
   name: 'TwittererNavPills',
   props: {
-    id: {
+    initialId: {
       type: Number,
       required: true
     }
   },
-  data() {
-    return {
-      tabs: [
-        {
-          id: uuidv4(),
-          title: '推文',
-          path: { name: 'user-tweets', params: { id: this.id}}
-        },
-        {
-          id:uuidv4(),
-          title: '推文與回覆',
-          path: { name: 'user-reply', params: { id: this.id}}
-
-        },
-        {
-          id:uuidv4(),
-          title: '喜歡的內容',
-          path: { name: 'user-likes', params: { id: this.id}}
-        }
-      ]
+  watch: {
+    initialId(newValue) {
+      this.id = newValue
     }
   },
+  created() {
+    this.fetchId()
+  },
+  data() {
+    return {
+      id: -1
+    }
+  },
+  methods: {
+     fetchId() {
+      this.id =  this.initialId
+    }
+  }
 }
 </script>
 

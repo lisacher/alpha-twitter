@@ -2,9 +2,9 @@
   <div class="d-flex border tweet-card">
     <div class="img-container m-3">
       <router-link 
-        to="/"
+        :to="{ name: 'user-tweets', params: { id: data.User.id }}"
       >
-         <!-- :to="{ name: 'user-tweets', params: { id: data.User.id }}" -->
+         
         <img :src="data.User.avatar | emptyImage" alt="" />
       </router-link>
     </div>

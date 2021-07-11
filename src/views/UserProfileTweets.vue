@@ -6,7 +6,7 @@
         <TopNavBar 
           :msg="User.name" 
           :show="true" 
-          :tweetsCount="User.tweetsCount" 
+          :tweetsCount="tweets.length" 
         />
         <div class="tweets-container">
           <TweetererImformation 
@@ -14,7 +14,7 @@
             @after-form-submit="afterFormSubmit"
           />
           <TwittererNavPills 
-            :id="User.id"
+            :initial-id="User.id"
           />
           <TweetsCard
             v-for="tweet in tweets"
@@ -41,121 +41,9 @@ import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
-const user = 
-  {
-    id: 1,
-    name: "Yun",
-    account: "lisacher",
-    avatar: "",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "ABBC.",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  }
-;
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
-const dummyTweets = [
-  {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 5, 10, 10),
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: true,
-  },
-  {
-    id: 16,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 66,
-    isLiked: true,
-  },
-  {
-    id: 17,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 17,
-    isLiked: true,
-  },
-  {
-    id: 18,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 0,
-    likesCount: 0,
-    isLiked: false,
-  },
-  {
-    id: 12,
-    User: {
-      id: 2,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 2, 10, 10),
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: false,
-  },
-  {
-    id: 13,
-    User: {
-      id: 3,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 5, 21, 10, 10),
-    repliesCount: 5,
-    likesCount: 7,
-    isLiked: true,
-  },
-  {
-    id: 14,
-    User: {
-      id: 4,
-      name: "Teddy",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 6,
-    likesCount: 2,
-    isLiked: false,
-  },
-];
 
 export default {
   name: "UserProfileTweets",
@@ -177,8 +65,8 @@ export default {
         avatar: "",
         cover: "",
         bio: "",
-        followingsCounts: 0,
-        followersCounts: 0,
+        totalFollowings: 0,
+        totalFollowers: 0,
       },
       tweets: [],
       modalContent : {}
@@ -186,19 +74,34 @@ export default {
   },
 
   created() {
-    // const { id } = this.$route.params
-    this.fetchUser();
-    this.fetchTweets();
+    const { id: userId } = this.$route.params
+    this.fetchUser(userId);
   },
   methods: {
-    fetchUser() {
-      this.User = {
-        ...this.User,
-        ...user,
-      };
-    },
-    fetchTweets() {
-      this.tweets = dummyTweets;
+   async fetchUser(userId) {
+     try {
+       const { data } = await usersAPI.getUser({ userId })
+       console.log('data', data);
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
+       this.User = {
+         ...this.User,
+         id,
+         name,
+         account,
+         avatar,
+         cover,
+         bio,
+         totalFollowers,
+         totalFollowings
+       }
+       this.tweets = Tweets
+       console.log(this.tweets.length);
+     } catch(error) {
+       Toast.fire({
+         icon: 'error',
+         title: '無法取得資料，請稍後再試。'
+       })
+     }
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {
