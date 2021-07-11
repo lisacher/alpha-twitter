@@ -1,11 +1,11 @@
 <template>
   <div class="col my-2">
     <div class="twitterer-card">
-      <div class="cover-container"><img :src="user.avatar | emptyImage" alt=""></div>
-      <div class="avatar-container"><img :src="user.cover | emptyImage" alt=""></div>
+      <div class="cover-container"><img :src="user.User.avatar | emptyImage" alt=""></div>
+      <div class="avatar-container"><img :src="user.User.cover | emptyImage" alt=""></div>
       <div class="description-container d-flex flex-column pb-2">
-        <p class="name">{{user.name}}</p>
-        <p class="account mb-1">@{{user.account}}</p>
+        <p class="name">{{user.User.name}}</p>
+        <p class="account mb-1">{{user.User.account}}</p>
         <div class="comment-like mb-2">
           <img src="./../assets/comment.png" alt="" class="me-2">
           <div class="d-inline-block me-2">{{user.tweetsCount}}</div>
@@ -33,7 +33,7 @@ export default {
       required: true
     }
   }
-}  ;
+}
 </script>
 
 <style scoped>

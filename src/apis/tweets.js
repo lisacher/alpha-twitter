@@ -6,5 +6,15 @@ export default {
     return apiHelper.get('/tweets', {
       headers: { Authorization: `Bearer ${getToken()}`}
     })
+  },
+  getAdminTweets() {
+    return apiHelper.get('/admin/main', {
+      headers: { Authorization: `Bearer ${getToken()}`}
+    })
+  },
+  getAdminUsers() {
+    return apiHelper.get('/admin/users', {
+      headers: { Authorization: `Bearer ${getToken()}`}
+    })
   }
 }

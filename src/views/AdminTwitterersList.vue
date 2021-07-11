@@ -22,150 +22,8 @@
 import SideNavBar from './../components/SideNavBar.vue'
 import TopNavBar from './../components/TopNavBar.vue'
 import AdminTwitterersCard from './../components/AdminTwitterersCard.vue'
-
-const dummyUser = [
-  {
-		id: 1,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 17,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 2,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 10,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 3,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 8,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 4,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 26,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},{
-		id: 5,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 128,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 6,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 73,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 7,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 160,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 8,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 88,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 9,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 12,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},{
-		id: 10,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 12,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 11,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 12,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 12,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 12,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-  {
-		id: 13,
-		name: 'Teddy',
-		account: 'teddy0323',
-		avatar: '',
-		cover: '',
-		tweetsCount: 12,
-		beLikedCount: 23,
-		followersCount: 33,
-		followingsCount: 44
-	},
-]
+import tweetsAPI from "./../apis/tweets"
+import { Toast } from './../utils/helpers'
 
 
 export default {
@@ -184,16 +42,22 @@ export default {
     this.fetchUser()
   },
   methods: {
-    fetchUser() {
-      this.users = [
-        ...this.users,
-        ...dummyUser
-      ]
-
-			this.users.sort((a, b) => {
-				return b.tweetsCount - a.tweetsCount
-			})
-    }
+	async fetchUser() {
+      try{
+        const { data } = await tweetsAPI.getAdminTweets()
+        this.users = data
+        this.users.sort((a, b) => {
+          return b.tweetsCount - a.tweetsCount
+        })
+      }
+      catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推文資料，請稍後再試'
+        })
+        .console.log(error.message);
+      }
+    },
   }
 }
 </script>
