@@ -50,6 +50,7 @@
 
 <script>
 import { Toast } from "../utils/helpers"
+import authorizationAPI from './../apis/authorization'
 
 const dummyUser = {
     id: 3,
@@ -74,7 +75,8 @@ export default {
     fetchUser() {
         this.user = dummyUser
     },
-    handleSubmit() {
+    async handleSubmit() {
+      try {
         if (!this.user.account || !this.user.password) {
           Toast.fire({
             icon: "warning",
@@ -83,14 +85,28 @@ export default {
           return
         }
 
-        if (this.password !== this.user.password) {
-          Toast.fire({
-            icon: "warning",
-            title: "您尚未加入會員！",
-          })
-          return
+        const res = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password
+        })
+        
+        const data = res.data
+
+        console.log('res', res);
+
+        if(data.status !== 'success') {
+          throw new Error(data.message)
         }
-        this.$router.push("/")
+        localStorage.setItem('token', data.token)
+
+        this.$router.push("/tweets")
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法登入，請稍後再試'
+        })
+      }        
     },
   },
 }
