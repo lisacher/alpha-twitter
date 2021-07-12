@@ -93,9 +93,6 @@ export default {
           isLiked
         }
         this.replies = Replies
-
-        console.log('tweet',this.tweet);
-        console.log('replies', this.replies);
       } catch(error) {
         Toast.fire({
           icon: 'error',

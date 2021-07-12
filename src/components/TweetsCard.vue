@@ -61,7 +61,10 @@
           class="liked d-flex align-items-center"
           :class="{ activeLiked: data.isLiked ===  1}"
         >
-          <div class="btn liked-img" @click.prevent.stop="toggleLiked"></div>
+          <button class="btn liked-img" 
+            @click.prevent.stop="toggleLiked(data.id)"
+            :disabled="status.isProcessing"
+          ></button>
           <div class="likes-count">{{ data.totalLikes }}</div>
         </div>
       </div>
@@ -72,6 +75,9 @@
 <script>
 import { emptyImageFilter } from './../utils/mixins'
 import { daytimeFilter } from "./../utils/mixins";
+
+import tweetsAPI from './../apis/tweets'
+import { Toast } from './../utils/helpers'
 
 export default {
   name: "TweetsCard",
@@ -92,17 +98,44 @@ export default {
   data() {
     return {
       data: this.initialData,
+      status: {
+        isProcessing: false,
+        isLoading: false
+      }
     };
   },
   methods: {
-    toggleLiked() {
-      if (this.data.isLiked === 1 ) {
-        this.data.totalLikes -= 1;
-        this.data.isLiked = 0
-      } else {
-        this.data.totalLikes += 1;
-        this.data.isLiked = 1
+    async toggleLiked(tweetId) {
+      try {
+        this.status.isProcessing = true
+
+        if (this.data.isLiked === 0 ) {
+          const { data } = await tweetsAPI.likeTweet({ tweetId }) 
+          if(data.status !== 'success') {
+            throw new Error(data.message)
+          }
+
+          this.data.totalLikes += 1;
+          this.data.isLiked = 1
+        } else {
+          const { data } = await tweetsAPI.unlikeTweet({ tweetId })
+          if(data.status !== 'success') {
+            throw new Error(data.message)
+          }
+          this.data.totalLikes -= 1;
+          this.data.isLiked = 0
+       }
+       this.status.isProcessing = false
+       this.$emit('after-toggle-like')
+
+      } catch(error) {
+        this.status.isProcessing = false
+        Toast.fire({
+          icon: 'error',
+          title: '現在無法按讚/取消讚，請稍後再試。'
+        })
       }
+      
     }, 
     clickModalButton(data) {
       this.$emit('after-click-modal', data)
@@ -183,8 +216,9 @@ export default {
   width: 12px;
   background-size: contain;
   background-repeat: no-repeat;
+  border: none;
+  box-shadow: none;
 }
-
 
 .liked::after {
   content: '';
@@ -202,6 +236,7 @@ export default {
   opacity: 0.2;
 }
 
+
 .liked:hover .likes-count {
   color: #e0245e;
 }
@@ -213,4 +248,5 @@ export default {
 .activeLiked .likes-count {
   color: #e0245e;
 }
+
 </style>

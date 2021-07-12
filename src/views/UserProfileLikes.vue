@@ -17,6 +17,7 @@
             :key="like.id"
             :initial-data="like.Tweet"
             @after-click-modal="afterClickModal"
+            @after-toggle-like="afterToggleLike"
           />
           <TweetReplyModal :target-tweet="modalContent" />
         </div>
@@ -121,8 +122,8 @@ export default {
         })
 
         this.likes.sort((a, b) => {
-          const aDate = new Date(a.createdAt)
-          const bDate = new Date(b.createdAt)
+          const aDate = new Date(a.Tweet.createdAt)
+          const bDate = new Date(b.Tweet.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
 
@@ -145,6 +146,9 @@ export default {
         ...data,
       };
     },
+    afterToggleLike() {
+      this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+    }
   },
 };
 </script>

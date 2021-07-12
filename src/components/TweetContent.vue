@@ -4,14 +4,14 @@
     <div class="userInfo">
       <div class="avatar">
         <router-link
-          :to="{ name: 'user-tweets', params: { id: tweet.User.id } }"
+          :to="{ name: 'user-tweets', params: { id: tweet.User.id || 0 } }"
         >
-          <img :src="tweet.User.image | emptyImage" alt="" />
+          <img :src="tweet.User.avatar | emptyImage" alt="" />
         </router-link>
       </div>
       <div class="userTitle">
         <router-link
-          :to="{ name: 'user-tweets', params: { id: tweet.User.id } }"
+          :to="{ name: 'user-tweets', params: { id: tweet.User.id || 0 } }"
         >
           <p class="text-dark">
             {{ tweet.User.name }}
@@ -31,7 +31,7 @@
       <p>{{ tweet.totalReplies }} <span>回覆 </span></p>
       <p>{{ tweet.totalLikes }} <span>喜歡次數</span></p>
     </div>
-    <div class="tweetPanel">
+    <div class="tweetPanel d-flex align-items-center">
       <div class="comments">
         <img
           data-bs-toggle="modal"
@@ -41,21 +41,24 @@
           @click.prevent.stop="clickModalButton(tweet)"
         />
       </div>
-      <div class="likes">
+      <button 
+        class=" btn btn-likes"
+        :disabled="status.isProcessing"
+      >
         <img
           src="../assets/isLiked-active.png"
           alt=""
-          @click.stop.prevent="disLike(tweet)"
+          @click.stop.prevent="disLike(tweet.id)"
           v-if="tweet.isLiked"
         />
         <img
           src="../assets/isLiked.png"
           alt=""
-          @click.stop.prevent="like(tweet)"
+          @click.stop.prevent="like(tweet.id)"
           v-else
         />
         <p></p>
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -63,6 +66,9 @@
 <script>
 import { emptyImageFilter } from "../utils/mixins";
 import { exactDateFilter } from "../utils/mixins";
+
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "TweetContent",
@@ -74,14 +80,51 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      status: {
+        isProcessing: false,
+        isLoading: false
+      }
+    }
+  },
   methods: {
-    like(tweet) {
-      tweet.isLiked = true;
-      tweet.likesCount += 1;
+    async like(tweetId) {
+      try {
+        this.status.isProcessing = true
+        const { data } = await tweetsAPI.likeTweet({ tweetId });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.tweet.isLiked = 1;
+        this.tweet.totalLikes += 1;
+        this.status.isProcessing = false
+      } catch (error) {
+        this.status.isProcessing = false
+        Toast.fire({
+          icon: "error",
+          title: "無法按讚，請稍後再試。",
+        });
+      }
     },
-    disLike(tweet) {
-      tweet.isLiked = false;
-      tweet.likesCount -= 1;
+    async disLike(tweetId) {
+      try {
+        this.status.isProcessing = true
+        const { data } = await tweetsAPI.unlikeTweet({ tweetId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.tweet.isLiked = 0;
+        this.tweet.totalLikes -= 1;
+        this.status.isProcessing = false
+      } catch (error) {
+        this.status.isProcessing = false
+        Toast.fire({
+          icon: "error",
+          title: "無法取消讚，請稍後再試。",
+        });
+      }
     },
     clickModalButton(data) {
       this.$emit("after-click-modal", data);
@@ -179,5 +222,10 @@ p {
 }
 .tweetPanel .comments {
   margin-right: 155px;
+}
+
+.btn-likes {
+  border: none;
+  box-shadow: none;
 }
 </style>
