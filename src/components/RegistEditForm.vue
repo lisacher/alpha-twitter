@@ -206,11 +206,13 @@ export default {
         })
         return result
       }
+      console.log("Data check passed")
       return (result = true)
+
     },
     handleSubmit() {
       const formCheckResult = this.formCheck();
-      if (!formCheckResult) {
+      if (formCheckResult) {
       if (this.isSignUp) {
         this.handleRegistSubmit()
       } else {
