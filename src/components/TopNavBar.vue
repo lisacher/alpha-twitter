@@ -29,13 +29,13 @@ export default {
       type: Boolean,
       default: false
     },
-    tweetsCount: {
+    totalTweets: {
       type: Number,
       required: false
     }
   },
   watch: {
-    tweetsCount(newValue) {
+    totalTweets(newValue) {
       this.count = newValue
     }
   },
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     fetchCount() {
-      this.count = this.tweetsCount
+      this.count = this.totalTweets
     }
   }
 };

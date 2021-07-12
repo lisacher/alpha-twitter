@@ -87,7 +87,7 @@ export default {
 
       
     },
-    afterCreateTweet({ text }) {
+    afterCreateTweet({ description }) {
       this.tweets.unshift({
         id: uuidv4(),
         User: {
@@ -97,11 +97,11 @@ export default {
           image: this.currentUser.image
 
         },
-        text,
+        description,
         createdAt: new Date(),
         isLiked: false,
-        likesCount: 0,
-        repliesCount: 0
+        totalLikes: 0,
+        totalReplies: 0
       })
     },
     afterClickModal(data) {

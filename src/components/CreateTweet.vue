@@ -4,7 +4,7 @@
       <div class="d-flex">
         <img src="./../assets/Logo.png" alt="" />
         <textarea
-          v-model="text"
+          v-model="description"
           name="text"
           id="text"
           rows="3"
@@ -18,7 +18,7 @@
       
       <div class="submit d-flex mt-3 mb-2 pe-3">
         <div
-          v-if="text.length > 140"
+          v-if="description.length > 140"
           class="warning-content"
         > 
           字數請勿超過140字！
@@ -26,7 +26,7 @@
         <button 
           type="submit" 
           class="btn btn-primary ms-auto"
-          :disabled="!text || text.length > 140"
+          :disabled="!description || description.length > 140"
         >推文</button>
       </div>
     </form>
@@ -46,21 +46,21 @@ export default {
   },
   data() {
     return {
-      text: '',
+      description: '',
       comments: []
     }
   },
   methods: {
     handleSubmit() {
-      if(!this.text.trim()) {
+      if(!this.description.trim()) {
         Toast.fire({
           icon: 'error',
           title: '請填寫推文內容！'
         })
-        this.text = ''
+        this.description = ''
         return
       }
-      if(this.text.length > 140) {
+      if(this.description.length > 140) {
         Toast.fire({
           icon: 'warning',
           title: '推文內容請勿超過140字'
@@ -69,9 +69,9 @@ export default {
       }
 
       this.$emit('after-create-tweet', {
-        text: this.text
+        description: this.description
       })
-      this.text = ''
+      this.description = ''
 
     }
   },

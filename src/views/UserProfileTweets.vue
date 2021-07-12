@@ -6,7 +6,7 @@
         <TopNavBar 
           :msg="User.name" 
           :show="true" 
-          :tweetsCount="User.tweetsCount" 
+          :total-tweets="User.totalTweets" 
         />
         <div class="tweets-container">
           <TweetererImformation 
@@ -42,6 +42,7 @@ import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
 import usersAPI from './../apis/users'
+import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
 
 
@@ -67,7 +68,7 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
-        tweetsCount: 0
+        totalTweets: 0
       },
       tweets: [],
       modalContent : {}
@@ -77,17 +78,20 @@ export default {
   created() {
     const { id: userId } = this.$route.params
     this.fetchUser(userId);
+    this.fetchUserTweet(userId)
   },
   beforeRouteUpdate (to ,from, next) {
     const { id: userId } = to.params
     this.fetchUser(userId)
+    this.fetchUserTweet(userId)
     next()
   },
   methods: {
    async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
+
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
        this.User = {
          ...this.User,
          id,
@@ -98,15 +102,26 @@ export default {
          bio,
          totalFollowers,
          totalFollowings,
-         tweetsCount: Tweets.length
+         totalTweets,
        }
-       this.tweets = Tweets
      } catch(error) {
        Toast.fire({
          icon: 'error',
          title: '無法取得資料，請稍後再試。'
        })
      }
+    },
+    async fetchUserTweet(userId) {
+      try{
+        const { data } = await tweetsAPI.getUsersTweets({ userId })
+        this.tweets = data
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得資料，請稍後再試'
+        })
+      }
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {

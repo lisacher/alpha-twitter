@@ -3,7 +3,7 @@
     <div class="row">
       <SideNavBar class="col-3" />
       <div class="col-5 p-0 border main-component">
-        <TopNavBar :msg="User.name" :show="true" :tweetsCount="User.tweetsCount" />
+        <TopNavBar :msg="User.name" :show="true" :total-tweets="User.totalTweets" />
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
@@ -36,7 +36,9 @@ import TweetsCard from "./../components/TweetsCard.vue";
 import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
+
 import usersAPI from './../apis/users'
+import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
 
 
@@ -62,7 +64,7 @@ export default {
         bio: "",
         followingsCounts: 0,
         followersCounts: 0,
-        tweetsCount: 0
+        totalTweets: 0
       },
       likes: [],
       modalContent: {},
@@ -84,7 +86,7 @@ export default {
     async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
        this.User = {
          ...this.User,
          id,
@@ -95,7 +97,7 @@ export default {
          bio,
          totalFollowers,
          totalFollowings,
-         tweetsCount: Tweets.length
+         totalTweets
        }
      } catch(error) {
        Toast.fire({
@@ -106,7 +108,7 @@ export default {
     },
     async fetchLikes(userId) {
       try {
-        const { data } = await usersAPI.getUserLikes({ userId })
+        const { data } = await tweetsAPI.getUserLikes({ userId })
 
         // 篩除dummyData中，Tweet欄位為Null的資料(會導致渲染不出畫面，先篩掉)
         data.map(like => {
@@ -117,20 +119,8 @@ export default {
             ...like,
           })
         })
-        //從liked撈出來的資料，都補上liked
-        this.likes.forEach(like => {
-          like.Tweet = {
-            ...like.Tweet,
-            isLiked: 1
-          }
-        })
-        console.log('likes',this.likes);
-        // data.map(like => {
-        //   if(!like.Tweet) {
-        //     return
-        //   }
-        //   this.likes.push(like.Tweet)
-        // })
+
+
       } catch(error) {
         Toast.fire({
           icon: 'error',
