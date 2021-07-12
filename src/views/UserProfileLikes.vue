@@ -120,6 +120,12 @@ export default {
           })
         })
 
+        this.likes.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
+        })
+
 
       } catch(error) {
         Toast.fire({

@@ -3,6 +3,7 @@
     <div class="row">
       <SideNavBar 
         class="col-3" 
+        @after-create-tweet="afterCreateTweet"
       />
       <div class="col-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" />

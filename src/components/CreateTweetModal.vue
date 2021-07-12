@@ -31,9 +31,9 @@
             <div class="d-flex">
               <img src="./../assets/Logo.png" alt="" />
               <textarea
-                v-model="text"
-                name="text"
-                id="textModal"
+                v-model="description"
+                name="description"
+                id="descriptionModal"
                 rows="6"
                 :placeholder="currentUser.name | adjustAddTweetPlaceholder"
                 class="flex-grow-1 pe-2"
@@ -43,13 +43,15 @@
               </textarea>
             </div>
             <div class="submit d-flex mt-3 mb-2 pe-3">
-              <div v-if="text.length > 140" class="warning-content">
+              <div v-if="description.length > 140" class="warning-content">
                 字數請勿超過140字！
               </div>
               <button
                 type="submit"
                 class="btn btn-primary ms-auto"
-                :disabled="!text || text.length > 140"
+                data-bs-toggle="modal"
+                data-bs-target="#tweetModal"
+                :disabled="!description || description.length > 140"
               >
                 推文
               </button>
@@ -62,10 +64,11 @@
 </template>
 
 <script>
-import { Toast } from './../utils/helpers'
+import { Toast } from '../utils/helpers'
+import tweetsAPI from './../apis/tweets'
 
 export default {
-  name: "AddTweetCard",
+  name: "CreatedTweetModal",
   props: {
     currentUser: {
       type: Object,
@@ -74,33 +77,51 @@ export default {
   },
   data() {
     return {
-      text: "",
+      description: "",
     };
   },
   methods: {
-    handleSubmit() {
-      if(!this.text.trim()) {
-        Toast.fire({
-          icon: 'error',
-          title: '請填寫推文內容！'
-        })
-        this.text = ''
-        return
-      }
-      if(this.text.length > 140) {
-        Toast.fire({
-          icon: 'warning',
-          title: '推文內容請勿超過140字'
-        })
-        return
-      }
+    async handleSubmit() {
+      //篩掉都是空白鍵的內容
+      try {
+        if (!this.description.trim()) {
+          Toast.fire({
+            icon: "error",
+            title: "請填寫推文內容！",
+          });
+          this.description = "";
+          return;
+        }
+        //文字數量過長，跳出提示，阻止送出。
+        if (this.description.length > 140) {
+          Toast.fire({
+            icon: "warning",
+            title: "推文內容請勿超過140字",
+          });
+          return;
+        }
 
-      this.$emit('after-create-tweet', {
-        text: this.text
-      })
-      this.text = ''
+        const { data } = await tweetsAPI.createTweet({
+          User: this.currentUser,
+          description: this.description,
+        });
 
-    }
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.$emit("after-create-tweet", {
+          description: this.description,
+        });
+
+        this.description = "";
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法推文，請稍後再試",
+        });
+      }
+    },
   },
   filters: {
     adjustAddTweetPlaceholder(userName) {

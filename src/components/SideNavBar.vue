@@ -31,7 +31,7 @@
             </router-link>
           </li>
           <li class="nav-item mt-2">
-            <AddTweetCard
+            <CreatedTweetModal
               :current-user="currentUser"
               @after-create-tweet="afterCreateTweet"
             />
@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import AddTweetCard from "./../components/AddTweetCard.vue";
+import CreatedTweetModal from "./CreateTweetModal.vue";
 import { mapState } from 'vuex'
 
 export default {
@@ -131,16 +131,12 @@ export default {
     ...mapState(['currentUser'])
   },
   components: {
-    AddTweetCard,
+    CreatedTweetModal,
   },
   methods: {
-    afterCreateTweet(payload) {
-      console.log("payload", payload);
-      const { id, text } = payload;
-      this.comments.push({
-        id,
-        text,
-        createdAt: new Date(),
+    afterCreateTweet({ description }) {
+      this.$emit("after-create-tweet", {
+        description,
       });
     },
     logOut() {

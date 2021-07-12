@@ -1,7 +1,10 @@
 <template>
   <div class="container main-container">
     <div class="row">
-      <SideNavBar class="col-3" />
+      <SideNavBar 
+        class="col-3" 
+        @after-create-tweet="afterCreateTweet"
+      />
       <div class="col-5 p-0 border main-component">
         <TopNavBar 
           :msg="User.name" 
@@ -33,6 +36,9 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+
+// import component 
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
@@ -41,9 +47,14 @@ import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
+// import currentUser
+import { mapState } from 'vuex'
+
+// import API
 import usersAPI from './../apis/users'
 import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
+
 
 
 export default {
@@ -85,6 +96,9 @@ export default {
     this.fetchUser(userId)
     this.fetchUserTweet(userId)
     next()
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
    async fetchUser(userId) {
@@ -128,6 +142,23 @@ export default {
           title: '目前無法取得資料，請稍後再試'
         })
       }
+    },
+    afterCreateTweet({ description }) {
+      this.tweets.unshift({
+        id: uuidv4(),
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          account: this.currentUser.account,
+          avatar: this.currentUser.avatar
+
+        },
+        description,
+        createdAt: new Date(),
+        isLiked: false,
+        totalLikes: 0,
+        totalReplies: 0
+      })
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {
