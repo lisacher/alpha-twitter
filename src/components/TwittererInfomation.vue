@@ -24,7 +24,7 @@
             class="btn button"
             @click.prevent.stop="deleteFollow"
             >
-            取消追蹤
+            追蹤中
           </button>
           <button 
             v-else 

@@ -12,18 +12,13 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}`}
     })
   },
-  getUserLikes({ userId }) {
-    return apiHelper.get(`/users/${userId}/likes`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
-  },
   getRecFollowers () {
     return apiHelper.get('/followships', {
         headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   followUser ({ userId }) {
-    return apiHelper.post(`/followships/`, { id: userId }, {
+    return apiHelper.post(`/followships`, { id: userId }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },

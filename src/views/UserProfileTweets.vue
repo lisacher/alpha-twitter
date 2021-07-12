@@ -1,12 +1,15 @@
 <template>
   <div class="container main-container">
     <div class="row">
-      <SideNavBar class="col-3" />
+      <SideNavBar 
+        class="col-3" 
+        @after-create-tweet="afterCreateTweet"
+      />
       <div class="col-5 p-0 border main-component">
         <TopNavBar 
           :msg="User.name" 
           :show="true" 
-          :tweetsCount="User.tweetsCount" 
+          :total-tweets="User.totalTweets" 
         />
         <div class="tweets-container">
           <TweetererImformation 
@@ -33,6 +36,7 @@
 </template>
 
 <script>
+// import component 
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
 import TopNavBar from "./../components/TopNavBar.vue";
@@ -41,8 +45,14 @@ import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
+// import currentUser
+import { mapState } from 'vuex'
+
+// import API
 import usersAPI from './../apis/users'
+import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
+
 
 
 export default {
@@ -67,7 +77,7 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
-        tweetsCount: 0
+        totalTweets: 0
       },
       tweets: [],
       modalContent : {}
@@ -77,17 +87,23 @@ export default {
   created() {
     const { id: userId } = this.$route.params
     this.fetchUser(userId);
+    this.fetchUserTweet(userId)
   },
   beforeRouteUpdate (to ,from, next) {
     const { id: userId } = to.params
     this.fetchUser(userId)
+    this.fetchUserTweet(userId)
     next()
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
    async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, Tweets } = data
+
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
        this.User = {
          ...this.User,
          id,
@@ -98,15 +114,52 @@ export default {
          bio,
          totalFollowers,
          totalFollowings,
-         tweetsCount: Tweets.length
+         totalTweets,
        }
-       this.tweets = Tweets
      } catch(error) {
        Toast.fire({
          icon: 'error',
          title: '無法取得資料，請稍後再試。'
        })
      }
+    },
+    async fetchUserTweet(userId) {
+      try{
+        const { data } = await tweetsAPI.getUsersTweets({ userId })
+        this.tweets = data
+
+        this.tweets.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
+        })
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法取得資料，請稍後再試'
+        })
+      }
+    },
+    afterCreateTweet({ description, id }) {
+      if(this.User.id !== this.currentUser.id) {
+        return
+      }
+      this.tweets.unshift({
+        id,
+        User: {
+          id: this.currentUser.id,
+          name: this.currentUser.name,
+          account: this.currentUser.account,
+          avatar: this.currentUser.avatar
+
+        },
+        description,
+        createdAt: new Date(),
+        isLiked: false,
+        totalLikes: 0,
+        totalReplies: 0
+      })
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {

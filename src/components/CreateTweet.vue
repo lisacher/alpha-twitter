@@ -1,97 +1,120 @@
 <template>
   <div class="border">
-    <form class="tweet-form border-top" @submit.prevent.stop="handleSubmit">
+    <form
+      class="tweet-form border-top"
+      @submit.prevent.stop="handleSubmit"
+      :class="{ warningBackground: description.length > 140 }"
+    >
       <div class="d-flex">
         <img src="./../assets/Logo.png" alt="" />
         <textarea
-          v-model="text"
+          v-model="description"
           name="text"
           id="text"
           rows="3"
           :placeholder="currentUser.name | adjustAddTweetPlaceholder"
           class="flex-grow-1 pe-2"
+          :class="{ warningBackground: description.length > 140 }"
           maxlength="140"
           required
         >
         </textarea>
       </div>
-      
+
       <div class="submit d-flex mt-3 mb-2 pe-3">
-        <div
-          v-if="text.length > 140"
-          class="warning-content"
-        > 
+        <div v-if="description.length > 140" class="warning-content">
           字數請勿超過140字！
         </div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           class="btn btn-primary ms-auto"
-          :disabled="!text || text.length > 140"
-        >推文</button>
+          :disabled="!description || description.length > 140"
+        >
+          推文
+        </button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { Toast } from './../utils/helpers'
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
 
 export default {
-  name: 'CreateTweet',
+  name: "CreateTweet",
   props: {
     currentUser: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      text: '',
-      comments: []
-    }
+      description: "",
+      comments: [],
+    };
   },
   methods: {
-    handleSubmit() {
-      if(!this.text.trim()) {
-        Toast.fire({
-          icon: 'error',
-          title: '請填寫推文內容！'
-        })
-        this.text = ''
-        return
-      }
-      if(this.text.length > 140) {
-        Toast.fire({
-          icon: 'warning',
-          title: '推文內容請勿超過140字'
-        })
-        return
-      }
+    async handleSubmit() {
+      //篩掉都是空白鍵的內容
+      try {
+        if (!this.description.trim()) {
+          Toast.fire({
+            icon: "error",
+            title: "請填寫推文內容！",
+          });
+          this.description = "";
+          return;
+        }
+        //文字數量過長，跳出提示，阻止送出。
+        if (this.description.length > 140) {
+          Toast.fire({
+            icon: "warning",
+            title: "推文內容請勿超過140字",
+          });
+          return;
+        }
 
-      this.$emit('after-create-tweet', {
-        text: this.text
-      })
-      this.text = ''
+        const { data } = await tweetsAPI.createTweet({
+          User: this.currentUser,
+          description: this.description,
+        });
 
-    }
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.$emit("after-create-tweet", {
+          description: this.description,
+          id: data.message.id
+        });
+
+        this.description = "";
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法推文，請稍後再試",
+        });
+      }
+    },
   },
   filters: {
     adjustAddTweetPlaceholder(userName) {
-      return `${userName}，有什麼新鮮事呢？`
-    }
-  }
-}
+      return `${userName}，有什麼新鮮事呢？`;
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 img {
   height: 50px;
   width: 50px;
 }
 
 .tweet-form {
-  border-bottom: 10px solid #E6ECF0;
+  border-bottom: 10px solid #e6ecf0;
 }
 
 .tweet-form textarea {
@@ -104,19 +127,23 @@ img {
   outline: 0;
 }
 
+.warningBackground {
+  background-color: #ffeff4;
+}
+
 .submit {
   border-top: 0;
 }
 
 .warning-content {
   line-height: 36px;
-  color: red;
+  color: #e0245e;
   font-weight: 700;
   padding-left: 50px;
 }
 
 .submit button {
-  background: #FF6600;
+  background: #ff6600;
   border: 0 solid #000;
   border-radius: 100px;
 }

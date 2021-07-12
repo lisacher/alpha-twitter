@@ -3,6 +3,7 @@
     <div class="row">
       <SideNavBar 
         class="col-3" 
+        @after-create-tweet="afterCreateTweet"
       />
       <div class="col-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" />
@@ -28,7 +29,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
 
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
@@ -87,21 +87,21 @@ export default {
 
       
     },
-    afterCreateTweet({ text }) {
+    afterCreateTweet({ description, id }) {
       this.tweets.unshift({
-        id: uuidv4(),
+        id,
         User: {
           id: this.currentUser.id,
           name: this.currentUser.name,
           account: this.currentUser.account,
-          image: this.currentUser.image
+          avatar: this.currentUser.avatar
 
         },
-        text,
+        description,
         createdAt: new Date(),
         isLiked: false,
-        likesCount: 0,
-        repliesCount: 0
+        totalLikes: 0,
+        totalReplies: 0
       })
     },
     afterClickModal(data) {
