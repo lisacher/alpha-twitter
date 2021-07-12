@@ -4,22 +4,22 @@ const getToken = () => localStorage.getItem('token')
 export default {
   getTweets() {
     return apiHelper.get('/tweets', {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getUsersTweets({ userId }) {
     return apiHelper.get(`/users/${userId}/tweets`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getUserLikes({ userId }) {
     return apiHelper.get(`/users/${userId}/likes`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   getTweet({ tweetId }) {
     return apiHelper.get(`/tweets/${tweetId}`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   createTweet({ User, description }) {
@@ -27,17 +27,32 @@ export default {
       User,
       description
     }, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   likeTweet({ tweetId }) {
     return apiHelper.post(`/tweets/${tweetId}/like`, null, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   unlikeTweet({ tweetId }) {
     return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
-      headers: { Authorization: `Bearer ${getToken()}`}
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getAdminTweets() {
+    return apiHelper.get('/admin/main', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  getAdminUsers() {
+    return apiHelper.get('/admin/users', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  deleteTweet({ tweetId }) {
+    return apiHelper.delete(`/admin/tweets/${tweetId}`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
     })
   }
 }

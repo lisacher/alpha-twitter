@@ -25,14 +25,14 @@
               <div class="toggleFollow">
                 <button
                   class="btn isFollowing"
-                  @click.stop.prevent="unfollowUser(user)"
-                  v-if="user.isFollowed"
+                  @click.stop.prevent="unfollowUser(user.id)"
+                  v-if="user.isFollowing"
                 >
                   正在跟隨
                 </button>
                 <button
                   class="btn"
-                  @click.stop.prevent="followUser(user)"
+                  @click.stop.prevent="followUser(user.id)"
                   v-else
                 >
                   跟隨
@@ -53,37 +53,10 @@
 
 <script>
 import { emptyImageFilter } from "../utils/mixins";
-const dummyUser = {
-  users: [
-    {
-      id: 1,
-      name: "root",
-      account: "root01",
-      email: "root@example.com",
-      isAdmin: true,
-      image: "https://i.imgur.com/58ImzMM.png",
-      isFollowed: false,
-    },
-    {
-      id: 2,
-      name: "user1",
-      account: "user1234",
-      email: "user1@example.com",
-      isAdmin: false,
-      image: "https://i.imgur.com/Q14p2le.jpg",
-      isFollowed: false,
-    },
-    {
-      id: 3,
-      name: "user2",
-      account: "user234",
-      email: "user2@example.com",
-      isAdmin: false,
-      image: "https://i.imgur.com/OezkRwO.jpg",
-      isFollowed: false,
-    },
-  ],
-};
+import usersAPI from "./../apis/users"
+import { Toast } from "./../utils/helpers"
+
+
 export default {
   name: "RecFollowingsList",
   mixins: [emptyImageFilter],
@@ -96,14 +69,67 @@ export default {
     };
   },
   methods: {
-    fetchRecFollowers() {
-      this.recTwitterer = dummyUser.users;
+    async fetchRecFollowers() {
+      try {
+        const { data } = await usersAPI.getRecFollowers()
+        this.recTwitterer = data
+      }
+      catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推薦追蹤者資料，請稍後再試'
+        })
+      }
     },
-    followUser(user) {
-      user.isFollowed = true;
+    async followUser(userId) {
+      try {
+        const { data } = await usersAPI.followUser({ userId })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.recTwitterer = this.recTwitterer.map(user => {
+        if (user.id !== userId) {
+          return user
+        } else {
+          return {
+            ...user,
+            totalFollowers: user.totalFollowers + 1,
+            isFollowing: 1
+          }
+        }
+      })     
+      }
+      catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法追蹤使用者，請稍後再試'
+        })
+      }
     },
-    unfollowUser(user) {
-      user.isFollowed = false;
+    async unfollowUser(userId) {
+      try {
+        const { data } = await usersAPI.unfollowUser({ userId })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.recTwitterer = this.recTwitterer.map(user => {
+        if (user.id !== userId) {
+          return user
+        } else {
+          return {
+            ...user,
+            totalFollowers: user.totalFollowers - 1,
+            isFollowing: 0
+          }
+        }
+      })
+      }
+      catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消追蹤使用者，請稍後再試'
+        })
+      }
     },
   },
 };

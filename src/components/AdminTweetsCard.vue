@@ -2,8 +2,6 @@
   <div>
     <div
       class="d-flex border tweet-container px-2"
-      v-for="tweet in tweets"
-      :key="tweet.id"
     >
       <div class="img-container">
         <img src="./../assets/Logo.png" alt="" />
@@ -13,14 +11,14 @@
           <div class="name d-inline-block pe-2 fw-bold">
             {{ tweet.User.name }}
           </div>
-          <div class="account d-inline-block">@{{ tweet.User.account }}</div>
+          <div class="account d-inline-block">{{ tweet.User.account }}</div>
           <div class="createdAt d-inline-block">
             ・{{ tweet.createdAt | fromNow }}
           </div>
         </div>
         <div class="body">
           <div class="text">
-            {{ tweet.text | textEllipsis }}
+            {{ tweet.description | textEllipsis }}
           </div>
         </div>
       </div>
@@ -67,7 +65,7 @@
               class="btn btn-danger"
               data-bs-toggle="modal"
               data-bs-target="#deleteModal"
-              @click.prevent.stop="deleteTweet"
+              @click.prevent.stop="deleteTweet(tweet.id)"
             >
               確定
             </button>
@@ -80,153 +78,40 @@
 
 <script>
 import { daytimeFilter } from "./../utils/mixins";
+import { Toast } from "./../utils/helpers"
 
-const dummyTweets = [
-  {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Teddy",
-      account: "teddy0323",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 5, 10, 10),
-  },
-  {
-    id: 16,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 17,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 18,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 12,
-    User: {
-      id: 2,
-      name: "Yun",
-      account: "lisacher",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 2, 10, 10),
-  },
-  {
-    id: 13,
-    User: {
-      id: 3,
-      name: "Carlos",
-      account: "carlos811009",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 5, 21, 10, 10),
-  },
-  {
-    id: 14,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 15,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 26,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 27,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-  {
-    id: 28,
-    User: {
-      id: 4,
-      name: "Debbie",
-      account: "debbie8820",
-      image: "./../assets/Logo.png",
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-  },
-];
 
 export default {
   name: "AdminTweetsCard",
   mixins: [daytimeFilter],
+  props: {
+    tweet: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      tweets: [],
       deleteTarget: 0,
     };
   },
-  created() {
-    this.fetchTweets();
-  },
   methods: {
-    fetchTweets() {
-      this.tweets = [...this.tweets, ...dummyTweets];
-    },
     generatedeleteTarger(id) {
       this.deleteTarget = id;
     },
-    deleteTweet() {
-      const targetId = this.deleteTarget;
-      this.tweets = this.tweets.filter((tweet) => tweet.id !== targetId);
+    async deleteTweet(tweetId) {
+      try {
+        this.$emit("after-delete-tweet", tweetId);
+        Toast.fire({
+          icon: "success",
+          title: "刪除成功！",
+        })
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法刪除推文，請稍後再試",
+        })
+      }
     },
   },
   filters: {

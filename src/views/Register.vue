@@ -16,7 +16,12 @@ export default {
     name:'Register',
     components: {
         RegistEditForm
+    },
+    data() {
+    return {
+      isSignUp: true,
     }
+  },
 }
 </script>
 

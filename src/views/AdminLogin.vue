@@ -48,14 +48,8 @@
 
 <script>
 import { Toast } from "../utils/helpers"
+import authorizationAPI from './../apis/authorization'
 
-const dummyAdmin = {
-    id: 3,
-    account: 'root',
-    password: '1234',
-    isAdmin: true
-
-}
 
 export default {
   name: "AdminLogin",
@@ -63,33 +57,38 @@ export default {
     return {
       account: "",
       password: "",
-      user: []
     }
   },
-  created() {
-      this.fetchUser()
-  },
   methods: {
-    fetchUser() {
-        this.user = dummyAdmin
-    },
-    handleSubmit() {
-        if (!this.user.account || !this.user.password) {
+    async handleSubmit() {
+      try {
+        if (!this.account || !this.password) {
           Toast.fire({
             icon: "warning",
             title: "請輸入帳號和密碼",
           })
           return
         }
+        const response = await authorizationAPI.signIn({
+          account: this.account,
+          password: this.password
+        })
 
-        if (this.user.password !== this.password) {
-          Toast.fire({
-            icon: "warning",
-            title: "您非管理者身分!",
-          })
-          return
+        const { data } = response
+
+        if (data.status !== 'success') {
+          throw new Error(data.message)
         }
+        
+        localStorage.setItem('token', data.token)
         this.$router.push("/admin/tweets")
+      }
+      catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法登入，請稍後再試'
+        })
+      }
     },
   },
 }
