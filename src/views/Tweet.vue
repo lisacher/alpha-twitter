@@ -40,120 +40,9 @@ import TweetContent from "./../components/TweetContent.vue";
 import TweetsCard from "../components/TweetsCard.vue";
 import TweetReplyModal from "../components/TweetReplyModal.vue";
 
-const currentUser = {
-  id: 4,
-  name: "Teddy",
-  account: "teddy0323",
-  image: "./../assets/Logo.png",
-}
-const dummyTweet = {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Apple",
-      account: "apple1234",
-      image:
-        "https://tse4.mm.bing.net/th?id=OIP.-C08ivJ6oLNEELI4SkjElgHaHa&pid=Api&P=0&w=300&h=300",
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-    createdAt: new Date(2021, 6, 5, 10, 10),
-    repliesCount: 6,
-    likesCount: 4,
-    isLiked: true,
-    Replies: [
-      {
-        id: 16,
-        UserId: 2,
-        User: {
-          id: 4,
-          name: "Debbie",
-          account: "debbie8820",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-        createdAt: new Date(2021, 5, 11, 10, 10),
-        repliesCount: 13,
-        likesCount: 66,
-        isLiked: true,
-      },
-      {
-        id: 17,
-        UserId: 3,
-        User: {
-          id: 4,
-          name: "Debbie",
-          account: "debbie8820",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-        createdAt: new Date(2021, 5, 11, 10, 10),
-        repliesCount: 13,
-        likesCount: 17,
-        isLiked: true,
-      },
-      {
-        id: 18,
-        UserId: 4,
-        User: {
-          id: 4,
-          name: "Debbie",
-          account: "debbie8820",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-        createdAt: new Date(2021, 5, 11, 10, 10),
-        repliesCount: 0,
-        likesCount: 0,
-        isLiked: false,
-      },
-      {
-        id: 12,
-        UserId: 1,
-        User: {
-          id: 2,
-          name: "Yun",
-          account: "lisacher",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolor sitcing elit. Officim exercitationem blanditiis liae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-        createdAt: new Date(2021, 6, 2, 10, 10),
-        repliesCount: 13,
-        likesCount: 4,
-        isLiked: false,
-      },
-      {
-        id: 13,
-        UserId: 7,
-        User: {
-          id: 3,
-          name: "Carlos",
-          account: "carlos811009",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-        createdAt: new Date(2021, 5, 21, 10, 10),
-        repliesCount: 5,
-        likesCount: 7,
-        isLiked: true,
-      },
-      {
-        id: 14,
-        UserId: 6,
-        User: {
-          id: 4,
-          name: "Debbie",
-          account: "debbie8820",
-          image: "./../assets/Logo.png",
-        },
-        text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-        createdAt: new Date(2021, 5, 11, 10, 10),
-        repliesCount: 6,
-        likesCount: 2,
-        isLiked: false,
-      },
-    ],
-  }
-  ;
+import tweetsAPI from './../apis/tweets'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 export default {
   name: "Tweet",
@@ -167,33 +56,65 @@ export default {
   },
   data() {
     return {
-      currentUser,
-      tweet: {},
+      tweet: {
+        id: -1,
+        User: '',
+        description: '',
+        createdAt: '',
+        totalReplies: 0,
+        totalLikes: 0,
+        isLiked: 0
+      },
       replies: [],
       modalContent: {},
     };
   },
   created() {
-    this.fetchData();
+    const { id: tweetId } = this.$route.params
+    this.fetchTweet(tweetId);
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
-    fetchData() {
-      const { id, User, text,  createdAt, repliesCount, likesCount, isLiked, Replies } = dummyTweet
-      this.tweet = {
-        ...this.tweet,
-        id,
-        User,
-        text,
-        createdAt,
-        repliesCount,
-        likesCount,
-        isLiked
+    async fetchTweet(tweetId) {
+      try {
+        const { data } = await tweetsAPI.getTweet({ tweetId })
+        const { id, User, description, createdAt, totalReplies, totalLikes, isLiked, Replies } = data
+
+        this.tweet = {
+          ...this.tweet,
+          id,
+          User,
+          description,
+          createdAt,
+          totalReplies,
+          totalLikes,
+          isLiked
+        }
+        this.replies = Replies
+
+        console.log('tweet',this.tweet);
+        console.log('replies', this.replies);
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得推文資料，請稍後再試。'
+        })
       }
-      this.replies = Replies
-      this.currentUser = {
-        ...this.currentUser,
-        ...currentUser,
-      };
+      
+      // const { id, User, text,  createdAt, repliesCount, likesCount, isLiked, Replies } = dummyTweet
+      // this.tweet = {
+      //   ...this.tweet,
+      //   id,
+      //   User,
+      //   text,
+      //   createdAt,
+      //   repliesCount,
+      //   likesCount,
+      //   isLiked
+      // }
+      // this.replies = Replies
     },
     afterClickModal(data) {
       this.modalContent = {

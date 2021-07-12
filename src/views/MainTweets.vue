@@ -94,7 +94,7 @@ export default {
           id: this.currentUser.id,
           name: this.currentUser.name,
           account: this.currentUser.account,
-          image: this.currentUser.image
+          avatar: this.currentUser.avatar
 
         },
         description,

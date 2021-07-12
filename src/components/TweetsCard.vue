@@ -28,7 +28,7 @@
                 :to="{ name: 'user-tweets', params:{ id: replyTweet.User.id}}"
                 class="tweet-link"
               >
-                <span>@{{replyTweet.User.account}}</span>
+                <span>{{replyTweet.User.account}}</span>
               </router-link>
             </p>
             {{ data.text }}

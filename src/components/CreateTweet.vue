@@ -1,6 +1,10 @@
 <template>
   <div class="border">
-    <form class="tweet-form border-top" @submit.prevent.stop="handleSubmit">
+    <form 
+      class="tweet-form border-top" 
+      @submit.prevent.stop="handleSubmit"
+      :class="{ warningBackground: description.length > 140 }"
+    >
       <div class="d-flex">
         <img src="./../assets/Logo.png" alt="" />
         <textarea
@@ -10,6 +14,7 @@
           rows="3"
           :placeholder="currentUser.name | adjustAddTweetPlaceholder"
           class="flex-grow-1 pe-2"
+          :class="{ warningBackground: description.length > 140 }"
           maxlength="140"
           required
         >
@@ -34,6 +39,7 @@
 </template>
 
 <script>
+import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
 
 export default {
@@ -51,7 +57,8 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
+      //篩掉都是空白鍵的內容
       if(!this.description.trim()) {
         Toast.fire({
           icon: 'error',
@@ -60,6 +67,7 @@ export default {
         this.description = ''
         return
       }
+      //文字數量過長，跳出提示，阻止送出。
       if(this.description.length > 140) {
         Toast.fire({
           icon: 'warning',
@@ -68,9 +76,18 @@ export default {
         return
       }
 
+      const res = await tweetsAPI.createTweet({
+        User: this.currentUser,
+        description: this.description
+      })
+      console.log("res", res);
+
+
+
       this.$emit('after-create-tweet', {
         description: this.description
       })
+
       this.description = ''
 
     }
@@ -104,13 +121,17 @@ img {
   outline: 0;
 }
 
+.warningBackground {
+  background-color: #ffeff4;
+}
+
 .submit {
   border-top: 0;
 }
 
 .warning-content {
   line-height: 36px;
-  color: red;
+  color: #e0245e;
   font-weight: 700;
   padding-left: 50px;
 }

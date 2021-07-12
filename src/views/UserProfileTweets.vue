@@ -116,6 +116,12 @@ export default {
         const { data } = await tweetsAPI.getUsersTweets({ userId })
         this.tweets = data
 
+        this.tweets.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
+        })
+
       } catch(error) {
         Toast.fire({
           icon: 'error',

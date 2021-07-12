@@ -34,7 +34,7 @@
                   {{tweet.User.name}}
                 </p>
                 <p class="userAccount">
-                  @{{ tweet.User.account }}
+                  {{ tweet.User.account }}
                 </p>
                 <span class="mx-1">&#xb7;</span>
                 <p class="tweetUpdateAt">
@@ -47,7 +47,7 @@
               <div class="panel">
                 <p>
                   回覆給
-                  <span> @ {{tweet.User.account}} </span>
+                  <span>{{tweet.User.account}} </span>
                 </p>
               </div>
             </div>

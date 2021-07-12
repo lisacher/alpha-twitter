@@ -16,21 +16,20 @@
           <p class="text-dark">
             {{ tweet.User.name }}
           </p>
-
-          <p>@{{ tweet.User.account }}</p>
+          <p>{{ tweet.User.account }}</p>
         </router-link>
       </div>
     </div>
 
     <div class="textContent">
-      <p>{{ tweet.text }}</p>
+      <p>{{ tweet.description }}</p>
     </div>
     <div class="updatedAt">
       <p class="tweetUpdateAt">{{ tweet.createdAt | exactDate }}</p>
     </div>
     <div class="feedbackCount">
-      <p>{{ tweet.repliesCount }} <span>回覆 </span></p>
-      <p>{{ tweet.likesCount }} <span>喜歡次數</span></p>
+      <p>{{ tweet.totalReplies }} <span>回覆 </span></p>
+      <p>{{ tweet.totalLikes }} <span>喜歡次數</span></p>
     </div>
     <div class="tweetPanel">
       <div class="comments">
