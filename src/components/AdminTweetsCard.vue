@@ -65,7 +65,7 @@
               class="btn btn-danger"
               data-bs-toggle="modal"
               data-bs-target="#deleteModal"
-              @click.prevent.stop="deleteTweet"
+              @click.prevent.stop="deleteTweet(tweet.id)"
             >
               確定
             </button>
@@ -78,7 +78,7 @@
 
 <script>
 import { daytimeFilter } from "./../utils/mixins";
-
+import { Toast } from "./../utils/helpers"
 
 
 export default {
@@ -99,9 +99,19 @@ export default {
     generatedeleteTarger(id) {
       this.deleteTarget = id;
     },
-    deleteTweet() {
-      const targetId = this.deleteTarget;
-      this.tweets = this.tweets.filter((tweet) => tweet.id !== targetId);
+    async deleteTweet(tweetId) {
+      try {
+        this.$emit("after-delete-tweet", tweetId);
+        Toast.fire({
+          icon: "success",
+          title: "刪除成功！",
+        })
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法刪除推文，請稍後再試",
+        })
+      }
     },
   },
   filters: {

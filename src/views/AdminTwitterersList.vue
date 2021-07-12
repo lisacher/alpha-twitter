@@ -44,7 +44,7 @@ export default {
   methods: {
 	async fetchUser() {
       try{
-        const { data } = await tweetsAPI.getAdminTweets()
+        const { data } = await tweetsAPI.getAdminUsers()
         this.users = data
         this.users.sort((a, b) => {
           return b.tweetsCount - a.tweetsCount

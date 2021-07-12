@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent.stop="formCheck()">
+<form @submit.prevent.stop="handleSubmit($event)">
     <div class="row">
       <label for="account"
         >帳號<span class="note ml-5">*帳號長度不得大於 50 字元</span></label
@@ -97,14 +97,17 @@
 </template>
 
 <script>
+import authorizationAPI from "./../apis/authorization"
+import usersAPI from "./../apis/users"
 import { Toast } from "../utils/helpers";
+import { mapState } from 'vuex'
 
 export default {
   name: "RegistEditForm",
   props: {
     isSignUp: {
         type: Boolean,
-        default: false
+        default: true
       }
   },
   data() {
@@ -115,10 +118,40 @@ export default {
         email: '',
         password: '',
         passwordCheck: '',
-      }
+      },
+      isSaved: true,
+      userChanged: false,
     }
   },
+  created() {
+    this.fetchCurrentUser(this.currentUser);
+  },
+  watch: {
+    currentUser(payload) {
+      this.fetchCurrentUser(payload);
+    },
+    form: {
+      handler: function () {
+        if (!this.userChanged) {
+          return (this.userChanged = true);
+        }
+        this.isSaved = false;
+      },
+    },
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   methods: {
+    fetchCurrentUser(payload) {
+      const { name, email, account } = payload;
+      this.form = {
+        ...this.form,
+        name,
+        email,
+        account,
+      };
+    },
     backToLogin() {
       this.$router.push("/login")
     },
@@ -173,12 +206,69 @@ export default {
         })
         return result
       }
-      Toast.fire({
-          icon: "success",
-          title: "已成功儲存！",
-      })
       return (result = true)
     },
+    handleSubmit() {
+      const formCheckResult = this.formCheck();
+      if (!formCheckResult) {
+      if (this.isSignUp) {
+        this.handleRegistSubmit()
+      } else {
+        this.handleSaveSetting()}
+      }
+    },
+    async handleRegistSubmit() {
+      try {
+        const formData = this.form
+        const { data } = await authorizationAPI.signUp(formData)
+        if (data.status !== "success") {
+          throw new Error(data)
+        }
+        Toast.fire({
+          icon: "success",
+          title: "註冊成功！",
+        })
+
+        this.$router.push("/login")
+      } catch (error) {
+        console.log(error)
+        let message = "無法註冊，請稍後再試！"
+        Toast.fire({
+          icon: "error",
+          title: message,
+        })
+      }
+    },
+    async handleSaveSetting() {
+      try {
+        const formData = this.form
+        const formCheckResult = this.formCheck()
+        if (!formCheckResult) {
+          return;
+        }
+        const userId = this.currentUser.id
+        const { data } = await usersAPI.update(userId, formData)
+        console.log(data);
+        if (data.status !== "success") {
+          throw new Error(data.message)
+        }
+        Toast.fire({
+          icon: "success",
+          title: "資料修改成功！",
+        });
+        this.isSaved = true
+        this.userChanged = true
+        this.form.password = ""
+        this.form.passwordCheck = ""
+      } catch (error) {
+        console.log(error)
+        Toast.fire({
+          icon: "error",
+          title: "無法儲存使用者資訊，請稍候再試！",
+        })
+      }
+    },
+    
   }
 }
 </script>

@@ -21,6 +21,7 @@
 import SideNavBar from "../components/SideNavBar.vue"
 import RegistEditForm from "../components/RegistEditForm.vue"
 import TopNavBar from './../components/TopNavBar.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: "UserSetting",
@@ -28,7 +29,21 @@ export default {
     SideNavBar,
     RegistEditForm,
     TopNavBar
-  }
+  },
+  data() {
+    return {
+      form: {
+        account: '',
+        name: '',
+        email: '',
+        password: '',
+        passwordCheck: '',
+      }
+    }
+  },
+  computed: {
+    ...mapState(['currentUser'])
+  },
 }
 </script>
 

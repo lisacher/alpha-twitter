@@ -8,7 +8,8 @@
           <AdminTweetsCard 
           v-for="tweet in tweets"
           :key="tweet.id"
-          :tweet="tweet"/>
+          :tweet="tweet"
+          @after-delete-tweet="afterDeleteTweet"/>
         </div>
       </div>
     </div>
@@ -49,6 +50,22 @@ export default {
           title: '無法取得推文資料，請稍後再試'
         })
       }
+    },
+    async afterDeleteTweet(tweetId) {
+      try{
+        const { data } = await tweetsAPI.deleteTweet({tweetId})
+        if (data.status === 'error') {
+          throw new Error(data.message)
+        }
+        this.tweets = this.tweets.filter((tweet) => tweet.id !== tweetId)
+        
+      } catch(error){
+        Toast.fire({
+          icon: 'error',
+          title: '目前無法刪除貼文，請稍後再試'
+        })
+      }
+      
     },
   }
 }

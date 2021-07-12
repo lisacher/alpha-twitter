@@ -1,20 +1,20 @@
 <template>
   <div class="col my-2">
     <div class="twitterer-card">
-      <div class="cover-container"><img :src="user.User.avatar | emptyImage" alt=""></div>
-      <div class="avatar-container"><img :src="user.User.cover | emptyImage" alt=""></div>
+      <div class="cover-container"><img :src="user.cover | emptyImage" alt=""></div>
+      <div class="avatar-container"><img :src="user.avatar | emptyImage" alt=""></div>
       <div class="description-container d-flex flex-column pb-2">
-        <p class="name">{{user.User.name}}</p>
-        <p class="account mb-1">{{user.User.account}}</p>
+        <p class="name">{{user.name}}</p>
+        <p class="account mb-1">{{user.account}}</p>
         <div class="comment-like mb-2">
           <img src="./../assets/comment.png" alt="" class="me-2">
-          <div class="d-inline-block me-2">{{user.tweetsCount}}</div>
+          <div class="d-inline-block me-2">{{user.totalTweets}}</div>
           <img src="./../assets/isLiked.png" alt="" class="me-2">
-          <div class="d-inline-block">{{user.beLikedCount}}</div>
+          <div class="d-inline-block">{{user.totalLikes}}</div>
         </div>
         <div class="follow-status d-flex justify-content-center">
-          <p class="pe-2">{{user.followingsCount}} <span>個跟隨中</span></p>
-          <p>{{user.followersCount}} <span>個追隨者</span></p>
+          <p class="pe-2">{{user.totalFollowings}} <span>個跟隨中</span></p>
+          <p>{{user.totalFollowers}} <span>個追隨者</span></p>
         </div>
       </div>
     </div>

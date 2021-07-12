@@ -84,11 +84,20 @@ export default {
     async followUser(userId) {
       try {
         const { data } = await usersAPI.followUser({ userId })
-        console.log('data', data)
         if (data.status !== 'success') {
           throw new Error(data.message)
         }
-        this.recTwitterer.isFollowing = true;
+        this.recTwitterer = this.recTwitterer.map(user => {
+        if (user.id !== userId) {
+          return user
+        } else {
+          return {
+            ...user,
+            totalFollowers: user.totalFollowers + 1,
+            isFollowing: 1
+          }
+        }
+      })     
       }
       catch (error) {
         Toast.fire({
@@ -97,8 +106,30 @@ export default {
         })
       }
     },
-    unfollowUser(user) {
-      user.isFollowed = false;
+    async unfollowUser(userId) {
+      try {
+        const { data } = await usersAPI.unfollowUser({ userId })
+        if (data.status !== 'success') {
+          throw new Error(data.message)
+        }
+        this.recTwitterer = this.recTwitterer.map(user => {
+        if (user.id !== userId) {
+          return user
+        } else {
+          return {
+            ...user,
+            totalFollowers: user.totalFollowers - 1,
+            isFollowing: 0
+          }
+        }
+      })
+      }
+      catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消追蹤使用者，請稍後再試'
+        })
+      }
     },
   },
 };
