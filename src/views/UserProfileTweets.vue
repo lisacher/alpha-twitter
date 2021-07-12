@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid'
-
 // import component 
 import SideNavBar from "./../components/SideNavBar.vue";
 import RecFollowingList from "./../components/RecFollowingsList.vue";
@@ -143,9 +141,12 @@ export default {
         })
       }
     },
-    afterCreateTweet({ description }) {
+    afterCreateTweet({ description, id }) {
+      if(this.User.id !== this.currentUser.id) {
+        return
+      }
       this.tweets.unshift({
-        id: uuidv4(),
+        id,
         User: {
           id: this.currentUser.id,
           name: this.currentUser.name,

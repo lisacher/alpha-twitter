@@ -87,6 +87,7 @@ export default {
 
         this.$emit("after-create-tweet", {
           description: this.description,
+          id: data.message.id
         });
 
         this.description = "";

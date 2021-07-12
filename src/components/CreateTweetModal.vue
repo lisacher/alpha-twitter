@@ -49,8 +49,6 @@
               <button
                 type="submit"
                 class="btn btn-primary ms-auto"
-                data-bs-toggle="modal"
-                data-bs-target="#tweetModal"
                 :disabled="!description || description.length > 140"
               >
                 推文
@@ -112,6 +110,7 @@ export default {
 
         this.$emit("after-create-tweet", {
           description: this.description,
+          id: data.message.id
         });
 
         this.description = "";

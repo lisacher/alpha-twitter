@@ -134,9 +134,10 @@ export default {
     CreatedTweetModal,
   },
   methods: {
-    afterCreateTweet({ description }) {
+    afterCreateTweet({ description, id }) {
       this.$emit("after-create-tweet", {
         description,
+        id
       });
     },
     logOut() {
