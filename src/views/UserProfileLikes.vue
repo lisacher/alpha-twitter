@@ -15,7 +15,7 @@
           <TweetsCard
             v-for="like in likes"
             :key="like.id"
-            :initial-data="like"
+            :initial-data="like.Tweet"
             @after-click-modal="afterClickModal"
           />
           <TweetReplyModal :target-tweet="modalContent" />
@@ -106,8 +106,31 @@ export default {
     },
     async fetchLikes(userId) {
       try {
-        const res = await usersAPI.getUserLikes({ userId })
-        console.log('res', res);
+        const { data } = await usersAPI.getUserLikes({ userId })
+
+        // 篩除dummyData中，Tweet欄位為Null的資料(會導致渲染不出畫面，先篩掉)
+        data.map(like => {
+          if(!like.Tweet) {
+            return
+          }
+          this.likes.push({
+            ...like,
+          })
+        })
+        //從liked撈出來的資料，都補上liked
+        this.likes.forEach(like => {
+          like.Tweet = {
+            ...like.Tweet,
+            isLiked: 1
+          }
+        })
+        console.log('likes',this.likes);
+        // data.map(like => {
+        //   if(!like.Tweet) {
+        //     return
+        //   }
+        //   this.likes.push(like.Tweet)
+        // })
       } catch(error) {
         Toast.fire({
           icon: 'error',

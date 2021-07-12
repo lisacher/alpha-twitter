@@ -42,7 +42,7 @@
                 </p>
               </div>
               <div class="tweetContent">
-                <p>{{tweet.text}}</p>
+                <p>{{tweet.description}}</p>
               </div>
               <div class="panel">
                 <p>
