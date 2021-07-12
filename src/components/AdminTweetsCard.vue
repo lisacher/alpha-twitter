@@ -32,53 +32,11 @@
         ></button>
       </div>
     </div>
-    <!-- Modal -->
-    <div
-      class="modal fade"
-      id="deleteModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div>您確定要刪除此則推文嗎？</div>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body text-center">推文刪除後將無法復原</div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              取消
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-toggle="modal"
-              data-bs-target="#deleteModal"
-              @click.prevent.stop="deleteTweet(tweet.id)"
-            >
-              確定
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
 import { daytimeFilter } from "./../utils/mixins";
-import { Toast } from "./../utils/helpers"
 
 
 export default {
@@ -90,29 +48,10 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      deleteTarget: 0,
-    };
-  },
   methods: {
     generatedeleteTarger(id) {
-      this.deleteTarget = id;
-    },
-    async deleteTweet(tweetId) {
-      try {
-        this.$emit("after-delete-tweet", tweetId);
-        Toast.fire({
-          icon: "success",
-          title: "刪除成功！",
-        })
-      } catch (error) {
-        Toast.fire({
-          icon: "error",
-          title: "無法刪除推文，請稍後再試",
-        })
-      }
-    },
+      this.$emit('after-generate-target', { tweetId: id })
+    }
   },
   filters: {
     textEllipsis(text) {
@@ -144,17 +83,5 @@ export default {
 .account,
 .createdAt {
   color: #657786;
-}
-.modal-header {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.modal-body {
-  height: 150px;
-  line-height: 118px;
-  font-size: 18px;
-  font-weight: 700;
-  color: red;
 }
 </style>

@@ -18,7 +18,7 @@ export default {
     })
   },
   followUser ({ userId }) {
-    return apiHelper.post(`/followships/${userId}`, null, {
+    return apiHelper.post(`/followships`, { id: userId }, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
