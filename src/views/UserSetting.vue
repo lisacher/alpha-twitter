@@ -37,7 +37,7 @@ export default {
         name: '',
         email: '',
         password: '',
-        passwordCheck: '',
+        confirmPassword: '',
       }
     }
   },

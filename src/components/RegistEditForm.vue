@@ -56,16 +56,16 @@
       />
     </div>
     <div class="row">
-      <label for="passwordCheck"
+      <label for="confirmPassword"
         >密碼確認<span class="note ml-3"
           >*密碼長度需介於 4 和 12 之間</span
         ></label
       >
       <input
-        id="passwordCheck"
-        name="passwordCheck"
+        id="confirmPassword"
+        name="confirmPassword"
         type="password"
-        v-model="form.passwordCheck"
+        v-model="form.confirmPassword"
         required
         maxLength="12"
       />
@@ -117,7 +117,7 @@ export default {
         name: '',
         email: '',
         password: '',
-        passwordCheck: '',
+        confirmPassword: '',
       },
       isSaved: true,
       userChanged: false,
@@ -192,14 +192,14 @@ export default {
         })
         return result
       }
-      if (!this.form.passwordCheck) {
+      if (!this.form.confirmPassword) {
         Toast.fire({
           icon: "info",
           title: "請填寫密碼確認！",
         })
         return result
       }
-      if (this.form.password !== this.form.passwordCheck) {
+      if (this.form.password !== this.form.confirmPassword) {
         Toast.fire({
           icon: "error",
           title: "密碼不相符！",
@@ -211,18 +211,20 @@ export default {
 
     },
     handleSubmit() {
-      const formCheckResult = this.formCheck();
-      if (formCheckResult) {
       if (this.isSignUp) {
         this.handleRegistSubmit()
       } else {
         this.handleSaveSetting()}
-      }
     },
     async handleRegistSubmit() {
       try {
         const formData = this.form
+        const formCheckResult = this.formCheck()
+        if (!formCheckResult) {
+          return;
+        }
         const { data } = await authorizationAPI.signUp(formData)
+        console.log(data)
         if (data.status !== "success") {
           throw new Error(data)
         }
@@ -248,8 +250,8 @@ export default {
         if (!formCheckResult) {
           return;
         }
-        const userId = this.currentUser.id
-        const { data } = await usersAPI.update(userId, formData)
+        const { data } = await usersAPI.update(
+          {userId: this.currentUserid}, formData)
         console.log(data);
         if (data.status !== "success") {
           throw new Error(data.message)
@@ -261,7 +263,7 @@ export default {
         this.isSaved = true
         this.userChanged = true
         this.form.password = ""
-        this.form.passwordCheck = ""
+        this.form.confirmPassword = ""
       } catch (error) {
         console.log(error)
         Toast.fire({

@@ -83,7 +83,8 @@ export default {
     },
     async followUser(userId) {
       try {
-        const { data } = await usersAPI.followUser({ userId })
+        const res = await usersAPI.followUser({ userId })
+        const { data}  = res
         if (data.status !== 'success') {
           throw new Error(data.message)
         }

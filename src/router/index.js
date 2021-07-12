@@ -14,7 +14,7 @@ const routes = [
   {
     path:'/',
     name:'root',
-    redirect: '/tweets'
+    redirect: '/login'
   },
   {
     path: '/login',
