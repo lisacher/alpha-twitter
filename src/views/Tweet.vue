@@ -80,6 +80,7 @@ export default {
     async fetchTweet(tweetId) {
       try {
         const { data } = await tweetsAPI.getTweet({ tweetId })
+        //TODO: 請後端加入totalReplies資料
         const { id, User, description, createdAt, totalReplies, totalLikes, isLiked, Replies } = data
 
         this.tweet = {

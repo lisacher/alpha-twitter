@@ -3,11 +3,17 @@
     <div class="row">
       <SideNavBar class="col-3" />
       <div class="col-5 p-0 border main-component">
-        <TopNavBar :msg="User.name" :show="true" :total-tweets="User.totalTweets" />
+        <TopNavBar 
+          :msg="User.name" 
+          :show="true" 
+          :total-tweets="User.totalTweets" 
+        />
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
             @after-form-submit="afterFormSubmit"
+            @after-delete-follow-main="afterDeleteFollowMain"
+            @after-add-follow-main="afterAddFollowMain"
           />
           <TwittererNavPills 
             :initial-id="User.id"
@@ -23,7 +29,12 @@
         </div>
       </div>
       <div class="col-4">
-        <RecFollowingList />
+        <RecFollowingList 
+          @after-add-follow="afterAddFollow"
+          @after-delete-follow="afterDeleteFollow"
+          :remove-follow-id="removeFollowId"
+          :add-follow-id="addFollowId"
+        />
       </div>
     </div>
   </div>
@@ -37,6 +48,8 @@ import TweetsCard from "./../components/TweetsCard.vue";
 import TweetererImformation from "./../components/TwittererInfomation.vue";
 import TwittererNavPills from './../components/TwittererNavPills.vue'
 import TweetReplyModal from "../components/TweetReplyModal.vue";
+
+import { mapState } from 'vuex'
 
 import usersAPI from './../apis/users'
 import tweetsAPI from './../apis/tweets'
@@ -69,6 +82,8 @@ export default {
       },
       likes: [],
       modalContent: {},
+      removeFollowId: 0,
+      addFollowId: 0
     };
   },
 
@@ -83,11 +98,14 @@ export default {
     this.fetchLikes(userId)
     next()
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   methods: {
     async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
        this.User = {
          ...this.User,
          id,
@@ -98,7 +116,8 @@ export default {
          bio,
          totalFollowers,
          totalFollowings,
-         totalTweets
+         totalTweets,
+         isFollowing
        }
      } catch(error) {
        Toast.fire({
@@ -135,11 +154,19 @@ export default {
         })
       }
     },
-    afterFormSubmit(formData) {
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ": " + value);
-      }
+    async afterFormSubmit() {
+      const { id: userId } = this.$route.params
+      await this.fetchUser(userId);
+      this.likes.map(like => {
+        if(like.Tweet.User.id === this.User.id) {
+          like.Tweet.User = {
+            ...like.User,
+            ...this.User
+          }
+        }
+      })
     },
+
     afterClickModal(data) {
       this.modalContent = {
         ...this.modalContent,
@@ -148,6 +175,40 @@ export default {
     },
     afterToggleLike() {
       this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+    },
+    afterAddFollow(userId) {
+      // 在我自己以外的別人的主頁時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers += 1
+        this.User.isFollowing = 1
+        return
+      }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings += 1
+        return
+      }
+      return
+    },
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
+    afterDeleteFollow(userId) {
+      // 當從右側點選的使用者與當前頁面的使用者相同時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers -= 1
+        this.User.isFollowing = 0
+        return
+      }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings -= 1
+        return
+      }
+      return
+    },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
     }
   },
 };

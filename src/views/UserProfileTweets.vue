@@ -172,9 +172,15 @@ export default {
         totalReplies: 0
       })
     },
-    afterFormSubmit() {
+    async afterFormSubmit() {
       const { id: userId } = this.$route.params
-      this.fetchUser(userId);
+      await this.fetchUser(userId);
+      this.tweets.map(tweet => {
+        tweet.User = {
+          ...tweet.User,
+          ...this.User
+        }
+      })
     },
     afterClickModal(data) {
       this.modalContent = {
