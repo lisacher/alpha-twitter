@@ -10,12 +10,13 @@
             @after-form-submit="afterFormSubmit"
           />
           <TwittererNavPills 
-            :id="User.id"
+            :initial-id="User.id"
           />
           <TweetandReply
             v-for="reply in replies"
             :key="reply.id"
             :initial-data="reply"
+            :initial-reply="reply.Replies"
           />
         </div>
       </div>
@@ -33,127 +34,14 @@ import TopNavBar from "../components/TopNavBar.vue";
 import TweetererImformation from "../components/TwittererInfomation.vue";
 import TwittererNavPills from '../components/TwittererNavPills.vue'
 import TweetandReply from '../components/TweetandReply.vue'
+import tweetsAPI from '../apis/tweets'
+import usersAPI from '../apis/users'
+import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
-const user = 
-  {
-    id: 1,
-    name: "Yun",
-    account: "lisacher",
-    avatar: "",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "ABBC.",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  }
-;
-
-const dummyReplies = [
-  {
-    id: 11,
-    User: {
-      id: 1,
-      name: "Yun1",
-      account: "yundwdsd",
-      avatar: "./../assets/Logo.png",
-    },
-    Replies: {
-      id: 5,
-      content: "root的回覆，片片蝶衣輕，點點猩紅小。道是天公不惜花，百種千般巧。朝見樹頭繁，暮見枝頭少。道是天公果惜花，雨洗風吹了。",
-      createdAt: new Date(2021, 6, 5, 10, 10),
-      ReplyUser: {
-        id: 3,
-        avatar: null,
-        name: "root",
-        account: "@root"
-      }
-    },
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia architecto hic, optio aut enim exercitationem blanditiis libero, assumenda quos cupiditate quae, eligendi pariatur sit tenetur eveniet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 6, 5, 10, 10),
-    repliesCount: 13,
-    likesCount: 4,
-    isLiked: true,
-  },
-  {
-    id: 16,
-    User: {
-      id: 4,
-      name: "Teddy2",
-      account: "teddy0323",
-      avatar: "./../assets/Logo.png",
-    },
-    Replies: {
-      id: 5,
-      content: "小貓咪的回覆",
-      createdAt: new Date(2021, 6, 5, 10, 10),
-      ReplyUser: {
-        id: 4,
-        avatar: null,
-        name: "cat",
-        account: "@cat2344"
-      }
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 66,
-    isLiked: true,
-  },
-  {
-    id: 17,
-    User: {
-      id: 4,
-      name: "Apple3",
-      account: "apple333",
-      avatar: "./../assets/Logo.png",
-    },
-    Replies: {
-      id: 5,
-      content: "Cathy的回覆，問訊湖邊春色，重來又是三年。東風吹我過湖船。楊柳絲絲拂面。",
-      createdAt: new Date(2021, 6, 5, 10, 10),
-      ReplyUser: {
-        id: 6,
-        avatar: null,
-        name: "Cathy",
-        account: "@cathy"
-      }
-    },
-    text: "Lorem ipsum dolanditiis libero, niet   at vol at vol at vol  at voluptatibus. Quo, cim exercitationem blanditiis liacumque.",
-    createdAt: new Date(2021, 5, 11, 10, 10),
-    repliesCount: 13,
-    likesCount: 17,
-    isLiked: true,
-  },
-  {
-    id: 13,
-    User: {
-      id: 3,
-      name: "July4",
-      account: "julysss",
-      avatar: "./../assets/Logo.png",
-    },
-    Replies: {
-      id: 5,
-      content: "daisy的回覆，新月曲如眉，未有團圞意。紅豆不堪看，滿眼相思淚。終日劈桃穰，人在心兒裏。兩耳隔牆花，早晚成連理。",
-      createdAt: new Date(2021, 6, 5, 10, 10),
-      ReplyUser: {
-        id: 8,
-        avatar: null,
-        name: "daisy",
-        account: "@daisy"
-      }
-    },
-    text: "Lorem ipsum dolanditiis libero, niet at voluptatibus. Quo, cumque.",
-    createdAt: new Date(2021, 5, 21, 10, 10),
-    repliesCount: 5,
-    likesCount: 7,
-    isLiked: true,
-  }
-];
 
 export default {
-  name: "UserProfileLikes",
+  name: "UserProfileReply",
   components: {
     SideNavBar,
     RecFollowingList,
@@ -171,26 +59,64 @@ export default {
         avatar: "",
         cover: "",
         bio: "",
-        followingsCounts: 0,
-        followersCounts: 0,
+        totalFollowings: 0,
+        totalFollowers: 0,
+        totalTweets: 0
       },
       replies: [],
     };
   },
-
   created() {
-    this.fetchUser();
-    this.fetchReplies();
+    const { id: userId } = this.$route.params
+    this.fetchUser(userId)
+    this.fetchReplies(userId)
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   methods: {
-    fetchUser() {
-      this.User = {
-        ...this.User,
-        ...user,
-      };
+    async fetchUser(userId) {
+     try {
+       const { data } = await usersAPI.getUser({ userId })
+
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
+       this.User = {
+         ...this.User,
+         id,
+         name,
+         account,
+         avatar,
+         cover,
+         bio,
+         totalFollowers,
+         totalFollowings,
+         totalTweets,
+       }
+     } catch(error) {
+       Toast.fire({
+         icon: 'error',
+         title: '無法取得資料，請稍後再試。'
+       })
+     }
     },
-    fetchReplies() {
-      this.replies = dummyReplies;
+    async fetchReplies(userId) {
+      try {
+        const { data } = await tweetsAPI.getReply({ userId })
+        data.map(reply => {
+          if(reply.UserId !== userId) {
+            return
+          }
+          this.replies.push({
+            ...reply,
+          })
+        })
+      } catch(error) {
+        Toast.fire({
+          icon:'error',
+          title:'目前無法顯示回應，請稍後再試'
+        })
+      }
+      
     },
     afterFormSubmit(formData) {
       for (let [name, value] of formData.entries()) {
