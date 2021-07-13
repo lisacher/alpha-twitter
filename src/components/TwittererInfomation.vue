@@ -113,8 +113,8 @@ export default {
         followersCounts: this.user.followersCounts - 1
       }
     },
-    afterFormSubmit(formData) {
-      this.$emit('after-form-submit', formData)
+    afterFormSubmit() {
+      this.$emit('after-form-submit')
     }
   },
 };

@@ -161,10 +161,9 @@ export default {
         totalReplies: 0
       })
     },
-    afterFormSubmit(formData) {
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ": " + value);
-      }
+    afterFormSubmit() {
+      const { id: userId } = this.$route.params
+      this.fetchUser(userId);
     },
     afterClickModal(data) {
       this.modalContent = {
