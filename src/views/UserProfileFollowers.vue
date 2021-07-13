@@ -142,10 +142,6 @@ export default {
       }
     },
     afterAddFollow(userId) {
-      if(this.currentUser.id === this.User.id) {
-        //TODO: 在自己的頁面要做其他篩選/新增
-        return
-      }
       this.followers.map(follower => {
         if(follower.id === userId) {
           follower.isFollowing = 1
@@ -153,10 +149,6 @@ export default {
       })
     },
     afterDeleteFollow(userId) {
-      if(this.currentUser.id === this.User.id) {
-        //TODO: 在自己的頁面要做其他篩選/新增
-        return
-      }
       this.followers.map(follower => {
         if(follower.id === userId) {
           follower.isFollowing = 0

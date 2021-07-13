@@ -140,9 +140,21 @@ export default {
         })
       }
     },
-    afterAddFollow(userId) {
+    async afterAddFollow(userId) {
       if(this.currentUser.id === this.User.id) {
         //TODO: 在自己的頁面要做其他篩選/新增
+        // 抱歉 我偷懶 我呼叫API
+        const { data } = await usersAPI.getUser({ userId })
+        const { id, name, account, avatar, bio, isFollowing } = data
+        this.followings.push({
+          id,
+          name,
+          account,
+          avatar,
+          bio,
+          isFollowing
+        })
+        console.log('data', data);
         return
       }
       this.followings.map(following => {
@@ -153,7 +165,8 @@ export default {
     },
     afterDeleteFollow(userId) {
       if(this.currentUser.id === this.User.id) {
-        //TODO: 在自己的頁面要做其他篩選/新增
+        // 在自己的頁面中，將刪除的User移除。
+        this.followings = this.followings.filter(following => following.id !== userId)
         return
       }
       this.followings.map(following => {
@@ -163,9 +176,14 @@ export default {
       })
     },
     afterAddFollowMain(userId) {
+      // 自己的頁面中，followings不會顯示沒有加入的User，所以不用另外設計。
       this.addFollowId = userId
     },
     afterDeleteFollowMain(userId) {
+      // 在自己的頁面中，將刪除的User移除。
+      if(this.currentUser.id === this.User.id) {
+        this.followings = this.followings.filter(following => following.id !== userId)
+      }
       this.removeFollowId = userId
     }
   }
