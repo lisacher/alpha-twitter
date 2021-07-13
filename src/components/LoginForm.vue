@@ -104,7 +104,7 @@ export default {
       } catch(error) {
         Toast.fire({
           icon: 'error',
-          title: '目前無法登入，請稍後再試'
+          title: '請確認您的帳號密碼正確'
         })
       }        
     },

@@ -22,6 +22,11 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  getReply({ userId }) {
+    return apiHelper.get(`/users/${userId}/replied_tweets`, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   createTweet({ User, description }) {
     return apiHelper.post('/tweets', {
       User,
@@ -54,5 +59,5 @@ export default {
     return apiHelper.delete(`/admin/tweets/${tweetId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
-  }
+  },
 }

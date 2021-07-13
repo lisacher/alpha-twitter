@@ -2,30 +2,30 @@
   <div class="tweetReply">
       <!-- Other User's Tweet -->
     <router-link 
-      :to="{ name:'tweet', params: { id: data.id} }"
+      :to="{ name:'tweet', params: { id: data.UserId } }"
       class="tweet-link"
     >
     <div class="d-flex">
       <div class="img-container">
         <router-link
-          :to="{ name: 'user-tweets', params: { id: data.User.id } }"
+          :to="{ name: 'user-tweets', params: { id: data.UserId } }"
         >
-          <img src="./../assets/Logo.png" alt="" />
+          <img :src="data.Replies.User.avatar" alt="" />
         </router-link>
         <div class="replyTarget"></div> 
       </div>
 
       <div class="text-container mt-2 flex-grow-1">
         <div class="header">
-          <div class="name d-inline-block pe-2">{{ data.User.name }}</div>
-          <div class="account d-inline-block">@{{ data.User.account }}</div>
+          <div class="name d-inline-block pe-2">{{data.User.name}}</div>
+          <div class="account d-inline-block">{{ data.User.account }}</div>
           <div class="createdAt d-inline-block">
-            ・{{ data.createdAt | fromNow }}
+            ・{{ data.Replies.createdAt | fromNow }}
           </div>
         </div>
         <div class="body mb-3">
           <div class="text me-3">
-            {{ data.text }}
+            {{ Replies.content }}
           </div>
         </div>
       </div>
@@ -34,23 +34,23 @@
     <div class="d-flex border-bottom">
       <div class="img-container">
         <router-link
-          :to="{ name: 'user-tweets', params: { id: Replies.ReplyUser.id } }"
+          :to="{ name: 'user-tweets', params: { id: data.UserId } }"
         >
-          <img src="./../assets/Logo.png" alt="" />
+          <img :src="data.User.avatar" alt="" />
         </router-link>
       </div>
 
       <div class="text-container mt-2 flex-grow-1">
         <div class="header">
-          <div class="name d-inline-block pe-2">{{ Replies.ReplyUser.name }}</div>
-          <div class="account d-inline-block">{{ Replies.ReplyUser.account }}</div>
+          <div class="name d-inline-block pe-2">{{ data.User.name }}</div>
+          <div class="account d-inline-block">{{ data.User.name }}</div>
           <div class="createdAt d-inline-block">
-            ・{{ Replies.createdAt | fromNow }}
+            ・{{ data.createdAt | fromNow }}
           </div>
         </div>
         <div class="body mb-3">
           <div class="text me-3">
-            {{ Replies.content }}
+            {{ data.description }}
           </div>
         </div>
       </div>
@@ -61,6 +61,7 @@
 
 <script>
 import { daytimeFilter } from './../utils/mixins'
+import { mapState } from 'vuex'
 
 export default {
   name: "TweetsCard",
@@ -70,12 +71,19 @@ export default {
       type: Object,
       required: true,
     },
+    initialReply: {
+      type: Array,
+      required: true,
+    }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   data() {
     return {
       data: this.initialData,
-      Replies: this.initialData.Replies
-    };
+      Replies: this.initialReply,
+    }
   },
 };
 </script>
@@ -95,8 +103,9 @@ export default {
 .img-container img {
   height: 50px;
   width: 50px;
+  border-radius: 50%;
+  margin: 10px;
 }
-
 .comment-img {
   background-image: url(./../assets/comment.png);
   height: 12px;

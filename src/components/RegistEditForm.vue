@@ -1,9 +1,8 @@
 <template>
 <form @submit.prevent.stop="handleSubmit($event)">
     <div class="row">
-      <label for="account"
-        >帳號<span class="note ml-5">*帳號長度不得大於 50 字元</span></label
-      >
+      <label for="account">帳號<span class="note">{{ form.account.length }} / 50</span>
+      </label>
       <input
         id="account"
         name="account"
@@ -16,7 +15,7 @@
 
     <div class="row">
       <label for="name"
-        >名稱<span class="note ml-5">*名稱長度不得大於 50 字元</span></label
+        >名稱<span class="note">{{ form.name.length }} / 50</span></label
       >
       <input
         id="name"
@@ -30,21 +29,20 @@
 
     <div class="row">
       <label for="email"
-        >Email<span class="note ml-5">*信箱長度不得大於 50 字元</span></label
+        >Email<span class="note ml-5"></span></label
       >
       <input
         id="email"
         name="email"
         type="email"
         v-model="form.email"
-        maxlength="50"
         required
       />
     </div>
 
     <div class="row">
       <label for="password"
-        >密碼<span class="note ml-5">*密碼長度需介於 4 和 12 之間</span></label
+        >密碼<span class="password">*密碼長度需介於 4 到 15 字元</span></label
       >
       <input
         id="password"
@@ -57,8 +55,8 @@
     </div>
     <div class="row">
       <label for="confirmPassword"
-        >密碼確認<span class="note ml-3"
-          >*密碼長度需介於 4 和 12 之間</span
+        >密碼確認<span class="passwordCheck"
+          >*密碼長度需介於 4 到 15 字元</span
         ></label
       >
       <input
@@ -144,9 +142,10 @@ export default {
   },
   methods: {
     fetchCurrentUser(payload) {
-      const { name, email, account } = payload;
+      const { id, name, email, account } = payload;
       this.form = {
         ...this.form,
+        id,
         name,
         email,
         account,
@@ -185,10 +184,10 @@ export default {
         })
         return result
       }
-      if (this.form.password.length > 12 || this.form.password.length < 4) {
+      if (this.form.password.length > 15 || this.form.password.length < 4) {
         Toast.fire({
           icon: "info",
-          title: "密碼長度不得小於 4 或超過 12！",
+          title: "密碼長度需介於 4 到 15 字元！",
         })
         return result
       }
@@ -236,7 +235,10 @@ export default {
         this.$router.push("/login")
       } catch (error) {
         console.log(error)
-        let message = "無法註冊，請稍後再試！"
+        let message = "目前無法註冊，請稍後再試";
+        if (error.response.status === 403) {
+          message = "該帳號或Email已註冊過囉！";
+        }
         Toast.fire({
           icon: "error",
           title: message,
@@ -272,7 +274,6 @@ export default {
         })
       }
     },
-    
   }
 }
 </script>
@@ -311,8 +312,19 @@ input:focus,textarea:focus {
     outline: none
 }
 .note {
-  font-size: 15px;
-  color: #ff6600;
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 550px;
+}
+.password {
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 400px;
+}
+.passwordCheck {
+  font-size: 13px;
+  font-weight: 400;
+  margin-left: 370px;
 }
 .btn {
   width: 100%;
