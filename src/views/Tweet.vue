@@ -100,19 +100,7 @@ export default {
           title: '無法取得推文資料，請稍後再試。'
         })
       }
-      
-      // const { id, User, text,  createdAt, repliesCount, likesCount, isLiked, Replies } = dummyTweet
-      // this.tweet = {
-      //   ...this.tweet,
-      //   id,
-      //   User,
-      //   text,
-      //   createdAt,
-      //   repliesCount,
-      //   likesCount,
-      //   isLiked
-      // }
-      // this.replies = Replies
+
     },
     afterClickModal(data) {
       this.modalContent = {
