@@ -250,10 +250,10 @@ export default {
         if (!formCheckResult) {
           return;
         }
-        const { data } = await usersAPI.update(
-          {userId: this.currentUserid}, formData)
+        const { data } = await usersAPI.updateInfo(
+          { userId: this.currentUserid, formData })
         console.log(data);
-        if (data.status !== "success") {
+        if (data[1].status !== "success") {
           throw new Error(data.message)
         }
         Toast.fire({

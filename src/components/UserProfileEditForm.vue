@@ -33,12 +33,14 @@
                 <img src="./../assets/icon_close@2x.png" alt="" />
               </button>
               <p class="ms-4">編輯個人資料</p>
-              <button 
-                class="btn save ms-auto" 
+              <button
+                class="btn save ms-auto"
                 type="submit"
                 data-bs-toggle="modal"
                 data-bs-target="#editFormModal"
-              >儲存</button>
+              >
+                儲存
+              </button>
             </div>
             <!-- form  content -->
             <div class="modal-body p-0">
@@ -101,7 +103,6 @@
                     name="name"
                     type="text"
                     maxlength="50"
-
                     v-model="user.name"
                   />
                   <div class="info text-end">{{ user.name.length }}/50</div>
@@ -116,6 +117,7 @@
                     rows="5"
                     maxlength="160"
                     v-model="user.bio"
+                    placeholder="尚未輸入任何自我介紹唷！"
                   />
                   <div class="info text-end">{{ user.bio.length }}/160</div>
                 </div>
@@ -130,6 +132,8 @@
 
 <script>
 import { emptyImageFilter } from "./../utils/mixins";
+
+import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
 
 export default {
@@ -144,7 +148,7 @@ export default {
   data() {
     return {
       user: {},
-      userCached: {}
+      userCached: {},
     };
   },
   created() {
@@ -156,12 +160,18 @@ export default {
         ...this.user,
         ...this.initailUser,
       };
+      if (this.user.bio === null) {
+        this.user = {
+          ...this.user,
+          bio: "",
+        };
+      }
     },
     cachedUserData() {
       this.userCached = {
         ...this.userCached,
-        ...this.user
-      }
+        ...this.user,
+      };
     },
     handleFileChange(e) {
       const id = e.target.id;
@@ -186,35 +196,48 @@ export default {
       this.user.cover = "";
     },
 
-    handelSubmit(e) {
-      if (!this.user.name) {
-        Toast.fire({
-          icon: "warning",
-          title: "姓名請勿空白",
+    async handelSubmit(e) {
+      try {
+        if (!this.user.name) {
+          Toast.fire({
+            icon: "warning",
+            title: "姓名請勿空白",
+          });
+          return;
+        }
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const { data } = await usersAPI.update({
+          id: this.user.id,
+          formData,
         });
-        return;
+
+
+        if (data[1].status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.$emit("after-form-submit");
+
+        Toast.fire({
+          icon: "success",
+          title: "儲存成功！",
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法更新個人資料，請稍後再試。",
+        });
       }
-
-      if (!this.user.bio) {
-        this.user.bio = "未填寫任何自我介紹";
-      }
-
-      const form = e.target;
-      const formData = new FormData(form);
-      this.$emit('after-form-submit', formData)
-
-      Toast.fire({
-        icon: 'success',
-        title: '儲存成功！'
-      })
     },
 
     handleCancel() {
       this.user = {
         ...this.user,
-        ...this.userCached
-      }
-    }
+        ...this.userCached,
+      };
+    },
   },
 };
 </script>

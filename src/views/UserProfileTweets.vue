@@ -15,6 +15,8 @@
           <TweetererImformation 
             :initial-user="User"
             @after-form-submit="afterFormSubmit"
+            @after-delete-follow-main="afterDeleteFollowMain"
+            @after-add-follow-main="afterAddFollowMain"
           />
           <TwittererNavPills 
             :initial-id="User.id"
@@ -29,7 +31,12 @@
         </div>
       </div>
       <div class="col-4">
-        <RecFollowingList />
+        <RecFollowingList 
+          @after-add-follow="afterAddFollow"
+          @after-delete-follow="afterDeleteFollow"
+          :remove-follow-id="removeFollowId"
+          :add-follow-id="addFollowId"
+        />
       </div>
     </div>
   </div>
@@ -77,10 +84,13 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
-        totalTweets: 0
+        totalTweets: 0,
+        isFollowing: 0
       },
       tweets: [],
-      modalContent : {}
+      modalContent : {},
+      removeFollowId: 0,
+      addFollowId: 0
     };
   },
 
@@ -103,7 +113,7 @@ export default {
      try {
        const { data } = await usersAPI.getUser({ userId })
 
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
        this.User = {
          ...this.User,
          id,
@@ -115,6 +125,7 @@ export default {
          totalFollowers,
          totalFollowings,
          totalTweets,
+         isFollowing
        }
      } catch(error) {
        Toast.fire({
@@ -161,10 +172,15 @@ export default {
         totalReplies: 0
       })
     },
-    afterFormSubmit(formData) {
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ": " + value);
-      }
+    async afterFormSubmit() {
+      const { id: userId } = this.$route.params
+      await this.fetchUser(userId);
+      this.tweets.map(tweet => {
+        tweet.User = {
+          ...tweet.User,
+          ...this.User
+        }
+      })
     },
     afterClickModal(data) {
       this.modalContent = {
@@ -172,6 +188,40 @@ export default {
         ...data,
       };
     },
+    afterAddFollow(userId) {
+      // 在我自己以外的別人的主頁時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers += 1
+        this.User.isFollowing = 1
+        return
+      }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings += 1
+        return
+      }
+      return
+    },
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
+    afterDeleteFollow(userId) {
+      // 當從右側點選的使用者與當前頁面的使用者相同時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers -= 1
+        this.User.isFollowing = 0
+        return
+      }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings -= 1
+        return
+      }
+      return
+    },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
+    }
   },
 };
 </script>

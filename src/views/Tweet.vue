@@ -80,6 +80,7 @@ export default {
     async fetchTweet(tweetId) {
       try {
         const { data } = await tweetsAPI.getTweet({ tweetId })
+        //TODO: 請後端加入totalReplies資料
         const { id, User, description, createdAt, totalReplies, totalLikes, isLiked, Replies } = data
 
         this.tweet = {
@@ -99,19 +100,7 @@ export default {
           title: '無法取得推文資料，請稍後再試。'
         })
       }
-      
-      // const { id, User, text,  createdAt, repliesCount, likesCount, isLiked, Replies } = dummyTweet
-      // this.tweet = {
-      //   ...this.tweet,
-      //   id,
-      //   User,
-      //   text,
-      //   createdAt,
-      //   repliesCount,
-      //   likesCount,
-      //   isLiked
-      // }
-      // this.replies = Replies
+
     },
     afterClickModal(data) {
       this.modalContent = {

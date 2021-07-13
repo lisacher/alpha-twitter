@@ -104,6 +104,17 @@ export default {
       }
     };
   },
+  watch: {
+    initialData: {
+      handler: function(newValue) {
+        this.data = {
+          ...this.data,
+          ...newValue
+        }
+      },
+      deep: true
+    }
+  },
   methods: {
     async toggleLiked(tweetId) {
       try {

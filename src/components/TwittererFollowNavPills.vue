@@ -27,6 +27,13 @@ export default {
       required: true
     }
   },
+  watch: {
+    id: {
+      handler: function changePathId() {
+       this.tabs.map(tab => tab.path.params.id = this.id)
+     }
+    },
+  },
   data() {
     return {
       tabs: [
@@ -42,7 +49,7 @@ export default {
         }
       ]
     }
-  },
+  }
 }
 </script>
 
