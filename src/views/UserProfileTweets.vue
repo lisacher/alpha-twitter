@@ -15,6 +15,8 @@
           <TweetererImformation 
             :initial-user="User"
             @after-form-submit="afterFormSubmit"
+            @after-delete-follow-main="afterDeleteFollowMain"
+            @after-add-follow-main="afterAddFollowMain"
           />
           <TwittererNavPills 
             :initial-id="User.id"
@@ -32,6 +34,8 @@
         <RecFollowingList 
           @after-add-follow="afterAddFollow"
           @after-delete-follow="afterDeleteFollow"
+          :remove-follow-id="removeFollowId"
+          :add-follow-id="addFollowId"
         />
       </div>
     </div>
@@ -84,7 +88,9 @@ export default {
         isFollowing: 0
       },
       tweets: [],
-      modalContent : {}
+      modalContent : {},
+      removeFollowId: 0,
+      addFollowId: 0
     };
   },
 
@@ -180,6 +186,7 @@ export default {
       // 在我自己以外的別人的主頁時：
       if(this.User.id === userId) {
         this.User.totalFollowers += 1
+        this.User.isFollowing = 1
         return
       }
       // 在我自己的主頁時。
@@ -189,11 +196,14 @@ export default {
       }
       return
     },
-
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
     afterDeleteFollow(userId) {
-      // 在我自己以外的別人的主頁時：
+      // 當從右側點選的使用者與當前頁面的使用者相同時：
       if(this.User.id === userId) {
         this.User.totalFollowers -= 1
+        this.User.isFollowing = 0
         return
       }
       // 在我自己的主頁時。
@@ -203,6 +213,9 @@ export default {
       }
       return
     },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
+    }
   },
 };
 </script>

@@ -18,7 +18,10 @@
                 <TwittererFollowTable 
                 v-for="following of followings"
                 :key="following.id"
-                :initial-data="following" />
+                :initial-data="following" 
+                @after-delete-follow-main="afterDeleteFollowMain"
+                @after-add-follow-main="afterAddFollowMain"
+                />
             <div class="followers-container">
               <!-- ReplyDetailList --> 
               
@@ -26,7 +29,12 @@
             </div>
 
             <div class="col-4 border-start">
-                <RecFollowingList /> 
+                <RecFollowingList 
+                  @after-add-follow="afterAddFollow"
+                  @after-delete-follow="afterDeleteFollow"
+                  :remove-follow-id="removeFollowId"
+                  :add-follow-id="addFollowId"
+                /> 
             </div>
         </div>
     </div>
@@ -67,7 +75,12 @@ export default {
         isFollowing: 0
       },
       followings: [],
+      removeFollowId: 0,
+      addFollowId: 0
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   created() {
     const { id: userId } = this.$route.params
@@ -79,9 +92,6 @@ export default {
     this.fetchUser(userId)
     this.fetchFollowings(userId)
     next()
-  },
-  computed: {
-    ...mapState(['currentUser'])
   },
   methods: {
     async fetchUser(userId) {
@@ -130,6 +140,34 @@ export default {
         })
       }
     },
+    afterAddFollow(userId) {
+      if(this.currentUser.id === this.User.id) {
+        //TODO: 在自己的頁面要做其他篩選/新增
+        return
+      }
+      this.followings.map(following => {
+        if(following.id === userId) {
+          following.isFollowing = 1
+        }
+      })
+    },
+    afterDeleteFollow(userId) {
+      if(this.currentUser.id === this.User.id) {
+        //TODO: 在自己的頁面要做其他篩選/新增
+        return
+      }
+      this.followings.map(following => {
+        if(following.id === userId) {
+          following.isFollowing = 0
+        }
+      })
+    },
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
+    }
   }
     
 }

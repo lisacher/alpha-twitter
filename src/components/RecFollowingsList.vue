@@ -57,8 +57,42 @@ import { Toast } from "./../utils/helpers";
 export default {
   name: "RecFollowingsList",
   mixins: [emptyImageFilter],
+  props: {
+    removeFollowId: {
+      type: Number,
+      default: 0,
+    },
+    addFollowId: {
+      type: Number,
+      default: 0,
+    },
+  },
   created() {
     this.fetchRecFollowers();
+  },
+  watch: {
+    removeFollowId: {
+      handler: function (newValue) {
+        this.recTwitterer.map((twitterer) => {
+          if (twitterer.id !== newValue) {
+            return twitterer;
+          } else {
+            twitterer.isFollowing = 0
+          }
+        });
+      },
+    },
+    addFollowId: {
+      handler: function (newValue) {
+        this.recTwitterer.map((twitterer) => {
+          if (twitterer.id !== newValue) {
+            return twitterer;
+          } else {
+            twitterer.isFollowing = 1
+          }
+        });
+      },
+    },
   },
   data() {
     return {
@@ -97,7 +131,7 @@ export default {
             };
           }
         });
-        this.$emit('after-add-follow', userId)
+        this.$emit("after-add-follow", userId);
         Toast.fire({
           icon: "success",
           title: "追蹤成功！",
@@ -128,7 +162,7 @@ export default {
             };
           }
         });
-        this.$emit('after-delete-follow', userId)
+        this.$emit("after-delete-follow", userId);
         Toast.fire({
           icon: "success",
           title: "取消追蹤成功！",

@@ -18,7 +18,10 @@
                 <TwittererFollowTable 
                 v-for="follower of followers"
                 :key="follower.id"
-                :initial-data="follower" />
+                :initial-data="follower"
+                @after-delete-follow-main="afterDeleteFollowMain"
+                @after-add-follow-main="afterAddFollowMain"
+                />
             <div class="followers-container">
               <!-- ReplyDetailList --> 
               
@@ -26,7 +29,12 @@
             </div>
 
             <div class="col-4 border-start">
-                <RecFollowingList /> 
+                <RecFollowingList 
+                  @after-add-follow="afterAddFollow"
+                  @after-delete-follow="afterDeleteFollow"
+                  :remove-follow-id="removeFollowId"
+                  :add-follow-id="addFollowId"
+                /> 
             </div>
         </div>
     </div>
@@ -42,6 +50,7 @@ import TwittererFollowTable from '../components/TwittererFollowTable.vue';
 
 import usersAPI from './../apis/users'
 import { Toast } from './../utils/helpers'
+import { mapState } from 'vuex'
 
 
 export default {
@@ -54,7 +63,7 @@ export default {
         TwittererFollowTable
         
     },
-    data() {
+  data() {
     return {
       User: {
         id: -1,
@@ -65,7 +74,12 @@ export default {
         isFollowed: true,
       },
       followers: [],
+      removeFollowId: 0,
+      addFollowId: 0
     }
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   created() {
     const { id: userId } = this.$route.params
@@ -127,6 +141,34 @@ export default {
         })
       }
     },
+    afterAddFollow(userId) {
+      if(this.currentUser.id === this.User.id) {
+        //TODO: 在自己的頁面要做其他篩選/新增
+        return
+      }
+      this.followers.map(follower => {
+        if(follower.id === userId) {
+          follower.isFollowing = 1
+        }
+      })
+    },
+    afterDeleteFollow(userId) {
+      if(this.currentUser.id === this.User.id) {
+        //TODO: 在自己的頁面要做其他篩選/新增
+        return
+      }
+      this.followers.map(follower => {
+        if(follower.id === userId) {
+          follower.isFollowing = 0
+        }
+      })
+    },
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
+    }
   }
     
 }

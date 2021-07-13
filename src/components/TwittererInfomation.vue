@@ -117,6 +117,7 @@ export default {
           isFollowing: 1,
           totalFollowers: this.user.totalFollowers + 1
         }
+        this.$emit('after-add-follow-main', userId)
         Toast.fire({
           icon: 'success',
           title: '追蹤成功！'
@@ -140,6 +141,7 @@ export default {
           isFollowing: 0,
           totalFollowers: this.user.totalFollowers - 1
         }
+        this.$emit('after-delete-follow-main', userId)
         Toast.fire({
           icon: 'success',
           title: '取消追蹤成功！'

@@ -17,15 +17,18 @@
             </div>
           </router-link>
 
-          <div class="toggleFollow">
+          <div 
+            class="toggleFollow"
+            v-if="follower.id !== currentUser.id"
+          >
             <button
               class="btn isFollowing"
-              v-if="follower.isFollowed"
-              @click.stop.prevent="unfollowUser()"
+              v-if="follower.isFollowing === 1 "
+              @click.stop.prevent="unfollowUser(follower.id)"
             >
               正在跟隨
             </button>
-            <button class="btn" v-else @click.stop.prevent="followUser()">
+            <button class="btn" v-else @click.stop.prevent="followUser(follower.id)">
               跟隨
             </button>
           </div>
@@ -38,7 +41,9 @@
 
 <script>
 import { emptyImageFilter } from "../utils/mixins";
+import usersAPI from './../apis/users'
 import { Toast } from "../utils/helpers";
+import { mapState } from 'vuex'
 
 export default {
   name: "TwittererFollowTable",
@@ -54,22 +59,50 @@ export default {
       follower: this.initialData,
     };
   },
+  computed: {
+    ...mapState(['currentUser'])
+  },
   methods: {
-    followUser() {
-      this.follower.isFollowed = true;
+    async followUser(userId) {
+      try {
+        const { data }= await usersAPI.followUser({ userId });
 
-      Toast.fire({
-        icon: "success",
-        title: "追蹤成功！",
-      });
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.follower.isFollowing = 1
+        Toast.fire({
+          icon: "success",
+          title: "追蹤成功！",
+        });
+        this.$emit('after-add-follow-main', userId)
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法追蹤使用者，請稍後再試",
+        });
+      }
     },
-    unfollowUser() {
-      this.follower.isFollowed = false;
-      Toast.fire({
-        icon: "success",
-        title: "已取消追蹤",
-      });
-    },
+    async unfollowUser(userId) {
+      try {
+        const { data } = await usersAPI.unfollowUser({ userId });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+        this.follower.isFollowing = 0
+        Toast.fire({
+          icon: "success",
+          title: "取消追蹤成功！",
+        });
+        this.$emit('after-delete-follow-main', userId)
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法取消追蹤使用者，請稍後再試",
+        });
+      }
+    }
   },
 };
 </script>
