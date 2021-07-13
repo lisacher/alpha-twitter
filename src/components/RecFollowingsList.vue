@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" :style="[more ? { height: `${recTwitterer.length * 71 + 92}px` } : { height:  `${5 * 71 + 92}px`}]">
     <div class="title">
       <h1>跟隨誰</h1>
     </div>
     <hr />
     <div class="users">
       <ul class="usersList">
-        <li class="user" v-for="user in recTwitterer" :key="user.id">
+        <li v-show="!(!more && card > 4)" class="user" v-for="(user, card) in recTwitterer" :key="user.id">
           <router-link :to="{ name: 'user-tweets', params: { id: user.id } }">
             <div class="userContent">
               <div class="avatar">
@@ -44,7 +44,8 @@
     </div>
 
     <div class="showMore">
-      <button class="btn">顯示更多</button>
+      <button class="btn" v-show="!more" @click="more = !more">顯示更多</button>
+      <button class="btn" v-show="more" @click="more = !more">顯示更少</button>
     </div>
   </div>
 </template>
@@ -97,7 +98,8 @@ export default {
   data() {
     return {
       recTwitterer: [],
-    };
+      more: false
+    }
   },
   methods: {
     async fetchRecFollowers() {
