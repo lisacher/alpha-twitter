@@ -22,7 +22,7 @@
             v-if="user.isFollowing === 1" 
             type="button"
             class="btn button"
-            @click.prevent.stop="deleteFollow"
+            @click.prevent.stop="deleteFollow(user.id)"
             >
             追蹤中
           </button>
@@ -114,9 +114,13 @@ export default {
 
         this.user = {
           ...this.user,
-          isFollowed: true,
-          followersCounts: this.user.followersCounts + 1
+          isFollowing: 1,
+          totalFollowers: this.user.totalFollowers + 1
         }
+        Toast.fire({
+          icon: 'success',
+          title: '追蹤成功！'
+        })
       } catch(error) {
         Toast.fire({
           icon: 'error',
@@ -124,11 +128,27 @@ export default {
         })
       }
     },
-    deleteFollow() {
-      this.user = {
-        ...this.user,
-        isFollowed: false,
-        followersCounts: this.user.followersCounts - 1
+    async deleteFollow(userId) {
+      try {
+        const { data } = await usersAPI.unfollowUser({ userId })
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.user = {
+          ...this.user,
+          isFollowing: 0,
+          totalFollowers: this.user.totalFollowers - 1
+        }
+        Toast.fire({
+          icon: 'success',
+          title: '取消追蹤成功！'
+        })
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取消追蹤使用者，請稍後再試。'
+        })
       }
     },
     afterFormSubmit() {

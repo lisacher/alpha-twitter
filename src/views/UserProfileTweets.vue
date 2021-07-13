@@ -183,7 +183,11 @@ export default {
         return
       }
       // 在我自己的主頁時。
-      this.User.totalFollowings += 1
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings += 1
+        return
+      }
+      return
     },
 
     afterDeleteFollow(userId) {
@@ -193,7 +197,11 @@ export default {
         return
       }
       // 在我自己的主頁時。
-      this.User.totalFollowings -= 1
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings -= 1
+        return
+      }
+      return
     },
   },
 };

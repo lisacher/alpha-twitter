@@ -9,11 +9,11 @@
       <div class="follower-info">
         <div class="isfollowed-info">
           <router-link
-            :to="{ name: 'user-tweets', params: { id: follower.id } }"
+            :to="{ name: 'user-tweets', params: { id: follower.id }}"
           >
             <div class="follower-title">
               <div class="name text-dark">{{ follower.name }}</div>
-              <div class="account">@{{ follower.account }}</div>
+              <div class="account">{{ follower.account }}</div>
             </div>
           </router-link>
 
@@ -54,7 +54,6 @@ export default {
       follower: this.initialData,
     };
   },
-  created() {},
   methods: {
     followUser() {
       this.follower.isFollowed = true;

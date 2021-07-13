@@ -9,7 +9,7 @@
                 <TopNavBar 
                   :msg="User.name"
                   :show="true"
-                  :tweetsCount="User.tweetsCount"
+                  :total-tweets="User.totalTweets" 
                   class="border-bottom-0"
                 />
                 <TwittererFollowNavPills 
@@ -40,59 +40,9 @@ import RecFollowingList from "../components/RecFollowingsList.vue"
 import TwittererFollowNavPills from '../components/TwittererFollowNavPills.vue';
 import TwittererFollowTable from '../components/TwittererFollowTable.vue';
 
-const user = 
-  {
-    id: 1,
-    name: "Yun",
-    account: "lisacher",
-    avatar: "",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "ABBC.",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  }
-;
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
 
-const dummyFollowers = [
-  {
-    id: 2,
-    name: "Apple",
-    account: "apple123",
-    avatar: "https://p1.pstatp.com/origin/pgc-image/f2d321f3b9e14ce2b953392e2b076718.jpeg",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "哈囉你好",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: true,
-  },
-  {
-    id: 5,
-    name: "Jacky",
-    account: "jacky1234",
-    avatar: "https://i0.wp.com/p3.pstatp.com/large/dd0000a5eac1ba380eb",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "ABBC.",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  },
-  {
-    id: 6,
-    name: "Cindy",
-    account: "cindyyy",
-    avatar: "https://p3.pstatp.com/origin/pgc-image/c1dc078deaa84cdbac337e90b6c267cf.jpeg",
-    cover: "https://fakeimg.pl/200x200",
-    bio: "Hi~~~~~~~~",
-    tweetsCount: 7,
-    followingsCounts: 22,
-    followersCounts: 25,
-    isFollowed: false
-  }
-]
 
 export default {
     name: "UserProfileFollowers",
@@ -118,18 +68,64 @@ export default {
     }
   },
   created() {
-    this.fetchUser()
-    this.fetchFollowers()
+    const { id: userId } = this.$route.params
+    this.fetchUser(userId)
+    this.fetchFollowers(userId)
   },
+  beforeRouteUpdate (to ,from, next) {
+    const { id: userId } = to.params
+    this.fetchUser(userId)
+    this.fetchFollowers(userId)
+    next()
+  },
+
   methods: {
-    fetchUser() {
-      this.User = {
-        ...this.User,
-        ...user,
-      }
+    async fetchUser(userId) {
+     try {
+       const { data, statusText } = await usersAPI.getUser({ userId })
+       if(statusText !== 'OK') {
+         throw new Error(data.message)
+       }
+       const { id, account, name, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
+       this.User = {
+         ...this.User,
+         id,
+         name,
+         account,
+         totalFollowers,
+         totalFollowings,
+         totalTweets,
+         isFollowing
+       }
+     } catch(error) {
+       Toast.fire({
+         icon: 'error',
+         title: '無法取得資料，請稍後再試。'
+       })
+     }
     },
-    fetchFollowers() {
-      this.followers = dummyFollowers
+    async fetchFollowers(userId) {
+      try{
+        const { data } = await usersAPI.getUserFollowers({ userId })
+
+        data.map(follower => {
+          const { followerId, name, account, avatar, bio, isFollowing } = follower
+          this.followers.push({
+            id: followerId,
+            name,
+            account,
+            avatar,
+            bio,
+            isFollowing
+          })
+        })
+
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得追隨者資料，請稍後再試。'
+        })
+      }
     },
   }
     
