@@ -97,6 +97,7 @@ export default {
             };
           }
         });
+        this.$emit('after-add-follow', userId)
         Toast.fire({
           icon: "success",
           title: "追蹤成功！",
@@ -127,6 +128,7 @@ export default {
             };
           }
         });
+        this.$emit('after-delete-follow', userId)
         Toast.fire({
           icon: "success",
           title: "取消追蹤成功！",

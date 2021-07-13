@@ -197,32 +197,39 @@ export default {
     },
 
     async handelSubmit(e) {
-      if (!this.user.name) {
-        Toast.fire({
-          icon: "warning",
-          title: "姓名請勿空白",
+      try {
+        if (!this.user.name) {
+          Toast.fire({
+            icon: "warning",
+            title: "姓名請勿空白",
+          });
+          return;
+        }
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const { data } = await usersAPI.update({
+          id: this.user.id,
+          formData,
         });
-        return;
+
+
+        if (data[1].status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.$emit("after-form-submit");
+
+        Toast.fire({
+          icon: "success",
+          title: "儲存成功！",
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: "error",
+          title: "無法更新個人資料，請稍後再試。",
+        });
       }
-      const form = e.target;
-      const formData = new FormData(form);
-
-      const { data } = await usersAPI.update({
-        id: this.user.id,
-        formData,
-      });
-
-      console.log('data', data);
-      if(data[1].status !== 'success') {
-        throw new Error(data.message)
-      }
-
-      this.$emit("after-form-submit");
-
-      Toast.fire({
-        icon: "success",
-        title: "儲存成功！",
-      });
     },
 
     handleCancel() {

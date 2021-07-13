@@ -19,7 +19,7 @@
           <button class="btn button dm-button me-2"></button>
           <button class="btn button noti-button me-2"></button>
           <button 
-            v-if="user.isFollowed" 
+            v-if="user.isFollowing === 1" 
             type="button"
             class="btn button"
             @click.prevent.stop="deleteFollow"
@@ -30,7 +30,7 @@
             v-else 
             type="button"
             class="btn button is-active"
-            @click.prevent.stop="addFollow"
+            @click.prevent.stop="addFollow(user.id)"
           >追蹤</button>
         </template>
       </div>
@@ -63,6 +63,9 @@ import UserProfileEditForm from './../components/UserProfileEditForm.vue'
 import { emptyImageFilter } from './../utils/mixins'
 import { mapState } from 'vuex'
 
+import usersAPI from './../apis/users'
+import { Toast } from './../utils/helpers'
+
 
 export default {
   name: "TwittererInformation",
@@ -88,22 +91,37 @@ export default {
     ...mapState(['currentUser'])
   },
   watch: {
-    initialUser(newValue) {
-      this.user = {
-        ...this.user,
-        ...newValue
-      }
+    initialUser: {
+      handler: function(newValue) {
+        this.user = {
+          ...this.user,
+          ...newValue
+        }
+      },
+      deep: true
     }
   },
   methods: {
     fetchUser() {
       this.user = this.initialUser;
     },
-    addFollow() {
-      this.user = {
-        ...this.user,
-        isFollowed: true,
-        followersCounts: this.user.followersCounts + 1
+    async addFollow(userId) {
+      try {
+        const { data } = await usersAPI.followUser({ userId })
+        if(data.status !== 'success') {
+          throw new Error(data.message)
+        }
+
+        this.user = {
+          ...this.user,
+          isFollowed: true,
+          followersCounts: this.user.followersCounts + 1
+        }
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法追蹤使用者，請稍後再試。'
+        })
       }
     },
     deleteFollow() {

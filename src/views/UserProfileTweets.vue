@@ -29,7 +29,10 @@
         </div>
       </div>
       <div class="col-4">
-        <RecFollowingList />
+        <RecFollowingList 
+          @after-add-follow="afterAddFollow"
+          @after-delete-follow="afterDeleteFollow"
+        />
       </div>
     </div>
   </div>
@@ -77,7 +80,8 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
-        totalTweets: 0
+        totalTweets: 0,
+        isFollowing: 0
       },
       tweets: [],
       modalContent : {}
@@ -103,7 +107,7 @@ export default {
      try {
        const { data } = await usersAPI.getUser({ userId })
 
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
        this.User = {
          ...this.User,
          id,
@@ -115,6 +119,7 @@ export default {
          totalFollowers,
          totalFollowings,
          totalTweets,
+         isFollowing
        }
      } catch(error) {
        Toast.fire({
@@ -170,6 +175,25 @@ export default {
         ...this.modalContent,
         ...data,
       };
+    },
+    afterAddFollow(userId) {
+      // 在我自己以外的別人的主頁時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers += 1
+        return
+      }
+      // 在我自己的主頁時。
+      this.User.totalFollowings += 1
+    },
+
+    afterDeleteFollow(userId) {
+      // 在我自己以外的別人的主頁時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers -= 1
+        return
+      }
+      // 在我自己的主頁時。
+      this.User.totalFollowings -= 1
     },
   },
 };
