@@ -111,7 +111,6 @@ export default {
     async fetchFollowings(userId) {
       try{
         const { data } = await usersAPI.getUserFollowings({ userId })
-
         data.map(following => {
           const { followingId, name, account, avatar, bio, isFollowing } = following
           this.followings.push({
