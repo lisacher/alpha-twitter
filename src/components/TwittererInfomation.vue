@@ -21,7 +21,7 @@
           <button 
             v-if="user.isFollowing === 1" 
             type="button"
-            class="btn button"
+            class="btn button is-active"
             @click.prevent.stop="deleteFollow(user.id)"
             >
             追蹤中
@@ -29,7 +29,7 @@
           <button 
             v-else 
             type="button"
-            class="btn button is-active"
+            class="btn button"
             @click.prevent.stop="addFollow(user.id)"
           >追蹤</button>
         </template>

@@ -37,7 +37,7 @@
         <router-link
           :to="{ name: 'user-tweets', params: { id: reply.User.id } }"
         >
-          <img :src="reply.User.avatar" alt="" />
+          <img :src="reply.User.avatar | emptyImage" alt="" />
         </router-link>
         <div class="replyTarget"></div> 
       </div>
@@ -63,12 +63,13 @@
 </template>
 
 <script>
+import { emptyImageFilter } from "./../utils/mixins"
 import { daytimeFilter } from './../utils/mixins'
 import { mapState } from 'vuex'
 
 export default {
   name: "TweetsCard",
-  mixins: [daytimeFilter],
+  mixins: [daytimeFilter, emptyImageFilter],
   props: {
     initialData: {
       type: Object,
