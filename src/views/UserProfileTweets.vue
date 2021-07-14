@@ -143,6 +143,7 @@ export default {
        }
         this.tweets = data
 
+        // 排序
         this.tweets.sort((a, b) => {
           const aDate = new Date(a.createdAt)
           const bDate = new Date(b.createdAt)

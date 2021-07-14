@@ -176,7 +176,10 @@ export default {
       };
     },
     afterToggleLike() {
-      this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+      // 只有在我自己的頁面才執行
+      if(this.User.id === this.currentUser.id) {
+        this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+      }
     },
     afterAddFollow(userId) {
       // 在我自己以外的別人的主頁時：

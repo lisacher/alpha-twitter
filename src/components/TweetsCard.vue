@@ -177,6 +177,7 @@ export default {
           }
         }
         this.status.isProcessing = false;
+        this.$emit('after-toggle-like')
       } catch (error) {
         this.status.isProcessing = false;
         Toast.fire({
@@ -204,6 +205,8 @@ export default {
 .img-container img {
   height: 50px;
   width: 50px;
+  object-fit: cover;
+  object-position: 50% 50%;
   border-radius: 50%;
 }
 

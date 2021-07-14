@@ -3,11 +3,17 @@
     <div class="row">
       <SideNavBar class="col-3" />
       <div class="col-5 p-0 border main-component">
-        <TopNavBar :msg="User.name" :show="true" :tweetsCount="User.tweetsCount" />
+        <TopNavBar 
+          :msg="User.name" 
+          :show="true" 
+          :tweetsCount="User.totalTweets" 
+        />
         <div class="tweets-container">
           <TweetererImformation 
             :initial-user="User"
             @after-form-submit="afterFormSubmit"
+            @after-delete-follow-main="afterDeleteFollowMain"
+            @after-add-follow-main="afterAddFollowMain"
           />
           <TwittererNavPills 
             :initial-id="User.id"
@@ -20,7 +26,12 @@
         </div>
       </div>
       <div class="col-4">
-        <RecFollowingList />
+        <RecFollowingList 
+          @after-add-follow="afterAddFollow"
+          @after-delete-follow="afterDeleteFollow"
+          :remove-follow-id="removeFollowId"
+          :add-follow-id="addFollowId"
+        />
       </div>
     </div>
   </div>
@@ -62,15 +73,24 @@ export default {
         bio: "",
         totalFollowings: 0,
         totalFollowers: 0,
-        totalTweets: 0
+        totalTweets: 0,
+        isFollowing: 0,
       },
       replies: [],
+      removeFollowId: 0,
+      addFollowId: 0
     };
   },
   created() {
     const { id: userId } = this.$route.params
     this.fetchUser(userId)
     this.fetchReplies(userId)
+  },
+  beforeRouteUpdate (to ,from, next) {
+    const { id: userId } = to.params
+    this.fetchUser(userId)
+    this.fetchReplies(userId)
+    next()
   },
   computed: {
     ...mapState(['currentUser'])
@@ -79,7 +99,7 @@ export default {
     async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
+       const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
        this.User = {
          ...this.User,
          id,
@@ -91,6 +111,7 @@ export default {
          totalFollowers,
          totalFollowings,
          totalTweets,
+         isFollowing
        }
      } catch(error) {
        Toast.fire({
@@ -108,11 +129,13 @@ export default {
        }
         this.replies = data
 
+        // 排序
         this.replies.sort((a, b) => {
           const aDate = new Date(a.createdAt)
           const bDate = new Date(b.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
+
       } catch(error) {
         Toast.fire({
           icon:'error',
@@ -121,10 +144,60 @@ export default {
       }
       
     },
-    afterFormSubmit(formData) {
-      for (let [name, value] of formData.entries()) {
-        console.log(name + ": " + value);
+    async afterFormSubmit() {
+      const { id: userId } = this.$route.params
+      await this.fetchUser(userId);
+      this.replies.map(reply => {
+        if(reply.User.id === userId) {
+          reply.User = {
+            ...reply.User,
+            ...this.User
+          }
+        }
+        reply.Replies.map(innerReply => {
+          if(innerReply.User.id === userId) {
+            innerReply.User = {
+              ...innerReply,
+              ...this.User
+            }
+          }
+        })
+
+      })
+    },
+    afterAddFollow(userId) {
+      // 在我自己以外的別人的主頁時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers += 1
+        this.User.isFollowing = 1
+        return
       }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings += 1
+        return
+      }
+      return
+    },
+    afterAddFollowMain(userId) {
+      this.addFollowId = userId
+    },
+    afterDeleteFollow(userId) {
+      // 當從右側點選的使用者與當前頁面的使用者相同時：
+      if(this.User.id === userId) {
+        this.User.totalFollowers -= 1
+        this.User.isFollowing = 0
+        return
+      }
+      // 在我自己的主頁時。
+      if(this.currentUser.id === this.User.id) {
+        this.User.totalFollowings -= 1
+        return
+      }
+      return
+    },
+    afterDeleteFollowMain(userId) {
+      this.removeFollowId = userId
     }
   },
 };
