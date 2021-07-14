@@ -35,6 +35,14 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  createReply({ tweetId, content }) {
+    return apiHelper.post(`/tweets/${tweetId}/replies`, {
+      tweetId,
+      content
+    }, {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
   likeTweet({ tweetId }) {
     return apiHelper.post(`/tweets/${tweetId}/like`, null, {
       headers: { Authorization: `Bearer ${getToken()}` }

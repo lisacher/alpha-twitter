@@ -50,7 +50,7 @@
         type="password"
         v-model="form.password"
         required
-        maxLength="12"
+        maxLength="15"
       />
     </div>
     <div class="row">
@@ -65,7 +65,7 @@
         type="password"
         v-model="form.confirmPassword"
         required
-        maxLength="12"
+        maxLength="15"
       />
     </div>
 

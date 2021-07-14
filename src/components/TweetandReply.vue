@@ -31,23 +31,21 @@
       </div>
     </div>
     <!-- User's Reply -->
-    <div 
-      class="d-flex border-bottom"
-      v-for="reply in data.Replies"
-      :key="reply.id"
-    >
+    <div class="d-flex" v-for="reply in data.Replies"
+            :key="reply.id">
       <div class="img-container">
         <router-link
           :to="{ name: 'user-tweets', params: { id: reply.User.id } }"
         >
           <img :src="reply.User.avatar" alt="" />
         </router-link>
+        <div class="replyTarget"></div> 
       </div>
 
       <div class="text-container mt-2 flex-grow-1">
         <div class="header">
           <div class="name d-inline-block pe-2">{{ reply.User.name }}</div>
-          <div class="account d-inline-block">{{ reply.User.name }}</div>
+          <div class="account d-inline-block">{{ reply.User.account }}</div>
           <div class="createdAt d-inline-block">
             ・{{ reply.createdAt | fromNow }}
           </div>
@@ -59,6 +57,7 @@
         </div>
       </div>
     </div>
+    <div class="border-bottom"></div>
   </router-link>
   </div>  
 </template>
@@ -74,7 +73,7 @@ export default {
     initialData: {
       type: Object,
       required: true,
-    }
+    },
   },
   computed: {
     ...mapState(['currentUser'])
@@ -166,7 +165,7 @@ export default {
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
-  height: calc(100% - 46px);
+  height: calc(100% - 70px);
   background-color: #ccd6dd;
 }
 </style>
