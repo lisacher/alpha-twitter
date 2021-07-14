@@ -16,7 +16,6 @@
             v-for="reply in replies"
             :key="reply.id"
             :initial-data="reply"
-            :initial-reply="reply.Replies"
           />
         </div>
       </div>
@@ -34,9 +33,11 @@ import TopNavBar from "../components/TopNavBar.vue";
 import TweetererImformation from "../components/TwittererInfomation.vue";
 import TwittererNavPills from '../components/TwittererNavPills.vue'
 import TweetandReply from '../components/TweetandReply.vue'
+
 import tweetsAPI from '../apis/tweets'
 import usersAPI from '../apis/users'
 import { Toast } from './../utils/helpers'
+
 import { mapState } from 'vuex'
 
 
@@ -78,7 +79,6 @@ export default {
     async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-
        const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets } = data
        this.User = {
          ...this.User,
@@ -102,13 +102,13 @@ export default {
     async fetchReplies(userId) {
       try {
         const { data } = await tweetsAPI.getReply({ userId })
-        data.map(reply => {
-          if(reply.UserId !== userId) {
-            return
-          }
-          this.replies.push({
-            ...reply,
-          })
+        console.log('data', data);
+        this.replies = data
+
+        this.replies.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
         })
       } catch(error) {
         Toast.fire({

@@ -128,6 +128,10 @@ export default {
 
           this.data.totalLikes += 1;
           this.data.isLiked = 1
+          Toast.fire({
+          icon: 'success',
+          title: data.message
+         })
         } else {
           const { data } = await tweetsAPI.unlikeTweet({ tweetId })
           if(data.status !== 'success') {
@@ -135,6 +139,11 @@ export default {
           }
           this.data.totalLikes -= 1;
           this.data.isLiked = 0
+          
+          Toast.fire({
+          icon: 'success',
+          title: data.message
+        })
        }
        this.status.isProcessing = false
        this.$emit('after-toggle-like')
@@ -143,7 +152,7 @@ export default {
         this.status.isProcessing = false
         Toast.fire({
           icon: 'error',
-          title: '現在無法按讚/取消讚，請稍後再試。'
+          title: error.message
         })
       }
       

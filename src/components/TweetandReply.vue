@@ -10,7 +10,7 @@
         <router-link
           :to="{ name: 'user-tweets', params: { id: data.UserId } }"
         >
-          <img :src="data.Replies.User.avatar" alt="" />
+          <img :src="data.User.avatar" alt="" />
         </router-link>
         <div class="replyTarget"></div> 
       </div>
@@ -20,37 +20,41 @@
           <div class="name d-inline-block pe-2">{{data.User.name}}</div>
           <div class="account d-inline-block">{{ data.User.account }}</div>
           <div class="createdAt d-inline-block">
-            ・{{ data.Replies.createdAt | fromNow }}
-          </div>
-        </div>
-        <div class="body mb-3">
-          <div class="text me-3">
-            {{ Replies.content }}
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- User's Reply -->
-    <div class="d-flex border-bottom">
-      <div class="img-container">
-        <router-link
-          :to="{ name: 'user-tweets', params: { id: data.UserId } }"
-        >
-          <img :src="data.User.avatar" alt="" />
-        </router-link>
-      </div>
-
-      <div class="text-container mt-2 flex-grow-1">
-        <div class="header">
-          <div class="name d-inline-block pe-2">{{ data.User.name }}</div>
-          <div class="account d-inline-block">{{ data.User.name }}</div>
-          <div class="createdAt d-inline-block">
             ・{{ data.createdAt | fromNow }}
           </div>
         </div>
         <div class="body mb-3">
           <div class="text me-3">
             {{ data.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- User's Reply -->
+    <div 
+      class="d-flex border-bottom"
+      v-for="reply in data.Replies"
+      :key="reply.id"
+    >
+      <div class="img-container">
+        <router-link
+          :to="{ name: 'user-tweets', params: { id: reply.User.id } }"
+        >
+          <img :src="reply.User.avatar" alt="" />
+        </router-link>
+      </div>
+
+      <div class="text-container mt-2 flex-grow-1">
+        <div class="header">
+          <div class="name d-inline-block pe-2">{{ reply.User.name }}</div>
+          <div class="account d-inline-block">{{ reply.User.name }}</div>
+          <div class="createdAt d-inline-block">
+            ・{{ reply.createdAt | fromNow }}
+          </div>
+        </div>
+        <div class="body mb-3">
+          <div class="text me-3">
+            {{ reply.content }}
           </div>
         </div>
       </div>
@@ -70,10 +74,6 @@ export default {
     initialData: {
       type: Object,
       required: true,
-    },
-    initialReply: {
-      type: Array,
-      required: true,
     }
   },
   computed: {
@@ -82,7 +82,6 @@ export default {
   data() {
     return {
       data: this.initialData,
-      Replies: this.initialReply,
     }
   },
 };
