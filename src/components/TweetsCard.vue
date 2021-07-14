@@ -1,10 +1,7 @@
 <template>
   <div class="d-flex border tweet-card">
     <div class="img-container m-3">
-      <router-link 
-        :to="{ name: 'user-tweets', params: { id: data.User.id }}"
-      >
-         
+      <router-link :to="{ name: 'user-tweets', params: { id: data.User.id } }">
         <img :src="data.User.avatar | emptyImage" alt="" />
       </router-link>
     </div>
@@ -16,28 +13,33 @@
           ・{{ data.createdAt | fromNow }}
         </div>
       </div>
-      <router-link 
+      <!-- 當此卡片是在回覆他人推文時： -->
+      <router-link
         v-if="replyTweet"
-        :to="{ name: 'tweet', params: { id: replyTweet.id }}" 
+        :to="{ name: 'tweet', params: { id: replyTweet.id } }"
         class="tweet-link"
       >
         <div class="body">
           <div class="text">
-            <p class="reply-content py-1">回覆 
+            <p class="reply-content py-1">
+              回覆
               <router-link
-                :to="{ name: 'user-tweets', params:{ id: replyTweet.User.id}}"
+                :to="{
+                  name: 'user-tweets',
+                  params: { id: replyTweet.User.id },
+                }"
                 class="tweet-link"
               >
-                <span>{{replyTweet.User.account}}</span>
+                <span>{{ replyTweet.User.account }}</span>
               </router-link>
             </p>
-            {{ data.text }}
+            {{ data.content }}
           </div>
         </div>
       </router-link>
-      <router-link 
+      <router-link
         v-else
-        :to="{ name: 'tweet', params: { id: data.id }}" 
+        :to="{ name: 'tweet', params: { id: data.id } }"
         class="tweet-link"
       >
         <div class="body me-3">
@@ -59,9 +61,10 @@
 
         <div
           class="liked d-flex align-items-center"
-          :class="{ activeLiked: data.isLiked ===  1}"
+          :class="{ activeLiked: data.isLiked === 1 }"
         >
-          <button class="btn liked-img" 
+          <button
+            class="btn liked-img"
             @click.prevent.stop="toggleLiked(data.id)"
             :disabled="status.isProcessing"
           ></button>
@@ -73,18 +76,16 @@
 </template>
 
 <script>
-import { emptyImageFilter } from './../utils/mixins'
+import { emptyImageFilter } from "./../utils/mixins";
 import { daytimeFilter } from "./../utils/mixins";
 
-import tweetsAPI from './../apis/tweets'
-import { Toast } from './../utils/helpers'
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
 
 export default {
   name: "TweetsCard",
   mixins: [daytimeFilter, emptyImageFilter],
-  components: {
-
-  },
+  components: {},
   props: {
     initialData: {
       type: Object,
@@ -92,74 +93,101 @@ export default {
     },
     replyTweet: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       data: this.initialData,
       status: {
         isProcessing: false,
-        isLoading: false
-      }
+        isLoading: false,
+      },
     };
   },
   watch: {
     initialData: {
-      handler: function(newValue) {
+      handler: function (newValue) {
         this.data = {
           ...this.data,
-          ...newValue
-        }
+          ...newValue,
+        };
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
-    async toggleLiked(tweetId) {
+    async toggleLiked(id) {
       try {
-        this.status.isProcessing = true
+        this.status.isProcessing = true;
+        // 當不是在單一推文頁面時：
+        if (!this.replyTweet) {
+          if (this.data.isLiked === 0) {
+            const { data } = await tweetsAPI.likeTweet({ tweetId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
 
-        if (this.data.isLiked === 0 ) {
-          const { data } = await tweetsAPI.likeTweet({ tweetId }) 
-          if(data.status !== 'success') {
-            throw new Error(data.message)
+            this.data.totalLikes += 1;
+            this.data.isLiked = 1;
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          } else {
+            const { data } = await tweetsAPI.unlikeTweet({ tweetId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+            this.data.totalLikes -= 1;
+            this.data.isLiked = 0;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
           }
+        }
+        if (this.replyTweet) {
+          if (this.data.isLiked === 0) {
+            const { data } = await tweetsAPI.likeReply({ replyId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
 
-          this.data.totalLikes += 1;
-          this.data.isLiked = 1
-          Toast.fire({
-          icon: 'success',
-          title: data.message
-         })
-        } else {
-          const { data } = await tweetsAPI.unlikeTweet({ tweetId })
-          if(data.status !== 'success') {
-            throw new Error(data.message)
+            this.data.totalLikes += 1;
+            this.data.isLiked = 1;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          } else {
+            const { data } = await tweetsAPI.unlikeReply({ replyId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+            this.data.totalLikes -= 1;
+            this.data.isLiked = 0;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
           }
-          this.data.totalLikes -= 1;
-          this.data.isLiked = 0
-          
-          Toast.fire({
-          icon: 'success',
-          title: data.message
-        })
-       }
-       this.status.isProcessing = false
-       this.$emit('after-toggle-like')
-
-      } catch(error) {
-        this.status.isProcessing = false
+        }
+        this.status.isProcessing = false;
+      } catch (error) {
+        this.status.isProcessing = false;
         Toast.fire({
-          icon: 'error',
-          title: error.message
-        })
+          icon: "error",
+          title: error.message,
+        });
       }
-      
-    }, 
+    },
     clickModalButton(data) {
-      this.$emit('after-click-modal', data)
-    }
+      this.$emit("after-click-modal", data);
+    },
   },
 };
 </script>
@@ -200,7 +228,7 @@ export default {
 }
 
 .reply-content span {
-  color: #FF6600;
+  color: #ff6600;
 }
 
 .footer {
@@ -215,10 +243,10 @@ export default {
 }
 
 .comment::after {
-  content: '';
-  height: 25px; 
-  width:25px;
-  background-color:#FF6600;
+  content: "";
+  height: 25px;
+  width: 25px;
+  background-color: #ff6600;
   border-radius: 25px;
   left: -5px;
   position: absolute;
@@ -241,9 +269,9 @@ export default {
 }
 
 .liked::after {
-  content: '';
-  height: 25px; 
-  width:25px;
+  content: "";
+  height: 25px;
+  width: 25px;
   background-color: #e0245e;
   border-radius: 25px;
   left: -5px;
@@ -256,7 +284,6 @@ export default {
   opacity: 0.2;
 }
 
-
 .liked:hover .likes-count {
   color: #e0245e;
 }
@@ -268,5 +295,4 @@ export default {
 .activeLiked .likes-count {
   color: #e0245e;
 }
-
 </style>

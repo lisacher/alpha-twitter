@@ -2,7 +2,7 @@
   <div class="tweetReply">
       <!-- Other User's Tweet -->
     <router-link 
-      :to="{ name:'tweet', params: { id: data.UserId } }"
+      :to="{ name:'tweet', params: { id: data.id } }"
       class="tweet-link"
     >
     <div class="d-flex">

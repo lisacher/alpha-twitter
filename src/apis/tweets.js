@@ -45,6 +45,16 @@ export default {
       headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
+  likeReply({ replyId }) {
+    return apiHelper.post(`/replies/${replyId}/like`, null, {
+      headers: { Authorization: `Bearer ${getToken()}`}
+    })
+  },
+  unlikeReply({ replyId }) {
+    return apiHelper.post(`/replies/${replyId}/unlike`, null, {
+      headers: { Authorization: `Bearer ${getToken()}`}
+    })
+  },
   getAdminTweets() {
     return apiHelper.get('/admin/main', {
       headers: { Authorization: `Bearer ${getToken()}` }
