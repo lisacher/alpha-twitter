@@ -6,7 +6,7 @@
         <TopNavBar 
           :msg="User.name" 
           :show="true" 
-          :tweetsCount="User.totalTweets" 
+          :totalTweets="User.totalTweets" 
         />
         <div class="tweets-container">
           <TweetererImformation 

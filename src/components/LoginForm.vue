@@ -1,63 +1,58 @@
 <template>
-    <form @submit.prevent.stop="handleSubmit">
-      <div class="logo">
-        <img src="../assets/Logo.png" alt="" />
-      </div>
-      <div class="title">
-        <h1>登入 Alphitter</h1>
-      </div>
+  <form @submit.prevent.stop="handleSubmit">
+    <div class="logo">
+      <img src="../assets/Logo.png" alt="" />
+    </div>
+    <div class="title">
+      <h1>登入 Alphitter</h1>
+    </div>
 
-      <div class="row">
-        <label for="account">帳號</label>
-        <input
-          id="account"
-          name="account"
-          type="text"
-          v-model="account"
-          required
-        />
-      </div>
+    <div class="row">
+      <label for="account">帳號</label>
+      <input
+        id="account"
+        name="account"
+        type="text"
+        v-model="account"
+        required
+      />
+    </div>
 
-      <div class="row">
-        <label for="password">密碼</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          v-model="password"
-          required
-        />
-      </div>
+    <div class="row">
+      <label for="password">密碼</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        v-model="password"
+        required
+      />
+    </div>
 
-      <div class="row mt-4">
-        <button class="btn login" type="submit">
-          登入
-        </button>
+    <div class="row mt-4">
+      <button class="btn login" type="submit">登入</button>
+    </div>
+    <div class="row link-btns-container">
+      <div class="link-btns">
+        <router-link class="routerLink" to="/register"
+          >註冊 Alphitter</router-link
+        >
+        <span> &#xb7; </span>
+        <router-link class="routerLink" to="/admin">後台登入</router-link>
       </div>
-      <div class="row link-btns-container">
-        <div class="link-btns">
-          <router-link class="routerLink" to="/register"
-            >註冊 Alphitter</router-link
-          >
-          <span> &#xb7; </span>
-          <router-link class="routerLink" to="/admin"
-            >後台登入</router-link
-          >
-        </div>
-      </div>
-    </form>
+    </div>
+  </form>
 </template>
 
 <script>
-import { Toast } from "../utils/helpers"
-import authorizationAPI from './../apis/authorization'
+import { Toast } from "../utils/helpers";
+import authorizationAPI from "./../apis/authorization";
 
 const dummyUser = {
-    id: 3,
-    account: 'root',
-    password: '1234'
-
-}
+  id: 3,
+  account: "root",
+  password: "1234",
+};
 
 export default {
   name: "UserLogin",
@@ -65,15 +60,15 @@ export default {
     return {
       account: "",
       password: "",
-      user: []
-    }
+      user: [],
+    };
   },
   created() {
-      this.fetchUser()
+    this.fetchUser();
   },
   methods: {
     fetchUser() {
-        this.user = dummyUser
+      this.user = dummyUser;
     },
     async handleSubmit() {
       try {
@@ -81,36 +76,32 @@ export default {
           Toast.fire({
             icon: "warning",
             title: "請輸入帳號和密碼",
-          })
-          return
+          });
+          return;
         }
 
         const { data } = await authorizationAPI.signIn({
           account: this.account,
-          password: this.password
-        })
+          password: this.password,
+        });
 
-        console.log('data', data);
-
-        if(data.status !== 'success') {
-          throw new Error(data.message)
+        if (data.status !== "success") {
+          throw new Error(data.message);
         }
-        localStorage.setItem('token', data.token)
+        localStorage.setItem("token", data.token);
 
-        this.$store.commit('setCurrentUser', data.user)
+        this.$store.commit("setCurrentUser", data.user);
 
-        this.$router.push("/tweets")
-
-      } catch(error) {
+        this.$router.push("/tweets");
+      } catch (error) {
         Toast.fire({
-          icon: 'error',
-          title: '請確認您的帳號密碼正確'
-        })
-      }        
+          icon: "error",
+          title: "請確認您的帳號密碼正確",
+        });
+      }
     },
   },
-}
-
+};
 </script>
 
 <style scoped>
@@ -134,7 +125,7 @@ form {
 .row label {
   color: #657786;
   font-weight: 500;
-  background-color: #F5F8FA;
+  background-color: #f5f8fa;
   width: 540px;
   height: 23px;
 }
@@ -151,8 +142,9 @@ input {
   border: none;
   border-bottom: 2px solid #657786;
 }
-input:focus,textarea:focus {
-    outline: none
+input:focus,
+textarea:focus {
+  outline: none;
 }
 .btn {
   width: 100%;
@@ -184,5 +176,4 @@ button.login {
   color: #0099ff;
   font-weight: 700;
 }
-
 </style>

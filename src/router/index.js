@@ -6,6 +6,8 @@ import Register from '../views/Register.vue'
 import AdminLogin from './../views/AdminLogin.vue'
 import store from './../store'
 
+import { Toast } from './../utils/helpers'
+
 Vue.use(VueRouter)
 
 // Test 
@@ -13,7 +15,11 @@ Vue.use(VueRouter)
 const authorizeIsAdmin = (to, from, next) => {
   const currentUser = store.state.currentUser
   if (currentUser && currentUser.role === 'user') {
-    next('/not-found')
+    Toast.fire({
+      icon: 'error',
+      title: '無法訪問該頁面。'
+    })
+    next('/tweets')
     return
   }
   next()
@@ -22,7 +28,11 @@ const authorizeIsAdmin = (to, from, next) => {
 const authorizeIsUser = (to, from, next) => {
   const currentUser = store.state.currentUser
   if (currentUser && currentUser.role === 'admin') {
-    next('/not-found')
+    Toast.fire({
+      icon: 'error',
+      title: '無法訪問該頁面。'
+    })
+    next('/admin-tweets')
     return
   }
   next()
@@ -132,7 +142,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
   const tokenInStore = store.state.token
-  const role = store.state.role
+  const role = store.state.currentUser.role
   let isAuthenticated = store.state.isAuthenticated
 
   // 有 token 的情況才向才驗證
@@ -141,18 +151,31 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const pathWithoutAuthentication = ['login', 'register', 'admin-login']
-    if (!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
-      next('/login')
+  if (!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
+    next('/login')
+    Toast.fire({
+      icon: 'error',
+      title: '請先完成登入！'
+    })
+    return
+  }
+  if (isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
+    if (role === 'user') {
+      next('/tweets')
+      Toast.fire({
+        icon: 'error',
+        title: '已完成登入。要切換使用者或註冊，請先登出。'
+      })
       return
-    }
-    if (isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
-      if(role === 'user') {
-        next('/tweets')
-        return
-      }
+    } else if (role === 'admin') {
+      Toast.fire({
+        icon: 'error',
+        title: '已完成登入。要登入前台，請先登出。'
+      })
       next('/admin/tweets')
       return
     }
+  }
 
   next()
 })
