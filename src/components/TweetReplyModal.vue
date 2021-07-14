@@ -183,7 +183,6 @@ export default {
 
         //clear when finished
         this.replyContent = ''
-        this.tweet.totalReplies += 1
 
         Toast.fire({
             icon: 'success',
