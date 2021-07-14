@@ -91,10 +91,7 @@ export default {
         });
 
         this.description = "";
-        Toast.fire({
-          icon: 'success',
-          title: '推文成功！'
-        })
+        
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -132,7 +129,7 @@ img {
 }
 
 .warningBackground {
-  background-color: #ffeff4;
+  background-color: #fcefef;
 }
 
 .submit {

@@ -18,7 +18,9 @@
             :initial-data="tweet" 
             @after-click-modal="afterClickModal"
           />
-          <TweetReplyModal :target-tweet="modalContent" />
+          <TweetReplyModal 
+          :target-tweet="modalContent" 
+          @change-reply-count="changeReplyCount"/>
         </div>
       </div>
       <div class="col-4">
@@ -40,6 +42,7 @@ import TweetReplyModal from './../components/TweetReplyModal.vue'
 import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
 import { mapState } from 'vuex'
+
 
 
 export default {
@@ -110,6 +113,13 @@ export default {
         ...data,
       };
     },
+    changeReplyCount(tweetId) {
+      this.tweets.map(tweet => {
+        if(tweet.id === tweetId) {
+          tweet.totalReplies += 1
+        }
+      })
+    }
   },
 };
 </script>

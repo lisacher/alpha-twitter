@@ -10,14 +10,17 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-            <button
-              type="button"
-              class="btn close-btn p-0"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            >
+          <button
+            type="button"
+            class="btn close-btn p-0"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
             <span aria-hidden="true"
-              ><img src="../assets/icon_close@2x.png" class="close-image" alt=""
+              ><img
+                src="../assets/icon_close@2x.png"
+                class="close-image"
+                alt=""
             /></span>
           </button>
         </div>
@@ -31,23 +34,23 @@
             <div class="tweetInfo">
               <div class="userInfo">
                 <p class="userName">
-                  {{tweet.User.name}}
+                  {{ tweet.User.name }}
                 </p>
                 <p class="userAccount">
                   {{ tweet.User.account }}
                 </p>
                 <span class="mx-1">&#xb7;</span>
                 <p class="tweetUpdateAt">
-                  {{tweet.createdAt | fromNow}}
+                  {{ tweet.createdAt | fromNow }}
                 </p>
               </div>
               <div class="tweetContent">
-                <p>{{tweet.description}}</p>
+                <p>{{ tweet.description }}</p>
               </div>
               <div class="panel">
                 <p>
                   回覆給
-                  <span>{{tweet.User.account}} </span>
+                  <span>{{ tweet.User.account }} </span>
                 </p>
               </div>
             </div>
@@ -84,7 +87,7 @@
               :disabled="!replyContent"
               @click.stop.prevent="createReply(tweet.id)"
             >
-             回覆
+              回覆
             </button>
           </div>
         </div>
@@ -94,11 +97,11 @@
 </template>
 
 <script>
-import { emptyImageFilter } from "../utils/mixins"
-import { fromNowFilter } from "../utils/mixins"
+import { emptyImageFilter } from "../utils/mixins";
+import { fromNowFilter } from "../utils/mixins";
 import { Toast } from "../utils/helpers";
-import tweetsAPI from "../apis/tweets"
-import { mapState } from 'vuex'
+import tweetsAPI from "../apis/tweets";
+import { mapState } from "vuex";
 
 export default {
   name: "TweetReplyModal",
@@ -106,123 +109,111 @@ export default {
   props: {
     targetTweet: {
       type: Object,
-      default:() => {
+      default: () => {
         return {
           id: -1,
           User: {
             id: -1,
-            account: '',
-            name: '',
-            avatar: ''
+            account: "",
+            name: "",
+            avatar: "",
           },
-          description: '',
+          description: "",
           totalLikes: 0,
           totalReplies: 0,
-          createdAt: '',
+          createdAt: "",
           isLiked: false,
-          Replies: {}
-        }
-      }
+          Replies: {},
+        };
+      },
     },
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   data() {
     return {
-      replyContent: '',
+      replyContent: "",
       tweet: {
         id: -1,
-          User: {
-            id: -1,
-            account: '',
-            name: '',
-            image: ''
-          },
-          content: '',
-          totalLikes: 0,
-          totalReplies: 0,
-          createdAt: '',
-          isLiked: false,
-          Replies: {}
+        User: {
+          id: -1,
+          account: "",
+          name: "",
+          image: "",
+        },
+        content: "",
+        totalLikes: 0,
+        totalReplies: 0,
+        createdAt: "",
+        isLiked: false,
+        Replies: {},
       },
-    }
+    };
   },
   created() {
-    this.fetchModalContent()
-    
+    this.fetchModalContent();
   },
   watch: {
     targetTweet() {
-      this.fetchModalContent()
+      this.fetchModalContent();
     },
   },
   methods: {
     async createReply(tweetId) {
-      try{
-        //check content first
-        this.replyContentCheck(this.replyContent)
-        if (!this.replyContent) {
+      try {
+        const content = this.replyContent.trim();
+        if (!content) {
           Toast.fire({
-            icon: 'error',
-            title: '請輸入內容'
-          })
-          return
+            icon: "error",
+            title: "尚未輸入推文內容！",
+          });
+          this.replyContent = ''
+          return;
         }
-        const content = this.replyContent
-        const { data } = await tweetsAPI.createReply({tweetId,content})
-        
-        if (data.status !== 'success') {
-            throw new Error(data.message)
+        if (content.length > 140) {
+          Toast.fire({
+            icon: "error",
+            title: "回覆字數不得超過 140 個字！",
+          });
+          return;
         }
-        
-        this.$emit('after-create-reply', {
+        const { data } = await tweetsAPI.createReply({ tweetId, content });
+
+        if (data.status !== "success") {
+          throw new Error(data.message);
+        }
+
+        this.$emit("after-create-reply", {
           id: data.message.id,
           content: this.replyContent,
-        })
+        });
+
+        this.$emit('change-reply-count', this.tweet.id)
 
         //clear when finished
-        this.replyContent = ''
+        this.replyContent = "";
 
         Toast.fire({
-            icon: 'success',
-            title: '已完成回覆！'
-        })
-          return
-      }
-      catch(error){
-        Toast.fire({
-          icon:'error',
-          title:'目前無法新增回應，請稍後再試'
-        })
-      }
-    },
-    replyContentCheck(replyContent) {
-      const checkTarget = replyContent.trim();
-      if (!checkTarget) {
+          icon: "success",
+          title: "已完成回覆！",
+        });
+        return;
+      } catch (error) {
         Toast.fire({
           icon: "error",
-          title: "尚未輸入推文內容！",
+          title: "目前無法新增回應，請稍後再試",
         });
-        return false;
       }
-      if (replyContent.length > 140) {
-        Toast.fire({
-          icon: "error",
-          title: "回覆字數不得超過 140 個字！",
-        });
-        return false;
-      }
-      return true;
     },
     fetchModalContent() {
       this.tweet = {
         ...this.tweet,
-        ...this.targetTweet
-      }
+        ...this.targetTweet,
+      };
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -232,14 +223,14 @@ export default {
   display: flex;
 }
 .modal-content {
-    border-radius: 14px;
+  border-radius: 14px;
 }
 .close-image {
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 }
 .modal-header {
-  height: 54px;  
+  height: 54px;
 }
 
 /* replyTarget */
@@ -269,6 +260,8 @@ export default {
 .avatar img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
   border-radius: 50%;
 }
 .tweetInfo {
@@ -342,7 +335,8 @@ export default {
   font-weight: 500;
   font-size: 18px;
 }
-.input:focus,textarea:focus {
-    outline: none
+.input:focus,
+textarea:focus {
+  outline: none;
 }
 </style>

@@ -32,7 +32,7 @@ const authorizeIsUser = (to, from, next) => {
       icon: 'error',
       title: '無法訪問該頁面。'
     })
-    next('/admin-tweets')
+    next('/admin/tweets')
     return
   }
   next()

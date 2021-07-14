@@ -85,7 +85,6 @@ import { Toast } from "./../utils/helpers";
 export default {
   name: "TweetsCard",
   mixins: [daytimeFilter, emptyImageFilter],
-  components: {},
   props: {
     initialData: {
       type: Object,

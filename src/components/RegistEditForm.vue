@@ -205,7 +205,6 @@ export default {
         })
         return result
       }
-      console.log("Data check passed")
       return (result = true)
 
     },
@@ -223,7 +222,6 @@ export default {
           return;
         }
         const { data } = await authorizationAPI.signUp(formData)
-        console.log(data)
         if (data.status !== "success") {
           throw new Error(data)
         }
@@ -234,7 +232,6 @@ export default {
 
         this.$router.push("/login")
       } catch (error) {
-        console.log(error)
         let message = "目前無法註冊，請稍後再試";
         if (error.response.status === 403) {
           message = "該帳號或Email已註冊過囉！";
@@ -254,7 +251,6 @@ export default {
         }
         const { data } = await usersAPI.updateInfo(
           { userId: this.currentUserid, formData })
-        console.log(data);
         if (data[1].status !== "success") {
           throw new Error(data.message)
         }

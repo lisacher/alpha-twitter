@@ -95,6 +95,13 @@ export default {
           isLiked
         }
         this.replies = Replies
+        
+        this.replies.sort((a, b) => {
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
+          return bDate.getTime() - aDate.getTime()
+        })
+
       } catch(error) {
         Toast.fire({
           icon: 'error',
