@@ -102,7 +102,10 @@ export default {
     async fetchReplies(userId) {
       try {
         const { data } = await tweetsAPI.getReply({ userId })
-        console.log('data', data);
+
+        if(data.message === '使用者沒有回覆任何推文') {
+          return
+       }
         this.replies = data
 
         this.replies.sort((a, b) => {

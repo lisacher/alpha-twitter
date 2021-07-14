@@ -10,10 +10,19 @@ Vue.use(VueRouter)
 
 // Test 
 
+const authorizeIsAdmin = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if (currentUser && currentUser.role === 'user') {
+    next('/not-found')
+    return
+  }
+  next()
+}
+
 const routes = [
   {
-    path:'/',
-    name:'root',
+    path: '/',
+    name: 'root',
     redirect: '/login'
   },
   {
@@ -80,12 +89,14 @@ const routes = [
   {
     path: '/admin/tweets',
     name: 'admin-tweets',
-    component: () => import('./../views/AdminTweetsList.vue')
+    component: () => import('./../views/AdminTweetsList.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '/admin/users',
     name: 'admin-twitterers',
-    component: () => import('./../views/AdminTwitterersList.vue')
+    component: () => import('./../views/AdminTwitterersList.vue'),
+    beforeEnter: authorizeIsAdmin
   },
   {
     path: '*',
@@ -100,8 +111,28 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  store.dispatch('fetchCurrentUser')
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem('token')
+  const tokenInStore = store.state.token
+
+  let isAuthenticated = store.state.isAuthenticated
+
+  // 有 token 的情況才向才驗證
+  if (token && token !== tokenInStore) {
+    isAuthenticated = await store.dispatch('fetchCurrentUser')
+  }
+
+  const pathWithoutAuthentication = ['login', 'register', 'admin-login']
+
+  if (!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
+    next('/login')
+    return
+  }
+  if (isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
+    next('/tweets')
+    return
+  }
+
   next()
 })
 
