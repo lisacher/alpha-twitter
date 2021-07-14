@@ -19,6 +19,15 @@ const authorizeIsAdmin = (to, from, next) => {
   next()
 }
 
+const authorizeIsUser = (to, from, next) => {
+  const currentUser = store.state.currentUser
+  if (currentUser && currentUser.role === 'admin') {
+    next('/not-found')
+    return
+  }
+  next()
+}
+
 const routes = [
   {
     path: '/',
@@ -43,48 +52,57 @@ const routes = [
   {
     path: '/setting',
     name: 'user-setting',
-    component: () => import('../views/UserSetting.vue')
+    component: () => import('../views/UserSetting.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/tweets',
     name: 'tweets',
-    component: MainTweets
+    component: MainTweets,
+    beforeEnter: authorizeIsUser
   },
   {
     // 為了讓Profile的button 在切換NavPills的時候都是part-active.
     path: `/users/:id`,
     name: 'user',
-    redirect: `/users/:id/tweets`
+    redirect: `/users/:id/tweets`,
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/users/:id/tweets',
     name: 'user-tweets',
-    component: () => import('./../views/UserProfileTweets.vue')
+    component: () => import('./../views/UserProfileTweets.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/users/:id/reply',
     name: 'user-reply',
-    component: () => import('./../views/UserProfileReply.vue')
+    component: () => import('./../views/UserProfileReply.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/users/:id/likes',
     name: 'user-likes',
-    component: () => import('./../views/UserProfileLikes.vue')
+    component: () => import('./../views/UserProfileLikes.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/users/:id/followers',
     name: 'user-followers',
-    component: () => import('./../views/UserProfileFollowers.vue')
+    component: () => import('./../views/UserProfileFollowers.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/users/:id/followings',
     name: 'user-followings',
-    component: () => import('./../views/UserProfileFollowings.vue')
+    component: () => import('./../views/UserProfileFollowings.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/tweet/:id',
     name: 'tweet',
-    component: () => import('../views/Tweet.vue')
+    component: () => import('../views/Tweet.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/admin/tweets',
@@ -114,7 +132,7 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem('token')
   const tokenInStore = store.state.token
-
+  const role = store.state.role
   let isAuthenticated = store.state.isAuthenticated
 
   // 有 token 的情況才向才驗證
@@ -123,15 +141,18 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const pathWithoutAuthentication = ['login', 'register', 'admin-login']
-
-  if (!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
-    next('/login')
-    return
-  }
-  if (isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
-    next('/tweets')
-    return
-  }
+    if (!isAuthenticated && !pathWithoutAuthentication.includes(to.name)) {
+      next('/login')
+      return
+    }
+    if (isAuthenticated && pathWithoutAuthentication.includes(to.name)) {
+      if(role === 'user') {
+        next('/tweets')
+        return
+      }
+      next('/admin/tweets')
+      return
+    }
 
   next()
 })

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import userAPI from './../apis/users'
+import authorizationAPI from './../apis/authorization'
 
 Vue.use(Vuex)
 
@@ -27,7 +27,14 @@ export default new Vuex.Store({
       state.token = localStorage.getItem('token')
     },
     revokeAuthentication(state) {
-      state.currentUser = {}
+      state.currentUser = {
+        id: -1,
+        name: '',
+        account: '',
+        email: '',
+        avatar: '',
+        role: ''
+      }
       state.isAuthenticated = false
       state.token = ''
       localStorage.removeItem('token')
@@ -36,12 +43,13 @@ export default new Vuex.Store({
   actions: {
     async fetchCurrentUser({ commit }) {
       try {
-        const { data } = await userAPI.getCurrentUser()
-        if(data.status === 'error') {
+        const { data } = await authorizationAPI.getCurrentUser()
+        console.log('data', data);
+        if (data.status === 'error') {
           throw new Error(data.message)
         }
 
-        const { id, name, account, email, avatar } = data 
+        const { id, name, account, email, avatar, role } = data
 
         commit('setCurrentUser', {
           id,
@@ -49,9 +57,10 @@ export default new Vuex.Store({
           account,
           email,
           avatar,
+          role
         })
         return true
-      } catch(error) {
+      } catch (error) {
         console.error(error.message)
         commit('revokeAuthentication')
         return false

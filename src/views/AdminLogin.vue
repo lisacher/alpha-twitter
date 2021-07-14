@@ -69,7 +69,7 @@ export default {
           })
           return
         }
-        const response = await authorizationAPI.signIn({
+        const response = await authorizationAPI.adminSignin({
           account: this.account,
           password: this.password
         })
@@ -83,7 +83,7 @@ export default {
         localStorage.setItem('token', data.token)
 
         this.$store.commit('setCurrentUser', data.user)
-        
+
         this.$router.push("/admin/tweets")
       }
       catch(error) {
