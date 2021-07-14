@@ -112,7 +112,7 @@ export default {
    async fetchUser(userId) {
      try {
        const { data } = await usersAPI.getUser({ userId })
-
+       
        const { id, account, name, bio, avatar, cover, totalFollowers, totalFollowings, totalTweets, isFollowing } = data
        this.User = {
          ...this.User,
@@ -137,8 +137,13 @@ export default {
     async fetchUserTweet(userId) {
       try{
         const { data } = await tweetsAPI.getUsersTweets({ userId })
+        //如果使用者沒有任何推文：
+       if(data.message === '使用者暫無貼文') {
+         return
+       }
         this.tweets = data
 
+        // 排序
         this.tweets.sort((a, b) => {
           const aDate = new Date(a.createdAt)
           const bDate = new Date(b.createdAt)

@@ -141,6 +141,7 @@ export default {
       });
     },
     logOut() {
+      this.$store.commit('revokeAuthentication')
       if (this.isAdmin) {
         this.$router.push("/admin");
         return

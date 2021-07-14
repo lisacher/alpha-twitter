@@ -129,8 +129,10 @@ export default {
     async fetchLikes(userId) {
       try {
         const { data } = await tweetsAPI.getUserLikes({ userId })
-
-        // 篩除dummyData中，Tweet欄位為Null的資料(會導致渲染不出畫面，先篩掉)
+        if(data.message === '沒有喜歡的推文或回覆') {
+          return
+        }
+        // 先只抓喜歡的推文
         data.map(like => {
           if(!like.Tweet) {
             return
@@ -174,7 +176,10 @@ export default {
       };
     },
     afterToggleLike() {
-      this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+      // 只有在我自己的頁面才執行
+      if(this.User.id === this.currentUser.id) {
+        this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+      }
     },
     afterAddFollow(userId) {
       // 在我自己以外的別人的主頁時：
