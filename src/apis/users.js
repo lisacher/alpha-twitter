@@ -41,5 +41,10 @@ export default {
     return apiHelper.put(`/users/${userId}/info`, formData,{
       headers: { Authorization: `Bearer ${getToken()}`}
     })
-  }
+  },
+  getAdminUsers() {
+    return apiHelper.get('/admin/users', {
+      headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
 }

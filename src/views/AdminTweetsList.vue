@@ -114,6 +114,10 @@ export default {
           throw new Error(data.message);
         }
         this.tweets = this.tweets.filter((tweet) => tweet.id !== this.deleteTargetId);
+        Toast.fire({
+          icon: 'success',
+          title: '成功刪除推文！'
+        })
 
       } catch (error) {
         Toast.fire({

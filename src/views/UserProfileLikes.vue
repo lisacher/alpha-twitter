@@ -129,7 +129,7 @@ export default {
     async fetchLikes(userId) {
       try {
         const { data } = await tweetsAPI.getUserLikes({ userId })
-        if(data.message === '沒有喜歡的推文或回覆') {
+        if(data.message === '使用者沒有喜歡的推文或回覆') {
           return
         }
         // 先只抓喜歡的推文

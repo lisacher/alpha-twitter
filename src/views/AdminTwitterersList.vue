@@ -22,7 +22,7 @@
 import SideNavBar from './../components/SideNavBar.vue'
 import TopNavBar from './../components/TopNavBar.vue'
 import AdminTwitterersCard from './../components/AdminTwitterersCard.vue'
-import tweetsAPI from "./../apis/tweets"
+import usersAPI from "./../apis/users"
 import { Toast } from './../utils/helpers'
 
 
@@ -44,18 +44,19 @@ export default {
   methods: {
 	async fetchUser() {
       try{
-        const { data } = await tweetsAPI.getAdminUsers()
+        const { data } = await usersAPI.getAdminUsers()
+        console.log('data',data);
         this.users = data
         this.users.sort((a, b) => {
-          return b.tweetsCount - a.tweetsCount
+          return b.totalTweets - a.totalTweets
         })
       }
       catch(error) {
         Toast.fire({
           icon: 'error',
-          title: '無法取得推文資料，請稍後再試'
+          title: '無法取得所有使用者資料，請稍後再試'
         })
-        .console.log(error.message);
+        console.log(error.message);
       }
     },
   }

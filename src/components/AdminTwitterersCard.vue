@@ -55,6 +55,8 @@ export default {
 .avatar-container img {
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  object-position: 50% 50%;
 
   border: 4px solid #fff;
   border-radius: 50%;
