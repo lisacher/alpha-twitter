@@ -69,7 +69,7 @@ export default {
           })
           return
         }
-        const response = await authorizationAPI.signIn({
+        const response = await authorizationAPI.adminSignin({
           account: this.account,
           password: this.password
         })

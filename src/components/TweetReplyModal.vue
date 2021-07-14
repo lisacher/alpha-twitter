@@ -145,7 +145,7 @@ export default {
           createdAt: '',
           isLiked: false,
           Replies: {}
-      }
+      },
     }
   },
   created() {
@@ -172,7 +172,6 @@ export default {
         const content = this.replyContent
         const { data } = await tweetsAPI.createReply({tweetId,content})
         
-        console.log(this.content)
         if (data.status !== 'success') {
             throw new Error(data.message)
         }
@@ -181,8 +180,11 @@ export default {
           id: data.message.id,
           content: this.replyContent,
         })
+
+        //clear when finished
         this.replyContent = ''
-        this.data.totalReplies += 1
+        this.tweet.totalReplies += 1
+
         Toast.fire({
             icon: 'success',
             title: '已完成回覆！'
@@ -190,7 +192,6 @@ export default {
           return
       }
       catch(error){
-        console.log(error)
         Toast.fire({
           icon:'error',
           title:'目前無法新增回應，請稍後再試'
