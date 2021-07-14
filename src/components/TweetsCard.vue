@@ -31,7 +31,7 @@
                 <span>{{replyTweet.User.account}}</span>
               </router-link>
             </p>
-            {{ data.text }}
+            {{ data.content }}
           </div>
         </div>
       </router-link>

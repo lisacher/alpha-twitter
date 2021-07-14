@@ -26,7 +26,7 @@
           <!-- tweet -->
           <div class="container replyTarget">
             <div class="avatar">
-              <img :src="'' | emptyImage" alt="" />
+              <img :src="tweet.User.avatar | emptyImage" alt="" />
             </div>
             <div class="tweetInfo">
               <div class="userInfo">
@@ -56,9 +56,9 @@
           <!-- comment -->
           <div class="container myReply">
             <div class="avatar">
-              <img :src="'' | emptyImage" alt="" />
+              <img :src="currentUser.avatar | emptyImage" alt="" />
             </div>
-            <div class="tweetInf">
+            <div class="tweetInfo">
               <div class="input">
                 <textarea
                   id=""
@@ -82,7 +82,7 @@
               type="button"
               class="btn"
               :disabled="!replyContent"
-              @click.stop.prevent="createReply()"
+              @click.stop.prevent="createReply(tweet.id)"
             >
              回覆
             </button>
@@ -97,7 +97,8 @@
 import { emptyImageFilter } from "../utils/mixins"
 import { fromNowFilter } from "../utils/mixins"
 import { Toast } from "../utils/helpers";
-import {v4 as uuidv4} from 'uuid'
+import tweetsAPI from "../apis/tweets"
+import { mapState } from 'vuex'
 
 export default {
   name: "TweetReplyModal",
@@ -112,17 +113,20 @@ export default {
             id: -1,
             account: '',
             name: '',
-            image: ''
+            avatar: ''
           },
-          text: '',
-          likesCount: 0,
-          repliesCount: 0,
+          description: '',
+          totalLikes: 0,
+          totalReplies: 0,
           createdAt: '',
           isLiked: false,
           Replies: {}
         }
       }
     },
+  },
+  computed: {
+    ...mapState(['currentUser'])
   },
   data() {
     return {
@@ -135,9 +139,9 @@ export default {
             name: '',
             image: ''
           },
-          text: '',
-          likesCount: 0,
-          repliesCount: 0,
+          content: '',
+          totalLikes: 0,
+          totalReplies: 0,
           createdAt: '',
           isLiked: false,
           Replies: {}
@@ -154,16 +158,44 @@ export default {
     },
   },
   methods: {
-    createReply() {
-      this.replyContentCheck(this.replyContent)
-      if(!this.replyContent) {
-        Toast.fire({
-          icon: 'error',
-          title: '請填寫推文內容！'
+    async createReply(tweetId) {
+      try{
+        //check content first
+        this.replyContentCheck(this.replyContent)
+        if (!this.replyContent) {
+          Toast.fire({
+            icon: 'error',
+            title: '請輸入內容'
+          })
+          return
+        }
+        const content = this.replyContent
+        const { data } = await tweetsAPI.createReply({tweetId,content})
+        
+        console.log(this.content)
+        if (data.status !== 'success') {
+            throw new Error(data.message)
+        }
+        
+        this.$emit('after-create-reply', {
+          id: data.message.id,
+          content: this.replyContent,
         })
-        return
+        this.replyContent = ''
+        this.data.totalReplies += 1
+        Toast.fire({
+            icon: 'success',
+            title: '已完成回覆！'
+        })
+          return
       }
-      this.clickModalButton()
+      catch(error){
+        console.log(error)
+        Toast.fire({
+          icon:'error',
+          title:'目前無法新增回應，請稍後再試'
+        })
+      }
     },
     replyContentCheck(replyContent) {
       const checkTarget = replyContent.trim();
@@ -189,23 +221,6 @@ export default {
         ...this.targetTweet
       }
     },
-    clickModalButton() {
-      this.$emit('after-create-reply', {
-        id: uuidv4(),
-        UserId: this.UserId,
-        text: this.replyContent,
-        likesCount: 0,
-        repliesCount: 0,
-        isLiked: false,
-      })
-      this.replyContent = ''
-      Toast.fire({
-          icon: 'success',
-          title: '已完成回覆！'
-      })
-      this.tweet.repliesCount += 1
-        return
-    }
   }
 }
 </script>

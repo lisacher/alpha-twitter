@@ -21,6 +21,7 @@
             @after-click-modal="afterClickModal"
           />
           <TweetReplyModal :target-tweet="modalContent"
+          :replyTweet="tweet"
           @after-create-reply="afterCreateReply"/>
         </div>
       </div>
@@ -71,7 +72,7 @@ export default {
   },
   created() {
     const { id: tweetId } = this.$route.params
-    this.fetchTweet(tweetId);
+    this.fetchTweet(tweetId)
   },
   computed: {
     ...mapState(['currentUser'])
@@ -108,26 +109,25 @@ export default {
         ...data,
       };
     },
-    afterCreateReply (payload) {
-      const { id, UserId, text, likesCount, repliesCount, isLiked } = payload
-      this.replies.unshift({
-        id,
-        UserId: UserId,
-        User: {
-          id: this.currentUser.id,
-          name: this.currentUser.name,
-          account: this.currentUser.account,
-          image: this.currentUser.image
-        },
-        text,
-        createdAt: new Date(),
-        likesCount,
-        repliesCount,
-        isLiked,
-      })
-      this.tweet.repliesCount += 1
+    afterCreateReply ({ content, id }) {
+        this.replies.unshift({
+          ...this.replies,
+          id,
+          User: {
+            id: this.currentUser.id,
+            name: this.currentUser.name,
+            account: this.currentUser.account,
+            avatar: this.currentUser.avatar
+          },
+          content,
+          createdAt: new Date(),
+          totalLikes: 0,
+          totalReplies: 0,
+          isLiked: false
+        })
+        this.tweet.totalReplies += 1
+      }
     }
-  },
 };
 </script>
 

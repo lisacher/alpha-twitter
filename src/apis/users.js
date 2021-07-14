@@ -3,7 +3,7 @@ const getToken = () => localStorage.getItem('token')
 
 export default {
   getCurrentUser() {
-    return apiHelper.get('/users/currentUser', {
+    return apiHelper.get('/currentUser', {
       headers: { Authorization: `Bearer ${getToken()}`}
     })
   },
@@ -35,6 +35,11 @@ export default {
   unfollowUser ({ userId }) {
     return apiHelper.delete(`/followships/${userId}`, {
       headers: { Authorization: `Bearer ${getToken()}` }
+    })
+  },
+  update({ userId, formData }) {
+    return apiHelper.put(`/users/${userId}`, formData,{
+      headers: { Authorization: `Bearer ${getToken()}`}
     })
   },
   updateInfo({ userId, formData }) {

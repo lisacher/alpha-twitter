@@ -16,7 +16,6 @@
             v-for="reply in replies"
             :key="reply.id"
             :initial-data="reply"
-            :initial-reply="reply.Replies"
           />
         </div>
       </div>
@@ -102,14 +101,7 @@ export default {
     async fetchReplies(userId) {
       try {
         const { data } = await tweetsAPI.getReply({ userId })
-        data.map(reply => {
-          if(reply.UserId !== userId) {
-            return
-          }
-          this.replies.push({
-            ...reply,
-          })
-        })
+        this.replies = data
       } catch(error) {
         Toast.fire({
           icon:'error',
