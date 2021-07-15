@@ -25,7 +25,10 @@
             @after-click-modal="afterClickModal"
             @after-toggle-like="afterToggleLike"
           />
-          <TweetReplyModal :target-tweet="modalContent" />
+          <TweetReplyModal 
+            :target-tweet="modalContent" 
+            @change-reply-count="changeReplyCount"
+          />
         </div>
       </div>
       <div class="col-4">
@@ -149,8 +152,6 @@ export default {
           const bDate = new Date(b.Tweet.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
-
-
       } catch(error) {
         Toast.fire({
           icon: 'error',
@@ -216,6 +217,13 @@ export default {
     },
     afterDeleteFollowMain(userId) {
       this.removeFollowId = userId
+    },
+    changeReplyCount(tweetId) {
+      this.likes.map(like => {
+        if(like.Tweet.id === tweetId) {
+          like.Tweet.totalReplies += 1
+        }
+      })
     }
   },
 };

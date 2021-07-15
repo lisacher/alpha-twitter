@@ -27,7 +27,10 @@
             :initial-data="tweet"
             @after-click-modal="afterClickModal"
           />
-          <TweetReplyModal :target-tweet="modalContent" />
+          <TweetReplyModal 
+            :target-tweet="modalContent" 
+            @change-reply-count="changeReplyCount"
+          />
         </div>
       </div>
       <div class="col-4">
@@ -226,6 +229,13 @@ export default {
     },
     afterDeleteFollowMain(userId) {
       this.removeFollowId = userId
+    },
+    changeReplyCount(tweetId) {
+      this.tweets.map(tweet => {
+        if(tweet.id === tweetId) {
+          tweet.totalReplies += 1
+        }
+      })
     }
   },
 };

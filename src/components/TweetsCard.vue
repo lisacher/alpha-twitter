@@ -16,7 +16,7 @@
       <!-- 當此卡片是在回覆他人推文時： -->
       <router-link
         v-if="replyTweet"
-        :to="{ name: 'tweet', params: { id: replyTweet.id ? replyTweet.id : replyTweet.TweetId} }"
+        :to="{ name: 'tweet', params: { id: replyTweet.id ? replyTweet.id : replyTweet.TweetId}}"
         class="tweet-link"
       >
         <div class="body">
@@ -92,7 +92,7 @@ export default {
       required: true,
     },
     replyTweet: {
-      type: Object,
+      type: [Object, String],
       default: null,
     },
   },
