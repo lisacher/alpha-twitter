@@ -32,15 +32,11 @@
             :initial-data="tweet"
             @after-click-modal="afterClickModal"
           />
-<<<<<<< HEAD
           <TweetReplyModal 
             :target-tweet="modalContent" 
             @change-reply-count="changeReplyCount"
           />
-=======
-          <TweetReplyModal :target-tweet="modalContent" />
           </template>
->>>>>>> origin/main
         </div>
       </div>
       <div class="col-4">

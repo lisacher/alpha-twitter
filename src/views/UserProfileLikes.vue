@@ -20,25 +20,21 @@
           />
           <Spinner v-if="isLoading" />
           <template v-else>
-          <div class="noTweets" v-if="likes.length < 1">
-            此用戶暫無喜歡的內容
-          </div>
-          <TweetsCard
-            v-for="like in likes"
-            :key="like.id"
-            :initial-data="like.Tweet"
-            @after-click-modal="afterClickModal"
-            @after-toggle-like="afterToggleLike"
-          />
-<<<<<<< HEAD
-          <TweetReplyModal 
-            :target-tweet="modalContent" 
-            @change-reply-count="changeReplyCount"
-          />
-=======
-          <TweetReplyModal :target-tweet="modalContent" />
+            <div class="noTweets" v-if="likes.length < 1">
+              此用戶暫無喜歡的內容
+            </div>
+            <TweetsCard
+              v-for="like in likes"
+              :key="like.id"
+              :initial-data="like.Tweet"
+              @after-click-modal="afterClickModal"
+              @after-toggle-like="afterToggleLike"
+            />
+            <TweetReplyModal 
+              :target-tweet="modalContent" 
+              @change-reply-count="changeReplyCount"
+            />
           </template>
->>>>>>> origin/main
         </div>
       </div>
       <div class="col-4">
@@ -164,6 +160,25 @@ export default {
             ...like,
           })
         })
+        // data.map(like => {
+        //   // 抓出喜歡的推文
+        //   if(like.Tweet) {
+        //     this.likes.push({
+        //       id: like.id,
+        //       data: like.Tweet
+        //     })
+        //     return
+        //     // 抓出喜歡的回覆
+        //   } else if(like.Reply) {
+        //     this.likes.push({
+        //       id: like.id,
+        //       data: like.Reply
+        //     }) 
+        //     return
+        //   } else {
+        //     return
+        //   }
+        // })
 
         this.likes.sort((a, b) => {
           const aDate = new Date(a.Tweet.createdAt)
