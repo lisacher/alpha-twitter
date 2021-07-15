@@ -81,6 +81,7 @@
         <div
           class="liked d-flex align-items-center reply-tweet-like"
           :class="{ activeLiked: data.isLiked === 1 }"
+          v-if="data.id"
         >
           <button
             class="btn liked-img"
