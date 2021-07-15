@@ -1,5 +1,7 @@
 <template>
   <div class="container" :style="[more ? { height: `${recTwitterer.length * 71 + 92}px` } : { height:  `${5 * 71 + 92}px`}]">
+    <Spinner v-if="isLoading" />
+    <template v-else>
     <div class="title">
       <h1>跟隨誰</h1>
     </div>
@@ -49,6 +51,7 @@
       <button class="btn" v-show="!more" @click="more = !more">顯示更多</button>
       <button class="btn" v-show="more" @click="more = !more">顯示更少</button>
     </div>
+   </template> 
   </div>
 </template>
 
@@ -56,8 +59,10 @@
 import { emptyImageFilter } from "../utils/mixins";
 import usersAPI from "./../apis/users";
 import { Toast } from "./../utils/helpers";
+import Spinner from './Spinner.vue';
 
 export default {
+  components: { Spinner },
   name: "RecFollowingsList",
   mixins: [emptyImageFilter],
   props: {
@@ -101,6 +106,7 @@ export default {
     return {
       recTwitterer: [],
       more: false,
+      isLoading: true
     }
   },
   methods: {
@@ -114,7 +120,9 @@ export default {
             isProcessing: false
           })
         })
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: "error",
           title: "無法取得推薦追蹤者資料，請稍後再試",
