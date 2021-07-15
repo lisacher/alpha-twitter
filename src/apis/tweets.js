@@ -1,76 +1,52 @@
 import { apiHelper } from './../utils/helpers'
-const getToken = () => localStorage.getItem('token')
 
 export default {
   getTweets() {
-    return apiHelper.get('/tweets', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/tweets')
   },
   getUsersTweets({ userId }) {
-    return apiHelper.get(`/users/${userId}/tweets`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/tweets`)
   },
   getUserLikes({ userId }) {
-    return apiHelper.get(`/users/${userId}/likes`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/likes`)
   },
   getTweet({ tweetId }) {
-    return apiHelper.get(`/tweets/${tweetId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/tweets/${tweetId}`)
   },
   getReply({ userId }) {
-    return apiHelper.get(`/users/${userId}/replied_tweets`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get(`/users/${userId}/replied_tweets`)
   },
   createTweet({ User, description }) {
     return apiHelper.post('/tweets', {
       User,
       description
-    }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   createReply({ tweetId, content }) {
     return apiHelper.post(`/tweets/${tweetId}/replies`, {
       tweetId,
       content
-    }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
     })
   },
   likeTweet({ tweetId }) {
-    return apiHelper.post(`/tweets/${tweetId}/like`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/tweets/${tweetId}/like`, null)
   },
   unlikeTweet({ tweetId }) {
-    return apiHelper.post(`/tweets/${tweetId}/unlike`, null, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/tweets/${tweetId}/unlike`, null)
   },
   likeReply({ replyId }) {
-    return apiHelper.post(`/replies/${replyId}/like`, null, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.post(`/replies/${replyId}/like`, null)
   },
   unlikeReply({ replyId }) {
-    return apiHelper.post(`/replies/${replyId}/unlike`, null, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.post(`/replies/${replyId}/unlike`, null)
   },
   getAdminTweets() {
-    return apiHelper.get('/admin/main', {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/admin/main')
+  },
+  getAdminUsers() {
+    return apiHelper.get('/admin/users')
   },
   deleteTweet({ tweetId }) {
-    return apiHelper.delete(`/admin/tweets/${tweetId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/admin/tweets/${tweetId}`)
   },
 }

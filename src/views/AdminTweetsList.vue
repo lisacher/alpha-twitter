@@ -4,14 +4,17 @@
       <SideNavBar class="col-3" :isAdmin="true" />
       <div class="col-9 p-0 border main-component">
         <TopNavBar msg="推文清單" :show="false" />
+        
         <div class="tweets-container">
+          <Spinner v-if="isLoading" />
+          <template v-else>
           <AdminTweetsCard
             v-for="tweet in tweets"
             :key="tweet.id"
             :tweet="tweet"
             @after-generate-target="afterGenerateTarget"
           />
-
+        
           <!-- Modal -->
           <div
             class="modal fade"
@@ -53,6 +56,7 @@
               </div>
             </div>
           </div>
+          </template>
         </div>
       </div>
     </div>
@@ -66,6 +70,7 @@ import AdminTweetsCard from "./../components/AdminTweetsCard.vue";
 
 import tweetsAPI from "./../apis/tweets";
 import { Toast } from "./../utils/helpers";
+import Spinner from '../components/Spinner.vue';
 
 export default {
   name: "AdminTweetsList",
@@ -73,11 +78,13 @@ export default {
     SideNavBar,
     TopNavBar,
     AdminTweetsCard,
+    Spinner,
   },
   data() {
     return {
       tweets: [],
-      deleteTargetId: 0
+      deleteTargetId: 0,
+      isLoading: true
     };
   },
   created() {
@@ -94,8 +101,9 @@ export default {
           const bDate = new Date(b.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
-
+        this.isLoading = false
       } catch (error) {
+        this.isLoading = false
         Toast.fire({
           icon: "error",
           title: "無法取得推文資料，請稍後再試",
