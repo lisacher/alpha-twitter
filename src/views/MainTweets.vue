@@ -27,10 +27,7 @@
         </div>
       </div>
       <div class="col-sm-4">
-        <Spinner v-if="isLoading" />
-        <template v-else>
         <RecFollowingList />
-        </template>
       </div>
     </div>
   </div>
