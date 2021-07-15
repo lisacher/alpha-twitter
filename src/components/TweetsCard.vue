@@ -20,11 +20,11 @@
         class="tweet-link"
       >
         <div class="body">
-          <div class="text">
+          <div class="text mb-2">
             <p class="reply-content py-1">
               回覆
               <router-link
-                v-if="replyTweet.User.id"
+                v-if="replyTweet.User"
                 :to="{
                   name: 'user-tweets',
                   params: { id: replyTweet.User.id },
@@ -49,9 +49,11 @@
           </div>
         </div>
       </router-link>
-      <div class="footer d-flex my-2">
+      <div 
+        v-if="!replyTweet"
+        class="footer d-flex my-2"
+      >
         <div 
-          v-if="!replyTweet"
           class="comment d-flex align-items-center me-5"
         >
           <div
@@ -73,6 +75,18 @@
             :disabled="status.isProcessing"
           ></button>
           <div class="likes-count">{{ data.totalLikes }}</div>
+        </div>
+      </div>
+      <div v-else>
+        <div
+          class="liked d-flex align-items-center reply-tweet-like"
+          :class="{ activeLiked: data.isLiked === 1 }"
+        >
+          <button
+            class="btn liked-img"
+            @click.prevent.stop="toggleLiked(data.id)"
+            :disabled="status.isProcessing"
+          ></button>
         </div>
       </div>
     </div>
@@ -220,6 +234,9 @@ export default {
   background-size: contain;
   background-repeat: no-repeat;
 }
+.text-container {
+  position: relative;
+}
 
 .header,
 .body {
@@ -300,5 +317,13 @@ export default {
 
 .activeLiked .likes-count {
   color: #e0245e;
+}
+
+.reply-tweet-like {
+  position: absolute;
+  width: 30px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

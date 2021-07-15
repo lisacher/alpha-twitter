@@ -26,7 +26,8 @@
             <TweetsCard
               v-for="like in likes"
               :key="like.id"
-              :initial-data="like.Tweet"
+              :initial-data="like.data"
+              :reply-tweet="like.data.TweetId"
               @after-click-modal="afterClickModal"
               @after-toggle-like="afterToggleLike"
             />
@@ -146,45 +147,36 @@ export default {
     async fetchLikes(userId) {
       try {
         const { data } = await tweetsAPI.getUserLikes({ userId })
-        // TODO: 請後端新增整筆Reply資料。
         if(data.message === '使用者沒有喜歡的推文或回覆') {
           return
         }
-        console.log('data',data);
+
         // 先只抓喜歡的推文
+
         data.map(like => {
-          if(!like.Tweet) {
+          // 抓出喜歡的推文
+          if(like.Tweet) {
+            this.likes.push({
+              id: like.id,
+              data: like.Tweet
+            })
             return
-          }
-          this.likes.push({
-            ...like,
-          })
+            // 抓出喜歡的回覆
+          } else if(like.Reply) {
+            this.likes.push({
+              id: like.id,
+              data: like.Reply
+            })
+            return
+          } 
         })
-        // data.map(like => {
-        //   // 抓出喜歡的推文
-        //   if(like.Tweet) {
-        //     this.likes.push({
-        //       id: like.id,
-        //       data: like.Tweet
-        //     })
-        //     return
-        //     // 抓出喜歡的回覆
-        //   } else if(like.Reply) {
-        //     this.likes.push({
-        //       id: like.id,
-        //       data: like.Reply
-        //     }) 
-        //     return
-        //   } else {
-        //     return
-        //   }
-        // })
 
         this.likes.sort((a, b) => {
-          const aDate = new Date(a.Tweet.createdAt)
-          const bDate = new Date(b.Tweet.createdAt)
+          const aDate = new Date(a.data.createdAt)
+          const bDate = new Date(b.data.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
+        console.log('likes',this.likes);
       } catch(error) {
         Toast.fire({
           icon: 'error',
@@ -214,7 +206,7 @@ export default {
     afterToggleLike() {
       // 只有在我自己的頁面才執行
       if(this.User.id === this.currentUser.id) {
-        this.likes = this.likes.filter(like => like.Tweet.isLiked === 1)
+        this.likes = this.likes.filter(like => like.data.isLiked === 1)
       }
     },
     afterAddFollow(userId) {
