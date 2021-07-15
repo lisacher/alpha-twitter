@@ -41,7 +41,7 @@
       <router-link
         v-else
         :to="{ name: 'tweet', params: { id: data.id } }"
-        class="tweet-link"
+        class="tweet-link flex-grow-1"
       >
         <div class="body me-3">
           <div class="text">
@@ -51,7 +51,7 @@
       </router-link>
       <div 
         v-if="!replyTweet"
-        class="footer d-flex mt-auto mb-2"
+        class="footer d-flex mb-2"
       >
         <div 
           class="comment d-flex align-items-center me-5"
