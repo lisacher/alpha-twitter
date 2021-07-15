@@ -15,6 +15,7 @@
             class="btn close-btn p-0"
             data-bs-dismiss="modal"
             aria-label="Close"
+            @click.stop.prevent="handleCancel"
           >
             <span aria-hidden="true"
               ><img
@@ -185,7 +186,6 @@ export default {
           return;
         }
         const { data } = await tweetsAPI.createReply({ tweetId, content });
-        console.log('data',data);
 
         if (data.status !== "success") {
           throw new Error(data.message);
@@ -222,6 +222,9 @@ export default {
         ...this.targetTweet,
       };
     },
+    handleCancel() {
+      this.replyContent = ''
+    }
   },
 };
 </script>

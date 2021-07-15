@@ -145,6 +145,7 @@ export default {
       try {
         const { data } = await tweetsAPI.getUserLikes({ userId })
         if(data.message === '使用者沒有喜歡的推文或回覆') {
+          this.likes = []
           return
         }
 
@@ -173,7 +174,6 @@ export default {
           const bDate = new Date(b.data.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
-        console.log('likes',this.likes);
       } catch(error) {
         Toast.fire({
           icon: 'error',

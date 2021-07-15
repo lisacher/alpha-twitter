@@ -19,7 +19,7 @@
                   <h2 class="userName">{{ user.name }}</h2>
                 </div>
                 <div class="account">
-                  <h2>{{ user.account }}</h2>
+                  <h2>@{{ user.account }}</h2>
                 </div>
               </div>
               <div class="toggleFollow">

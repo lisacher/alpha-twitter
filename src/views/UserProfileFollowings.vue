@@ -154,7 +154,6 @@ export default {
           bio,
           isFollowing
         })
-        console.log('data', data);
         return
       }
       this.followings.map(following => {

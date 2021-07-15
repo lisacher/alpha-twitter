@@ -8,7 +8,7 @@
     <div class="text-container d-flex flex-column mt-2 flex-grow-1">
       <div class="header">
         <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
-        <div class="account d-inline-block">{{ data.User.account }}</div>
+        <div class="account d-inline-block">@{{ data.User.account }}</div>
         <div class="createdAt d-inline-block">
           ・{{ data.createdAt | fromNow }}
         </div>
@@ -31,7 +31,7 @@
                 }"
                 class="tweet-link"
               >
-                <span>{{ replyTweet.User.account }}</span>
+                <span>@{{ replyTweet.User.account }}</span>
               </router-link>
             </p>
             {{ data.content }}
@@ -51,7 +51,7 @@
       </router-link>
       <div 
         v-if="!replyTweet"
-        class="footer d-flex mb-2"
+        class="footer d-flex my-2"
       >
         <div 
           class="comment d-flex align-items-center me-5"
@@ -243,6 +243,10 @@ export default {
   position: relative;
 }
 
+.text {
+  word-break: break-all;
+}
+
 .header,
 .body {
   font-size: 15px;
@@ -323,11 +327,14 @@ export default {
 .activeLiked .likes-count {
   color: #e0245e;
 }
+.text {
+  width: 90%;
+}
 
 .reply-tweet-like {
   position: absolute;
   width: 30px;
-  right: 10px;
+  right: 0px;
   top: 50%;
   transform: translateY(-50%);
 }

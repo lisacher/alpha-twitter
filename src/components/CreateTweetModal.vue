@@ -23,6 +23,7 @@
               class="btn close-btn p-0"
               data-bs-dismiss="modal"
               aria-label="Close"
+              @click.prevent.stop="handleCancel"
             >
               <img src="./../assets/icon_close@2x.png" alt="" />
             </button>
@@ -134,6 +135,9 @@ export default {
         });
       }
     },
+    handleCancel() {
+      this.description = ''
+    }
   },
   filters: {
     adjustAddTweetPlaceholder(userName) {

@@ -4,14 +4,14 @@
       class="d-flex border tweet-container px-2"
     >
       <div class="img-container">
-        <img src="./../assets/Logo.png" alt="" />
+        <img :src="tweet.User.avatar | emptyImage" alt="" />
       </div>
       <div class="text-container mt-2 flex-grow-1">
         <div class="header">
           <div class="name d-inline-block pe-2 fw-bold">
             {{ tweet.User.name }}
           </div>
-          <div class="account d-inline-block">{{ tweet.User.account }}</div>
+          <div class="account d-inline-block">@{{ tweet.User.account }}</div>
           <div class="createdAt d-inline-block">
             ・{{ tweet.createdAt | fromNow }}
           </div>
@@ -37,11 +37,12 @@
 
 <script>
 import { daytimeFilter } from "./../utils/mixins";
+import { emptyImageFilter } from './../utils/mixins'
 
 
 export default {
   name: "AdminTweetsCard",
-  mixins: [daytimeFilter],
+  mixins: [daytimeFilter, emptyImageFilter],
   props: {
     tweet: {
       type: Object,
@@ -73,6 +74,10 @@ export default {
 .img-container img {
   height: 50px;
   width: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  margin: 10px 10px 0 0 ;
 }
 
 .header,

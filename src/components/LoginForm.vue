@@ -9,13 +9,17 @@
 
     <div class="row">
       <label for="account">帳號</label>
-      <input
+      <div class="d-flex px-0">
+        <div class="default">@</div>
+        <input
         id="account"
         name="account"
         type="text"
         v-model="account"
         required
+        class="flex-grow-1"
       />
+      </div>
     </div>
 
     <div class="row">
@@ -48,58 +52,41 @@
 import { Toast } from "../utils/helpers";
 import authorizationAPI from "./../apis/authorization";
 
-const dummyUser = {
-  id: 3,
-  account: "root",
-  password: "1234",
-};
-
 export default {
   name: "UserLogin",
   data() {
     return {
       account: "",
       password: "",
-      user: [],
     };
   },
-  created() {
-    this.fetchUser();
-  },
   methods: {
-    fetchUser() {
-      this.user = dummyUser;
-    },
     async handleSubmit() {
       try {
-        if (!this.user.account || !this.user.password) {
+        if (!this.account || !this.password) {
           Toast.fire({
             icon: "warning",
             title: "請輸入帳號和密碼",
           });
           return;
         }
-
         const { data } = await authorizationAPI.signIn({
           account: this.account,
           password: this.password,
         });
-
         if (data.status !== "success") {
           throw new Error(data.message);
         }
         localStorage.setItem("token", data.token);
-
         this.$store.commit("setCurrentUser", data.user);
-
         this.$router.push("/tweets");
       } catch (error) {
         Toast.fire({
           icon: "error",
-          title: "請確認您的帳號密碼正確",
+          title: error.response.data.message
         });
       }
-    },
+    }
   },
 };
 </script>
@@ -176,4 +163,12 @@ button.login {
   color: #0099ff;
   font-weight: 700;
 }
+.default {
+  width: 30px;
+  font-size: 19px;
+  background-color: #f5f8fa;
+  border-bottom: 2px solid #657786;
+  text-align: right;
+}
+
 </style>
