@@ -23,14 +23,16 @@
             type="button"
             class="btn button is-active"
             @click.prevent.stop="deleteFollow(user.id)"
+            :disabled="status.isProcessing"
             >
-            追蹤中
+            正在跟隨
           </button>
           <button 
             v-else 
             type="button"
             class="btn button"
             @click.prevent.stop="addFollow(user.id)"
+            :disabled="status.isProcessing"
           >追蹤</button>
         </template>
       </div>
@@ -82,6 +84,9 @@ export default {
   data() {
     return {
       user: {},
+      status: {
+        isProcessing: false
+      }
     };
   },
   created() {
@@ -106,6 +111,7 @@ export default {
       this.user = this.initialUser;
     },
     async addFollow(userId) {
+      this.status.isProcessing = true
       try {
         const { data } = await usersAPI.followUser({ userId })
         if(data.status !== 'success') {
@@ -122,7 +128,9 @@ export default {
           icon: 'success',
           title: '追蹤成功！'
         })
+        this.status.isProcessing = false
       } catch(error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法追蹤使用者，請稍後再試。'
@@ -131,6 +139,7 @@ export default {
     },
     async deleteFollow(userId) {
       try {
+        this.status.isProcessing = true
         const { data } = await usersAPI.unfollowUser({ userId })
         if(data.status !== 'success') {
           throw new Error(data.message)
@@ -146,7 +155,9 @@ export default {
           icon: 'success',
           title: '取消追蹤成功！'
         })
+        this.status.isProcessing = false
       } catch(error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: 'error',
           title: '無法取消追蹤使用者，請稍後再試。'

@@ -84,7 +84,7 @@
             <button
               type="button"
               class="btn"
-              :disabled="!replyContent"
+              :disabled="!replyContent || status.isProcessing "
               @click.stop.prevent="createReply(tweet.id)"
             >
               回覆
@@ -149,6 +149,9 @@ export default {
         isLiked: false,
         Replies: {},
       },
+      status: {
+        isProcessing: false
+      }
     };
   },
   created() {
@@ -162,6 +165,7 @@ export default {
   methods: {
     async createReply(tweetId) {
       try {
+        this.status.isProcessing = true
         const content = this.replyContent.trim();
         if (!content) {
           Toast.fire({
@@ -169,6 +173,7 @@ export default {
             title: "尚未輸入推文內容！",
           });
           this.replyContent = ''
+          this.status.isProcessing = false
           return;
         }
         if (content.length > 140) {
@@ -176,6 +181,7 @@ export default {
             icon: "error",
             title: "回覆字數不得超過 140 個字！",
           });
+          this.status.isProcessing = false
           return;
         }
         const { data } = await tweetsAPI.createReply({ tweetId, content });
@@ -198,8 +204,10 @@ export default {
           icon: "success",
           title: "已完成回覆！",
         });
+        this.status.isProcessing = false
         return;
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "目前無法新增回應，請稍後再試",

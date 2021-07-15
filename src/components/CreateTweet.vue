@@ -28,7 +28,7 @@
         <button
           type="submit"
           class="btn btn-primary ms-auto"
-          :disabled="!description || description.length > 140"
+          :disabled="!description || description.length > 140 || status.isProcessing"
         >
           推文
         </button>
@@ -53,18 +53,23 @@ export default {
     return {
       description: "",
       comments: [],
+      status: {
+        isProcessing: false
+      }
     };
   },
   methods: {
     async handleSubmit() {
       //篩掉都是空白鍵的內容
       try {
+        this.status.isProcessing = true
         if (!this.description.trim()) {
           Toast.fire({
             icon: "error",
             title: "請填寫推文內容！",
           });
           this.description = "";
+          this.status.isProcessing = false
           return;
         }
         //文字數量過長，跳出提示，阻止送出。
@@ -73,6 +78,7 @@ export default {
             icon: "warning",
             title: "推文內容請勿超過140字",
           });
+          this.status.isProcessing = false
           return;
         }
 
@@ -90,9 +96,16 @@ export default {
           id: data.message.id
         });
 
+        Toast.fire({
+          icon: 'success',
+          title: '推文成功！'
+        })
+
         this.description = "";
+        this.status.isProcessing = false
         
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法推文，請稍後再試",

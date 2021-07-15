@@ -16,7 +16,7 @@
       <!-- 當此卡片是在回覆他人推文時： -->
       <router-link
         v-if="replyTweet"
-        :to="{ name: 'tweet', params: { id: replyTweet.id } }"
+        :to="{ name: 'tweet', params: { id: replyTweet.id ? replyTweet.id : replyTweet.TweetId} }"
         class="tweet-link"
       >
         <div class="body">
@@ -24,13 +24,14 @@
             <p class="reply-content py-1">
               回覆
               <router-link
+                v-if="replyTweet.User.id"
                 :to="{
                   name: 'user-tweets',
                   params: { id: replyTweet.User.id },
                 }"
                 class="tweet-link"
               >
-                <span>{{ replyTweet.User.account }}</span>
+                <span>{{ replyTweet.User.account ? replyTweet.User.account : '' }}</span>
               </router-link>
             </p>
             {{ data.content }}

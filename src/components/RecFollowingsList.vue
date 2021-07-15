@@ -25,6 +25,7 @@
                   class="btn isFollowing"
                   @click.stop.prevent="unfollowUser(user.id)"
                   v-if="user.isFollowing"
+                  :disabled="status.isProcessing"
                 >
                   正在跟隨
                 </button>
@@ -32,6 +33,7 @@
                   class="btn follow"
                   @click.stop.prevent="followUser(user.id)"
                   v-else
+                  :disabled="status.isProcessing"
                 >
                   跟隨
                 </button>
@@ -98,12 +100,16 @@ export default {
   data() {
     return {
       recTwitterer: [],
-      more: false
+      more: false,
+      status: {
+        isProcessing: false
+      }
     }
   },
   methods: {
     async fetchRecFollowers() {
       try {
+        
         const { data } = await usersAPI.getRecFollowers();
         this.recTwitterer = data;
       } catch (error) {
@@ -115,6 +121,7 @@ export default {
     },
     async followUser(userId) {
       try {
+        this.status.isProcessing = true
         const res = await usersAPI.followUser({ userId });
         const { data } = res;
 
@@ -138,7 +145,9 @@ export default {
           icon: "success",
           title: "追蹤成功！",
         });
+        this.status.isProcessing = false
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法追蹤使用者，請稍後再試",
@@ -147,6 +156,7 @@ export default {
     },
     async unfollowUser(userId) {
       try {
+        this.status.isProcessing = true
         const res = await usersAPI.unfollowUser({ userId });
         const { data } = res;
 
@@ -169,7 +179,9 @@ export default {
           icon: "success",
           title: "取消追蹤成功！",
         });
+        this.status.isProcessing = false
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法取消追蹤使用者，請稍後再試",

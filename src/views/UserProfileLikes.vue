@@ -133,6 +133,7 @@ export default {
         if(data.message === '使用者沒有喜歡的推文或回覆') {
           return
         }
+        console.log('data',data);
         // 先只抓喜歡的推文
         data.map(like => {
           if(!like.Tweet) {

@@ -25,6 +25,7 @@
               class="btn isFollowing"
               v-if="follower.isFollowing === 1 "
               @click.stop.prevent="unfollowUser(follower.id)"
+              :disabled="status.isProcessing"
             >
               正在跟隨
             </button>
@@ -57,6 +58,9 @@ export default {
   data() {
     return {
       follower: this.initialData,
+      status: {
+        isProcessing: false
+      }
     };
   },
   computed: {
@@ -65,6 +69,7 @@ export default {
   methods: {
     async followUser(userId) {
       try {
+        this.status.isProcessing = true
         const { data }= await usersAPI.followUser({ userId });
 
         if (data.status !== "success") {
@@ -76,7 +81,9 @@ export default {
           title: "追蹤成功！",
         });
         this.$emit('after-add-follow-main', userId)
+        this.status.isProcessing = false
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法追蹤使用者，請稍後再試",
@@ -85,6 +92,7 @@ export default {
     },
     async unfollowUser(userId) {
       try {
+        this.status.isProcessing = true
         const { data } = await usersAPI.unfollowUser({ userId });
 
         if (data.status !== "success") {
@@ -96,7 +104,9 @@ export default {
           title: "取消追蹤成功！",
         });
         this.$emit('after-delete-follow-main', userId)
+        this.status.isProcessing = false
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法取消追蹤使用者，請稍後再試",
