@@ -12,17 +12,25 @@
             :current-user="currentUser" 
             @after-create-tweet="afterCreateTweet"
           />
+          <Spinner v-if="isLoading" />
+          <template v-else>
           <TweetsCard 
             v-for="tweet in tweets" 
             :key="tweet.id" 
             :initial-data="tweet" 
             @after-click-modal="afterClickModal"
           />
-          <TweetReplyModal :target-tweet="modalContent" />
+          </template>
+          <TweetReplyModal 
+          :target-tweet="modalContent" 
+          @change-reply-count="changeReplyCount"/>
         </div>
       </div>
       <div class="col-sm-4">
+        <Spinner v-if="isLoading" />
+        <template v-else>
         <RecFollowingList />
+        </template>
       </div>
     </div>
   </div>
@@ -36,6 +44,7 @@ import TopNavBar from "./../components/TopNavBar.vue";
 import CreateTweet from "../components/CreateTweet.vue";
 import TweetsCard from "./../components/TweetsCard.vue";
 import TweetReplyModal from './../components/TweetReplyModal.vue'
+import Spinner from './../components/Spinner.vue'
 
 import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
@@ -50,12 +59,14 @@ export default {
     TopNavBar,
     CreateTweet,
     TweetsCard,
-    TweetReplyModal
+    TweetReplyModal,
+    Spinner
   },
   data() {
     return {
       tweets: [],
       modalContent: {},
+      isLoading: true
     };
   },
 
@@ -78,7 +89,9 @@ export default {
           const bDate = new Date(b.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
+        this.isLoading = false
       } catch(error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: '目前無法取得推文資料，請稍後再試'

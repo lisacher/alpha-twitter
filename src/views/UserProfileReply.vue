@@ -12,15 +12,29 @@
           <TwittererNavPills 
             :initial-id="User.id"
           />
+          <Spinner v-if="isLoading" />
+          <template v-else>
+          <div class="noTweets" v-if="replies.length < 1">
+            此用戶暫無推文與回覆
+          </div>
           <TweetandReply
             v-for="reply in replies"
             :key="reply.id"
             :initial-data="reply"
           />
+          </template>
         </div>
       </div>
       <div class="col-4">
-        <RecFollowingList />
+        <Spinner v-if="isLoading" />
+        <template v-else>
+        <RecFollowingList 
+          @after-add-follow="afterAddFollow"
+          @after-delete-follow="afterDeleteFollow"
+          :remove-follow-id="removeFollowId"
+          :add-follow-id="addFollowId"
+        />
+        </template>
       </div>
     </div>
   </div>
@@ -37,6 +51,7 @@ import tweetsAPI from '../apis/tweets'
 import usersAPI from '../apis/users'
 import { Toast } from './../utils/helpers'
 import { mapState } from 'vuex'
+import Spinner from '../components/Spinner.vue';
 
 
 export default {
@@ -47,7 +62,8 @@ export default {
     TopNavBar,
     TweetandReply,
     TweetererImformation,
-    TwittererNavPills
+    TwittererNavPills,
+    Spinner
   },
   data() {
     return {
@@ -63,6 +79,9 @@ export default {
         totalTweets: 0
       },
       replies: [],
+      removeFollowId: 0,
+      addFollowId: 0,
+      isLoading: true
     };
   },
   created() {
@@ -91,7 +110,9 @@ export default {
          totalFollowings,
          totalTweets,
        }
+       this.isLoading = false
      } catch(error) {
+       this.isLoading = false
        Toast.fire({
          icon: 'error',
          title: '無法取得資料，請稍後再試。'
@@ -136,5 +157,12 @@ export default {
 
 .row {
   height: 100%;
+}
+
+.noTweets {
+  text-align: center;
+  margin: 50px;
+  font-size: 13px;
+  color: #657786;
 }
 </style>

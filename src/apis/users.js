@@ -1,50 +1,31 @@
 import { apiHelper } from './../utils/helpers'
-const getToken = () => localStorage.getItem('token')
 
 export default {
-  getCurrentUser() {
-    return apiHelper.get('/currentUser', {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
-  },
   getUser({ userId }) {
-    return apiHelper.get(`/users/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.get(`/users/${userId}`)
   },
   getUserFollowings({ userId }) {
-    return apiHelper.get(`/users/${userId}/followings`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.get(`/users/${userId}/followings`)
   },
   getUserFollowers({ userId }) {
-    return apiHelper.get(`/users/${userId}/followers`, {
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.get(`/users/${userId}/followers`)
   },
   getRecFollowers () {
-    return apiHelper.get('/followships', {
-        headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.get('/followships')
   },
   followUser ({ userId }) {
-    return apiHelper.post(`/followships`, { id: userId }, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.post(`/followships`, { id: userId })
   },
   unfollowUser ({ userId }) {
-    return apiHelper.delete(`/followships/${userId}`, {
-      headers: { Authorization: `Bearer ${getToken()}` }
-    })
+    return apiHelper.delete(`/followships/${userId}`)
   },
   update({ userId, formData }) {
-    return apiHelper.put(`/users/${userId}`, formData,{
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
+    return apiHelper.put(`/users/${userId}`, formData)
   },
   updateInfo({ userId, formData }) {
-    return apiHelper.put(`/users/${userId}/info`, formData,{
-      headers: { Authorization: `Bearer ${getToken()}`}
-    })
-  }
+    return apiHelper.put(`/users/${userId}/info`, formData)
+  },
+  getAdminUsers() {
+    return apiHelper.get('/admin/users')
+  },
 }

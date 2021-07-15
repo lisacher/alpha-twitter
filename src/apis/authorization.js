@@ -15,5 +15,8 @@ export default {
   },
   signUp (data) {
     return apiHelper.post('/users', data)
-  }
+  },
+  getCurrentUser() {
+    return apiHelper.get('/currentUser')
+  },
 }

@@ -302,12 +302,13 @@ form {
 .row label {
   padding-left: 11px;
   color: #657786;
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 15px;
   display: block;
   width: 100%;
   background-color: #F5F8FA;
   width: 642px;
-  height: 19px;
+  height: 20px;
 }
 .row input {
   padding-left: 11px;

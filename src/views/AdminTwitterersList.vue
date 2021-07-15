@@ -4,6 +4,8 @@
       <SideNavBar class="col-3" :isAdmin="true"/>
       <div class="col-9 p-0 border main-component">
         <TopNavBar msg="使用者列表" :show="false" />
+        <Spinner v-if="isLoading" />
+        <template v-else>
         <div class="container twitterers-container overflow-scroll">
           <div class="row row-cols-4 gx-3 my-2">
            <AdminTwitterersCard 
@@ -13,6 +15,7 @@
            />
           </div>
         </div>
+        </template>
       </div>
     </div>
   </div>
@@ -24,6 +27,7 @@ import TopNavBar from './../components/TopNavBar.vue'
 import AdminTwitterersCard from './../components/AdminTwitterersCard.vue'
 import tweetsAPI from "./../apis/tweets"
 import { Toast } from './../utils/helpers'
+import Spinner from '../components/Spinner.vue'
 
 
 export default {
@@ -31,11 +35,13 @@ export default {
   components: {
     SideNavBar,
     TopNavBar,
-    AdminTwitterersCard
+    AdminTwitterersCard,
+    Spinner
   },
   data() {
     return {
-      users: []
+      users: [],
+      isLoading: true
     }
   },
   created() {
@@ -49,8 +55,10 @@ export default {
         this.users.sort((a, b) => {
           return b.tweetsCount - a.tweetsCount
         })
+        this.isLoading = false
       }
       catch(error) {
+        this.isLoading = false
         Toast.fire({
           icon: 'error',
           title: '無法取得推文資料，請稍後再試'
