@@ -5,7 +5,7 @@
         <img :src="data.User.avatar | emptyImage" alt="" />
       </router-link>
     </div>
-    <div class="text-container mt-2 flex-grow-1">
+    <div class="text-container d-flex flex-column mt-2 flex-grow-1">
       <div class="header">
         <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
         <div class="account d-inline-block">{{ data.User.account }}</div>
@@ -51,7 +51,7 @@
       </router-link>
       <div 
         v-if="!replyTweet"
-        class="footer d-flex my-2"
+        class="footer d-flex mt-auto mb-2"
       >
         <div 
           class="comment d-flex align-items-center me-5"
@@ -215,6 +215,10 @@ export default {
   text-decoration: none;
   color: #000;
 }
+.tweet-card {
+  min-height: 120px;
+}
+
 .tweet-card:hover {
   background-color: #f7f7f7;
 }
