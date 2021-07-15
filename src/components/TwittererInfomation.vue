@@ -1,7 +1,7 @@
 <template>
   <div class="container border-top px-0">
     <div class="cover-container">
-      <img :src="user.cover | emptyImage" alt="" />
+      <img :src="user.cover | emptyCover" alt="" />
     </div>
     <div class="avatar-container">
       <img :src="user.avatar | emptyImage" alt="" />
@@ -184,7 +184,7 @@ export default {
   height: 140px;
   object-fit: cover;
   object-position: center center;
-  background-color: #000;
+  background-color: #fff;
   border-radius: 50%;
   border: 4px solid #fff;
 }

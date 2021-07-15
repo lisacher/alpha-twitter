@@ -2,10 +2,10 @@
   <div class="container main-container">
     <div class="row">
       <SideNavBar 
-        class="col-3" 
+        class="col-sm-3" 
         @after-create-tweet="afterCreateTweet"
       />
-      <div class="col-5 p-0 border main-component">
+      <div class="col-sm-5 p-0 border main-component">
         <TopNavBar msg="首頁" :show="false" />
         <div class="tweets-container">
           <CreateTweet 
@@ -21,7 +21,7 @@
           <TweetReplyModal :target-tweet="modalContent" />
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-sm-4">
         <RecFollowingList />
       </div>
     </div>

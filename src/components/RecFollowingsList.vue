@@ -29,7 +29,7 @@
                   正在跟隨
                 </button>
                 <button
-                  class="btn"
+                  class="btn follow"
                   @click.stop.prevent="followUser(user.id)"
                   v-else
                 >
@@ -217,6 +217,9 @@ hr {
   justify-content: space-between;
   align-items: center;
 }
+.userContent:hover {
+  background-color: #f0f2f5;
+}
 .userContent .avatar {
   height: 50px;
   width: 50px;
@@ -243,6 +246,10 @@ button {
   border: 1px solid #ff6600;
   border-radius: 100px;
   color: #ff6600;
+}
+.follow:hover {
+  background-color: #ff6600;
+  color: #fff;
 }
 .toggleFollow button {
   font-size: 15px;

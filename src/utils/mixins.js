@@ -25,6 +25,9 @@ export const emptyImageFilter = {
     filters: {
       emptyImage(src) {
         return src || require('../assets/avatar.png')
+      },
+      emptyCover(src) {
+        return src || require('../assets/cover.jpeg')
       }
     }
 }

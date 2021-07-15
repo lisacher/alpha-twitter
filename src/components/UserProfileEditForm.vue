@@ -52,7 +52,7 @@
                       alt=""
                       class="edit-cover-picture"
                   /></label>
-                  <img :src="user.cover | emptyImage" alt="" />
+                  <img class="coverimage" :src="user.cover | emptyCover" alt=""  />
                   <input
                     type="file"
                     id="cover"
@@ -101,6 +101,7 @@
                   <input
                     id="name"
                     name="name"
+                    class="input"
                     type="text"
                     maxlength="50"
                     v-model="user.name"
@@ -330,7 +331,6 @@ button.save {
   object-fit: cover;
   object-position: 50% 50%;
 }
-
 .avatar-container {
   position: absolute;
   top: 200px;
@@ -377,5 +377,8 @@ button.save {
 
 .row textarea {
   resize: none;
+}
+.input:focus,textarea:focus {
+    outline: none
 }
 </style>
