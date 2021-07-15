@@ -30,15 +30,11 @@
             @after-click-modal="afterClickModal"
             @after-toggle-like="afterToggleLike"
           />
-<<<<<<< HEAD
           <TweetReplyModal 
             :target-tweet="modalContent" 
             @change-reply-count="changeReplyCount"
           />
-=======
-          <TweetReplyModal :target-tweet="modalContent" />
           </template>
->>>>>>> origin/main
         </div>
       </div>
       <div class="col-4">
