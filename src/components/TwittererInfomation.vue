@@ -1,7 +1,7 @@
 <template>
   <div class="container border-top px-0">
     <div class="cover-container">
-      <img :src="user.cover | emptyImage" alt="" />
+      <img :src="user.cover | emptyCover" alt="" />
     </div>
     <div class="avatar-container">
       <img :src="user.avatar | emptyImage" alt="" />
@@ -21,7 +21,7 @@
           <button 
             v-if="user.isFollowing === 1" 
             type="button"
-            class="btn button"
+            class="btn button is-active"
             @click.prevent.stop="deleteFollow(user.id)"
             >
             追蹤中
@@ -29,7 +29,7 @@
           <button 
             v-else 
             type="button"
-            class="btn button is-active"
+            class="btn button"
             @click.prevent.stop="addFollow(user.id)"
           >追蹤</button>
         </template>
@@ -184,7 +184,7 @@ export default {
   height: 140px;
   object-fit: cover;
   object-position: center center;
-  background-color: #000;
+  background-color: #fff;
   border-radius: 50%;
   border: 4px solid #fff;
 }

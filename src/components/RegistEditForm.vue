@@ -251,19 +251,30 @@ export default {
         }
         const { data } = await usersAPI.updateInfo(
           { userId: this.currentUserid, formData })
-        if (data[1].status !== "success") {
-          throw new Error(data.message)
-        }
-        Toast.fire({
-          icon: "success",
-          title: "資料修改成功！",
+          //check email and account
+          if(data.message === '此帳號已被使用') {
+            Toast.fire({
+            icon: "error",
+            title: "此帳號已被使用，請改試其他帳號",
+            })
+            return
+          }
+          if(data.message === '此信箱已被使用') {
+            Toast.fire({
+            icon: "error",
+            title: "此信箱已被使用，請改試其他帳號",
+            })
+            return
+          }
+          Toast.fire({
+            icon: "success",
+            title: "資料修改成功！",
         });
         this.isSaved = true
         this.userChanged = true
         this.form.password = ""
         this.form.confirmPassword = ""
       } catch (error) {
-        console.log(error)
         Toast.fire({
           icon: "error",
           title: "無法儲存使用者資訊，請稍候再試！",
