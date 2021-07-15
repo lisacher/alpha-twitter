@@ -10,7 +10,7 @@
         <router-link
           :to="{ name: 'user-tweets', params: { id: data.UserId } }"
         >
-          <img :src="data.User.avatar" alt="" />
+          <img :src="data.User.avatar | emptyImage" alt="" />
         </router-link>
         <div class="replyTarget"></div> 
       </div>
@@ -41,9 +41,11 @@
 
         <div
           class="liked d-flex align-items-center"
+          :class="{ activeLiked: data.isLiked === 1 }"
         >
           <button class="btn liked-img" 
             @click.prevent.stop="toggleLiked(data.id)"
+            :disabled="status.isProcessing"
           ></button>
           <div class="likes-count">{{ data.totalLikes }}</div>
         </div>
@@ -75,6 +77,12 @@
           </div>
         </div>
       </div>
+      <div class="liked footer align-items-center d-flex my-2"
+      :class="{ activeLiked: data.isLiked === 1 }">
+      <button class="flex-row btn liked-img" 
+          @click.prevent.stop="toggleLiked(reply.id)"
+          :disabled="status.isProcessing"></button>
+      </div>
     </div>
     <div class="border-bottom"></div>
   </router-link>
@@ -86,6 +94,9 @@ import { emptyImageFilter } from "./../utils/mixins"
 import { daytimeFilter } from './../utils/mixins'
 import { mapState } from 'vuex'
 
+import tweetsAPI from "./../apis/tweets";
+import { Toast } from "./../utils/helpers";
+
 export default {
   name: "TweetsCard",
   mixins: [daytimeFilter, emptyImageFilter],
@@ -94,6 +105,10 @@ export default {
       type: Object,
       required: true,
     },
+    replyTweet: {
+      type: [Object, String],
+      default: null,
+    },
   },
   computed: {
     ...mapState(['currentUser'])
@@ -101,8 +116,85 @@ export default {
   data() {
     return {
       data: this.initialData,
+      status: {
+        isProcessing: false,
+      },
     }
   },
+  methods: {
+    clickModalButton(data) {
+      this.$emit("after-click-modal", data);
+    },
+    async toggleLiked(id) {
+      try {
+        this.status.isProcessing = true;
+        // 當不是在單一推文頁面時：
+        if (!this.replyTweet) {
+          if (this.data.isLiked === 0) {
+            const { data } = await tweetsAPI.likeTweet({ tweetId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+
+            this.data.totalLikes += 1;
+            this.data.isLiked = 1;
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          } else {
+            const { data } = await tweetsAPI.unlikeTweet({ tweetId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+            this.data.totalLikes -= 1;
+            this.data.isLiked = 0;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          }
+        }
+        if (this.replyTweet) {
+          if (this.data.isLiked === 0) {
+            const { data } = await tweetsAPI.likeReply({ replyId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+
+            this.data.totalLikes += 1;
+            this.data.isLiked = 1;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          } else {
+            const { data } = await tweetsAPI.unlikeReply({ replyId: id });
+            if (data.status !== "success") {
+              throw new Error(data.message);
+            }
+            this.data.totalLikes -= 1;
+            this.data.isLiked = 0;
+
+            Toast.fire({
+              icon: "success",
+              title: data.message,
+            });
+          }
+        }
+        this.status.isProcessing = false;
+        this.$emit('after-toggle-like')
+      } catch (error) {
+        this.status.isProcessing = false;
+        Toast.fire({
+          icon: "error",
+          title: error.message,
+        });
+      }
+    },
+  }
 };
 </script>
 

@@ -322,7 +322,7 @@ input:focus,textarea:focus {
 .note {
   font-size: 13px;
   font-weight: 400;
-  margin-left: 550px;
+  margin-left: 540px;
 }
 .password {
   font-size: 13px;
