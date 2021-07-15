@@ -156,14 +156,15 @@ export default {
         const { data } = await tweetsAPI.getReply({ userId });
 
         if (data.message === "使用者沒有回覆任何推文") {
+          this.replies = []
           return;
         }
         this.replies = data;
 
         // 排序
         this.replies.sort((a, b) => {
-          const aDate = new Date(a.createdAt);
-          const bDate = new Date(b.createdAt);
+          const aDate = new Date(a.Replies[a.Replies.length - 1].createdAt);
+          const bDate = new Date(b.Replies[b.Replies.length - 1].createdAt);
           return bDate.getTime() - aDate.getTime();
         });
         this.isLoading = false;

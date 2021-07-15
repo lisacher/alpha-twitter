@@ -180,6 +180,7 @@ p {
 }
 .textContent p {
   font-size: 23px;
+  word-break: break-all;
 }
 /* updatedAt */
 .updatedAt {

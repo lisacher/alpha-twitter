@@ -61,7 +61,6 @@ export default {
 	async fetchUser() {
       try{
         const { data } = await usersAPI.getAdminUsers()
-        console.log('data',data);
 
         data.map(account => {
           if(account.role === 'user') {
@@ -85,7 +84,6 @@ export default {
           icon: 'error',
           title: '無法取得所有使用者資料，請稍後再試'
         })
-        console.log(error.message);
       }
     },
   }

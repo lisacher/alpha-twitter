@@ -36,6 +36,7 @@
               <button
                 class="btn save ms-auto"
                 type="submit"
+                :disabled="status.isProcessing"
               >
                 儲存
               </button>
@@ -148,6 +149,9 @@ export default {
     return {
       user: {},
       userCached: {},
+      status: {
+        isProcessing: false
+      }
     };
   },
   created() {
@@ -197,6 +201,7 @@ export default {
 
     async handelSubmit(e) {
       try {
+        this.status.isProcessing = true
         if (!this.user.name) {
           Toast.fire({
             icon: "warning",
@@ -207,23 +212,30 @@ export default {
         const form = e.target;
         const formData = new FormData(form);
 
+      
+
         const { data } = await usersAPI.update({
           id: this.user.id,
           formData,
         });
-
 
         if (data[1].status !== "success") {
           throw new Error(data.message);
         }
 
         this.$emit("after-form-submit");
-
+        this.$store.commit("setCurrentUser", {
+          ...this.currentUser,
+          ...data[0]
+        })
+        
         Toast.fire({
           icon: "success",
           title: "儲存成功！",
         });
+        this.status.isProcessing = false
       } catch (error) {
+        this.status.isProcessing = false
         Toast.fire({
           icon: "error",
           title: "無法更新個人資料，請稍後再試。",

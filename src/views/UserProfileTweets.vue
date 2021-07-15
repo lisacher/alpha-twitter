@@ -152,6 +152,7 @@ export default {
         const { data } = await tweetsAPI.getUsersTweets({ userId })
         //如果使用者沒有任何推文：
        if(data.message === '使用者暫無推文') {
+         this.tweets = []
          return
        }
         this.tweets = data

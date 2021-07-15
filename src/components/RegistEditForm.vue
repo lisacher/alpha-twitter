@@ -3,14 +3,19 @@
     <div class="row">
       <label for="account">帳號<span class="note">{{ form.account.length }} / 50</span>
       </label>
-      <input
+      <div class="d-flex px-0">
+        <div class="default">@</div>
+        <input
         id="account"
         name="account"
         type="text"
         v-model="form.account"
         required
         maxlength="50"
+        class="px-0"
       />
+      </div>
+      
     </div>
 
     <div class="row">
@@ -221,7 +226,8 @@ export default {
         if (!formCheckResult) {
           return;
         }
-        const { data } = await authorizationAPI.signUp(formData)
+        const res = await authorizationAPI.signUp(formData)
+        const { data } = res
         if (data.status !== "success") {
           throw new Error(data)
         }
@@ -232,13 +238,9 @@ export default {
 
         this.$router.push("/login")
       } catch (error) {
-        let message = "目前無法註冊，請稍後再試";
-        if (error.response.status === 403) {
-          message = "該帳號或Email已註冊過囉！";
-        }
         Toast.fire({
           icon: "error",
-          title: message,
+          title: error.response.data.message
         })
       }
     },
@@ -274,6 +276,11 @@ export default {
         this.userChanged = true
         this.form.password = ""
         this.form.confirmPassword = ""
+
+        this.$store.commit("setCurrentUser", {
+          ...this.currentUser,
+          ...data[0]
+        })
       } catch (error) {
         Toast.fire({
           icon: "error",
@@ -362,4 +369,13 @@ button.update {
   width: 122px;
   font-size: 18px;
 }
+
+.default {
+  width: 30px;
+  font-size: 19px;
+  background-color: #f5f8fa;
+  border-bottom: 2px solid #657786;
+  text-align: right;
+}
+
 </style>
