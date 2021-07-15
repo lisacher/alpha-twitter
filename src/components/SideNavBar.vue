@@ -2,7 +2,7 @@
   <div>
     <nav class="container">
       <div class="nav-logo mb-4">
-        <router-link to="/">
+        <router-link to="/tweets">
           <img src="./../assets/Logo.png" alt="" />
         </router-link>
       </div>

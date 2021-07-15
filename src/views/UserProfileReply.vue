@@ -227,7 +227,24 @@ export default {
         ...data,
       };
     },
-    afterCreateReply () {
+    afterCreateReply ({ content, id }) {
+        if (this.replies[0].UserId === this.currentUser.id ) {
+          this.replies.unshift({
+          ...this.replies,
+          id,
+          User: {
+            id: this.currentUser.id,
+            name: this.currentUser.name,
+            account: this.currentUser.account,
+            avatar: this.currentUser.avatar
+          },
+          content,
+          createdAt: new Date(),
+          totalLikes: 0,
+          totalReplies: 0,
+          isLiked: false
+          })
+        }
         this.data.User.totalLikes += 1;
     },
     changeReplyCount(tweetId) {

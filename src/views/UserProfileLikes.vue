@@ -38,15 +38,12 @@
         </div>
       </div>
       <div class="col-4">
-        <Spinner v-if="isLoading" />
-        <template v-else>
         <RecFollowingList 
           @after-add-follow="afterAddFollow"
           @after-delete-follow="afterDeleteFollow"
           :remove-follow-id="removeFollowId"
           :add-follow-id="addFollowId"
         />
-        </template>
       </div>
     </div>
   </div>
