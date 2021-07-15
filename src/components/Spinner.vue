@@ -4,6 +4,12 @@
 </div></div>
 </template>
 
+<script>
+export default {
+  name: 'Spinner'
+}
+</script>
+
 <style scoped type="text/css">
 @keyframes ldio-4jdtjhjklh {
   0% { opacity: 1 }

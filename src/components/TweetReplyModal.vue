@@ -185,6 +185,7 @@ export default {
           return;
         }
         const { data } = await tweetsAPI.createReply({ tweetId, content });
+        console.log('data',data);
 
         if (data.status !== "success") {
           throw new Error(data.message);
@@ -193,6 +194,7 @@ export default {
         this.$emit("after-create-reply", {
           id: data.message.id,
           content: this.replyContent,
+          tweetId,
         });
 
         this.$emit('change-reply-count', this.tweet.id)

@@ -7,11 +7,20 @@
         <Spinner v-if="isLoading" />
         <template v-else>
         <div class="container twitterers-container overflow-scroll">
+          <h4 class="list-name border-bottom">使用者列表：</h4>
           <div class="row row-cols-4 gx-3 my-2">
            <AdminTwitterersCard 
            v-for="user in users"
            :key="user.id"
-           :user="user"
+           :data="user"
+           />
+          </div>
+          <h4 class="list-name border-bottom">管理者列表：</h4>
+          <div class="row row-cols-4 gx-3 my-2">
+          <AdminTwitterersCard 
+           v-for="admin in admins"
+           :key="admin.id"
+           :data="admin"
            />
           </div>
         </div>
@@ -41,6 +50,7 @@ export default {
   data() {
     return {
       users: [],
+      admins: [],
       isLoading: true
     }
   },
@@ -52,7 +62,18 @@ export default {
       try{
         const { data } = await usersAPI.getAdminUsers()
         console.log('data',data);
-        this.users = data
+
+        data.map(account => {
+          if(account.role === 'user') {
+            this.users.push({
+              ...account
+            })
+          } else if(account.role === 'admin') {
+            this.admins.push({
+              ...account
+            })
+          }
+        })
         this.users.sort((a, b) => {
           return b.totalTweets - a.totalTweets
         })
@@ -89,6 +110,11 @@ export default {
   height: 100%;
 }
 
+.list-name {
+  font-size: 20px;
+  font-weight: 1000;
+  padding: 20px 0;
+}
 
 
 </style>

@@ -1,43 +1,59 @@
 <template>
   <div class="col my-2">
-    <div class="twitterer-card">
-      <div class="cover-container"><img :src="user.cover | emptyCover" alt=""></div>
-      <div class="avatar-container"><img :src="user.avatar | emptyImage" alt=""></div>
-      <div class="description-container d-flex flex-column pb-2">
-        <p class="name">{{user.name}}</p>
-        <p class="account mb-1">{{user.account}}</p>
-        <div class="comment-like mb-2">
-          <img src="./../assets/comment.png" alt="" class="me-2">
-          <div class="d-inline-block me-2">{{user.totalTweets}}</div>
-          <img src="./../assets/isLiked.png" alt="" class="me-2">
-          <div class="d-inline-block">{{user.totalLikes}}</div>
-        </div>
-        <div class="follow-status d-flex justify-content-center">
-          <p class="pe-2">{{user.totalFollowings}} <span>個跟隨中</span></p>
-          <p>{{user.totalFollowers}} <span>個追隨者</span></p>
-        </div>
+    <div 
+      class="twitterer-card"
+    >
+      <div class="cover-container">
+        <img :src="data.cover | emptyCover" alt="" />
       </div>
+      <div 
+        class="avatar-container"
+      >
+        <img :src="data.avatar | emptyImage" alt="" />
+      </div>
+
+      <template v-if="data.role === 'user'">
+        <div class="description-container d-flex flex-column pb-2">
+          <p class="name">{{ data.name }}</p>
+          <p class="account mb-1">{{ data.account }}</p>
+          <div class="comment-like mb-2">
+            <img src="./../assets/comment.png" alt="" class="me-2" />
+            <div class="d-inline-block me-2">{{ data.totalTweets }}</div>
+            <img src="./../assets/isLiked.png" alt="" class="me-2" />
+            <div class="d-inline-block">{{ data.totalLikes }}</div>
+          </div>
+          <div class="follow-status d-flex justify-content-center">
+            <p class="pe-2">{{ data.totalFollowings }} <span>個跟隨中</span></p>
+            <p>{{ data.totalFollowers }} <span>個追隨者</span></p>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="description-container d-flex flex-column pb-2 admin-box justify-content-center">
+          <p class="name">{{ data.name }}</p>
+          <p class="account mb-1">{{ data.account }}</p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { emptyImageFilter } from './../utils/mixins'
+import { emptyImageFilter } from "./../utils/mixins";
 
 export default {
   name: "AdminTwitterersCard",
   mixins: [emptyImageFilter],
   props: {
-    user: {
+    data: {
       type: Object,
-      required: true
-    }
-  }
-}
+      required: true,
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .twitterer-card {
   position: relative;
   font-size: 15px;
@@ -69,7 +85,7 @@ export default {
 }
 
 .description-container {
-  background-color: #F6F7F8;
+  background-color: #f6f7f8;
   padding-top: calc(140px * 0.2);
   text-align: center;
   border-radius: 0 0 10px 10px;
@@ -82,5 +98,10 @@ export default {
 
 .follow-status {
   font-size: 14px;
+}
+
+.admin-box {
+  width: 100%;
+  height: 125px;
 }
 </style>

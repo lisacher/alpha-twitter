@@ -5,7 +5,7 @@
         <img :src="data.User.avatar | emptyImage" alt="" />
       </router-link>
     </div>
-    <div class="text-container mt-2 flex-grow-1">
+    <div class="text-container d-flex flex-column mt-2 flex-grow-1">
       <div class="header">
         <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
         <div class="account d-inline-block">{{ data.User.account }}</div>
@@ -16,22 +16,22 @@
       <!-- 當此卡片是在回覆他人推文時： -->
       <router-link
         v-if="replyTweet"
-        :to="{ name: 'tweet', params: { id: replyTweet.id ? replyTweet.id : replyTweet.TweetId}}"
+        :to="{ name: 'tweet', params: { id: replyTweet.id ? replyTweet.id : replyTweet }}"
         class="tweet-link"
       >
         <div class="body">
-          <div class="text">
+          <div class="text mb-2">
             <p class="reply-content py-1">
               回覆
               <router-link
-                v-if="replyTweet.User.id"
+                v-if="replyTweet.User"
                 :to="{
                   name: 'user-tweets',
                   params: { id: replyTweet.User.id },
                 }"
                 class="tweet-link"
               >
-                <span>{{ replyTweet.User.account ? replyTweet.User.account : '' }}</span>
+                <span>{{ replyTweet.User.account }}</span>
               </router-link>
             </p>
             {{ data.content }}
@@ -41,7 +41,7 @@
       <router-link
         v-else
         :to="{ name: 'tweet', params: { id: data.id } }"
-        class="tweet-link"
+        class="tweet-link flex-grow-1"
       >
         <div class="body me-3">
           <div class="text">
@@ -49,8 +49,13 @@
           </div>
         </div>
       </router-link>
-      <div class="footer d-flex my-2">
-        <div class="comment d-flex align-items-center me-5">
+      <div 
+        v-if="!replyTweet"
+        class="footer d-flex mb-2"
+      >
+        <div 
+          class="comment d-flex align-items-center me-5"
+        >
           <div
             class="btn comment-img"
             data-bs-toggle="modal"
@@ -70,6 +75,19 @@
             :disabled="status.isProcessing"
           ></button>
           <div class="likes-count">{{ data.totalLikes }}</div>
+        </div>
+      </div>
+      <div v-else>
+        <div
+          class="liked d-flex align-items-center reply-tweet-like"
+          :class="{ activeLiked: data.isLiked === 1 }"
+          v-if="data.id"
+        >
+          <button
+            class="btn liked-img"
+            @click.prevent.stop="toggleLiked(data.id)"
+            :disabled="status.isProcessing"
+          ></button>
         </div>
       </div>
     </div>
@@ -92,7 +110,7 @@ export default {
       required: true,
     },
     replyTweet: {
-      type: [Object, String],
+      type: [Object, Number],
       default: null,
     },
   },
@@ -198,6 +216,10 @@ export default {
   text-decoration: none;
   color: #000;
 }
+.tweet-card {
+  min-height: 120px;
+}
+
 .tweet-card:hover {
   background-color: #f7f7f7;
 }
@@ -216,6 +238,9 @@ export default {
   width: 12px;
   background-size: contain;
   background-repeat: no-repeat;
+}
+.text-container {
+  position: relative;
 }
 
 .header,
@@ -297,5 +322,13 @@ export default {
 
 .activeLiked .likes-count {
   color: #e0245e;
+}
+
+.reply-tweet-like {
+  position: absolute;
+  width: 30px;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

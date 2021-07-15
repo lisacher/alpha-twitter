@@ -44,7 +44,7 @@
           :class="{ activeLiked: data.isLiked === 1 }"
         >
           <button class="btn liked-img" 
-            @click.prevent.stop="toggleLiked(data.id)"
+            @click.prevent.stop="toggleLiked(data.id, 'tweet')"
             :disabled="status.isProcessing"
           ></button>
           <div class="likes-count">{{ data.totalLikes }}</div>
@@ -53,7 +53,7 @@
       </div>
     </div>
     <!-- User's Reply -->
-    <div class="d-flex" v-for="reply in data.Replies"
+    <div class="d-flex reply-card" v-for="reply in data.Replies"
             :key="reply.id">
       <div class="img-container">
         <router-link
@@ -77,10 +77,13 @@
           </div>
         </div>
       </div>
-      <div class="liked footer align-items-center d-flex my-2"
-      :class="{ activeLiked: data.isLiked === 1 }">
+      <div 
+        v-if="reply.id"
+        class="liked footer align-items-center d-flex my-2"
+        :class="{ activeLiked: reply.isLiked === 1 }"
+      >
       <button class="flex-row btn liked-img" 
-          @click.prevent.stop="toggleLiked(reply.id)"
+          @click.prevent.stop="toggleLiked(reply.id, 'reply')"
           :disabled="status.isProcessing"></button>
       </div>
     </div>
@@ -104,11 +107,7 @@ export default {
     initialData: {
       type: Object,
       required: true,
-    },
-    replyTweet: {
-      type: [Object, String],
-      default: null,
-    },
+    }
   },
   computed: {
     ...mapState(['currentUser'])
@@ -125,11 +124,11 @@ export default {
     clickModalButton(data) {
       this.$emit("after-click-modal", data);
     },
-    async toggleLiked(id) {
+    async toggleLiked(id, target) {
       try {
         this.status.isProcessing = true;
         // 當不是在單一推文頁面時：
-        if (!this.replyTweet) {
+        if (target === 'tweet') {
           if (this.data.isLiked === 0) {
             const { data } = await tweetsAPI.likeTweet({ tweetId: id });
             if (data.status !== "success") {
@@ -156,15 +155,15 @@ export default {
             });
           }
         }
-        if (this.replyTweet) {
-          if (this.data.isLiked === 0) {
+        if (target === 'reply') {
+          const targetReply = this.data.Replies.find(reply => reply.id === id)
+          if (targetReply.isLiked === 0) {
+
             const { data } = await tweetsAPI.likeReply({ replyId: id });
             if (data.status !== "success") {
               throw new Error(data.message);
             }
-
-            this.data.totalLikes += 1;
-            this.data.isLiked = 1;
+            targetReply.isLiked = 1
 
             Toast.fire({
               icon: "success",
@@ -175,8 +174,7 @@ export default {
             if (data.status !== "success") {
               throw new Error(data.message);
             }
-            this.data.totalLikes -= 1;
-            this.data.isLiked = 0;
+            targetReply.isLiked = 0;
 
             Toast.fire({
               icon: "success",
@@ -213,6 +211,8 @@ export default {
 .img-container img {
   height: 50px;
   width: 50px;
+  object-fit: cover;
+  object-position: 50% 50%;
   border-radius: 50%;
   margin: 10px;
 }

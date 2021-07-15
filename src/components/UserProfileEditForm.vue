@@ -36,8 +36,6 @@
               <button
                 class="btn save ms-auto"
                 type="submit"
-                data-bs-toggle="modal"
-                data-bs-target="#editFormModal"
               >
                 儲存
               </button>
