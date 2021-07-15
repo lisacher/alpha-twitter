@@ -27,7 +27,11 @@
             v-for="reply in replies"
             :key="reply.id"
             :initial-data="reply"
+            @after-click-modal="afterClickModal"
           />
+          <TweetReplyModal :target-tweet="modalContent"
+          @after-create-reply="afterCreateReply"
+          @change-reply-count="changeReplyCount"/>
           </template>
         </div>
       </div>
@@ -53,6 +57,7 @@ import TopNavBar from "../components/TopNavBar.vue";
 import TweetererImformation from "../components/TwittererInfomation.vue";
 import TwittererNavPills from '../components/TwittererNavPills.vue'
 import TweetandReply from '../components/TweetandReply.vue'
+import TweetReplyModal from "../components/TweetReplyModal.vue";
 
 import tweetsAPI from '../apis/tweets'
 import usersAPI from '../apis/users'
@@ -71,7 +76,8 @@ export default {
     TweetandReply,
     TweetererImformation,
     TwittererNavPills,
-    Spinner
+    Spinner,
+    TweetReplyModal
   },
   data() {
     return {
@@ -90,7 +96,8 @@ export default {
       replies: [],
       removeFollowId: 0,
       addFollowId: 0,
-      isLoading: true
+      isLoading: true,
+      modalContent: {},
     };
   },
   created() {
@@ -213,6 +220,22 @@ export default {
     },
     afterDeleteFollowMain(userId) {
       this.removeFollowId = userId
+    },
+    afterClickModal(data) {
+      this.modalContent = {
+        ...this.modalContent,
+        ...data,
+      };
+    },
+    afterCreateReply () {
+        this.data.User.totalLikes += 1;
+    },
+    changeReplyCount(tweetId) {
+      this.replies.map(reply => {
+        if(reply.id === tweetId) {
+          reply.totalReplies += 1
+        }
+      })
     }
   },
 };
