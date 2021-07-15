@@ -18,6 +18,11 @@
           <TwittererNavPills 
             :initial-id="User.id"
           />
+          <Spinner v-if="isLoading" />
+          <template v-else>
+          <div class="noTweets" v-if="likes.length < 1">
+            此用戶暫無喜歡的內容
+          </div>
           <TweetsCard
             v-for="like in likes"
             :key="like.id"
@@ -25,19 +30,27 @@
             @after-click-modal="afterClickModal"
             @after-toggle-like="afterToggleLike"
           />
+<<<<<<< HEAD
           <TweetReplyModal 
             :target-tweet="modalContent" 
             @change-reply-count="changeReplyCount"
           />
+=======
+          <TweetReplyModal :target-tweet="modalContent" />
+          </template>
+>>>>>>> origin/main
         </div>
       </div>
       <div class="col-4">
+        <Spinner v-if="isLoading" />
+        <template v-else>
         <RecFollowingList 
           @after-add-follow="afterAddFollow"
           @after-delete-follow="afterDeleteFollow"
           :remove-follow-id="removeFollowId"
           :add-follow-id="addFollowId"
         />
+        </template>
       </div>
     </div>
   </div>
@@ -57,6 +70,7 @@ import { mapState } from 'vuex'
 import usersAPI from './../apis/users'
 import tweetsAPI from './../apis/tweets'
 import { Toast } from './../utils/helpers'
+import Spinner from '../components/Spinner.vue';
 
 
 export default {
@@ -68,7 +82,8 @@ export default {
     TweetsCard,
     TweetererImformation,
     TwittererNavPills,
-    TweetReplyModal
+    TweetReplyModal,
+    Spinner
   },
   data() {
     return {
@@ -86,7 +101,8 @@ export default {
       likes: [],
       modalContent: {},
       removeFollowId: 0,
-      addFollowId: 0
+      addFollowId: 0,
+      isLoading: true
     };
   },
 
@@ -122,7 +138,9 @@ export default {
          totalTweets,
          isFollowing
        }
+       this.isLoading = false
      } catch(error) {
+       this.isLoading = false
        Toast.fire({
          icon: 'error',
          title: '無法取得資料，請稍後再試。'
@@ -246,5 +264,12 @@ export default {
 
 .row {
   height: 100%;
+}
+
+.noTweets {
+  text-align: center;
+  margin: 50px;
+  font-size: 13px;
+  color: #657786;
 }
 </style>
