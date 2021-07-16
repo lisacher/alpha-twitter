@@ -5,17 +5,17 @@ import store from './store'
 import './assets/application.css'
 
 // vue-socket.io
-import VueSocketIO from 'vue-socket.io'
+// import VueSocketIO from 'vue-socket.io'
 
 Vue.config.productionTip = false
 
-Vue.use(new VueSocketIO({
-  debug: true,
-  connection: 'socket',
-  vuex: {
-    store
-  }
-}))
+// Vue.use(new VueSocketIO({
+//   debug: true,
+//   connection: 'socket',
+//   vuex: {
+//     store
+//   }
+// }))
 
 new Vue({
   router,

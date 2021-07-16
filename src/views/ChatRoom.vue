@@ -31,6 +31,7 @@ export default {
       this.$socket.emit('clientSend', {
         message: this.text
       })
+      // 確定送出成功
       // 存入事件
       this.saveMessage()
       // 清空輸入欄
