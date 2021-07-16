@@ -8,7 +8,7 @@
     <div class="text-container d-flex flex-column mt-2 flex-grow-1">
       <div class="header">
         <div class="name d-inline-block pe-2 fw-bold">{{ data.User.name }}</div>
-        <div class="account d-inline-block">@{{ data.User.account }}</div>
+        <div class="account d-inline-block">{{ data.User.account }}</div>
         <div class="createdAt d-inline-block">
           ・{{ data.createdAt | fromNow }}
         </div>
@@ -31,7 +31,7 @@
                 }"
                 class="tweet-link"
               >
-                <span>@{{ replyTweet.User.account }}</span>
+                <span>{{ replyTweet.User.account }}</span>
               </router-link>
             </p>
             {{ data.content }}

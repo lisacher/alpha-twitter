@@ -9,17 +9,13 @@
 
     <div class="row">
       <label for="account">帳號</label>
-      <div class="d-flex px-0">
-        <div class="default">@</div>
-        <input
+      <input
         id="account"
         name="account"
         type="text"
         v-model="account"
         required
-        class="flex-grow-1"
       />
-      </div>
     </div>
 
     <div class="row">
@@ -83,10 +79,10 @@ export default {
       } catch (error) {
         Toast.fire({
           icon: "error",
-          title: error.response.data.message
+          title: error.response.data.message,
         });
       }
-    }
+    },
   },
 };
 </script>
@@ -162,13 +158,6 @@ button.login {
 .link-btns-container span {
   color: #0099ff;
   font-weight: 700;
-}
-.default {
-  width: 30px;
-  font-size: 19px;
-  background-color: #f5f8fa;
-  border-bottom: 2px solid #657786;
-  text-align: right;
 }
 
 </style>

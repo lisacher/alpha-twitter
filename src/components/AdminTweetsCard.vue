@@ -11,7 +11,7 @@
           <div class="name d-inline-block pe-2 fw-bold">
             {{ tweet.User.name }}
           </div>
-          <div class="account d-inline-block">@{{ tweet.User.account }}</div>
+          <div class="account d-inline-block">{{ tweet.User.account }}</div>
           <div class="createdAt d-inline-block">
             ・{{ tweet.createdAt | fromNow }}
           </div>
