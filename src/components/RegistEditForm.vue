@@ -1,21 +1,17 @@
 <template>
-<form @submit.prevent.stop="handleSubmit($event)">
+  <form @submit.prevent.stop="handleSubmit($event)">
     <div class="row">
-      <label for="account">帳號<span class="note">{{ form.account.length }} / 50</span>
+      <label for="account"
+        >帳號<span class="note">{{ form.account.length }} / 50</span>
       </label>
-      <div class="d-flex px-0">
-        <div class="default">@</div>
-        <input
+      <input
         id="account"
         name="account"
         type="text"
         v-model="form.account"
         required
         maxlength="50"
-        class="px-0"
       />
-      </div>
-      
     </div>
 
     <div class="row">
@@ -33,9 +29,7 @@
     </div>
 
     <div class="row">
-      <label for="email"
-        >Email<span class="note ml-5"></span></label
-      >
+      <label for="email">Email<span class="note ml-5"></span></label>
       <input
         id="email"
         name="email"
@@ -75,10 +69,8 @@
     </div>
 
     <template v-if="isSignUp">
-      <div class="row mt-4" >
-        <button class="btn submit" type="submit" >
-            註冊
-        </button>
+      <div class="row mt-4">
+        <button class="btn submit" type="submit">註冊</button>
       </div>
       <div class="row">
         <button class="btn cancel" @click.stop.prevent="backToLogin">
@@ -88,11 +80,7 @@
     </template>
     <template v-else>
       <div class="row">
-        <button
-          class="btn update"
-          type="submit"
-        >
-        </button>
+        <button class="btn update" type="submit"></button>
         <button class="btn update">儲存</button>
       </div>
     </template>
@@ -100,31 +88,31 @@
 </template>
 
 <script>
-import authorizationAPI from "./../apis/authorization"
-import usersAPI from "./../apis/users"
+import authorizationAPI from "./../apis/authorization";
+import usersAPI from "./../apis/users";
 import { Toast } from "../utils/helpers";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "RegistEditForm",
   props: {
     isSignUp: {
-        type: Boolean,
-        default: true
-      }
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
       form: {
-        account: '',
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        account: "",
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
       },
       isSaved: true,
       userChanged: false,
-    }
+    };
   },
   created() {
     this.fetchCurrentUser(this.currentUser);
@@ -143,7 +131,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   methods: {
     fetchCurrentUser(payload) {
@@ -157,139 +145,141 @@ export default {
       };
     },
     backToLogin() {
-      this.$router.push("/login")
+      this.$router.push("/login");
     },
     formCheck() {
-      let result = false
+      let result = false;
       if (!this.form.account) {
         Toast.fire({
           icon: "info",
-          title: "請填寫帳號！",               
+          title: "請填寫帳號！",
         });
-        return result
+        return result;
       }
       if (!this.form.name) {
         Toast.fire({
           icon: "info",
           title: "請填寫名稱！",
-        })
-        return result
+        });
+        return result;
       }
       if (!this.form.email) {
         Toast.fire({
           icon: "info",
           title: "請填寫 Email！",
-        })
-        return result
+        });
+        return result;
       }
       if (!this.form.password) {
         Toast.fire({
           icon: "info",
           title: "請填寫密碼！",
-        })
-        return result
+        });
+        return result;
       }
       if (this.form.password.length > 15 || this.form.password.length < 4) {
         Toast.fire({
           icon: "info",
           title: "密碼長度需介於 4 到 15 字元！",
-        })
-        return result
+        });
+        return result;
       }
       if (!this.form.confirmPassword) {
         Toast.fire({
           icon: "info",
           title: "請填寫密碼確認！",
-        })
-        return result
+        });
+        return result;
       }
       if (this.form.password !== this.form.confirmPassword) {
         Toast.fire({
           icon: "error",
           title: "密碼不相符！",
-        })
-        return result
+        });
+        return result;
       }
-      return (result = true)
-
+      return (result = true);
     },
     handleSubmit() {
       if (this.isSignUp) {
-        this.handleRegistSubmit()
+        this.handleRegistSubmit();
       } else {
-        this.handleSaveSetting()}
+        this.handleSaveSetting();
+      }
     },
     async handleRegistSubmit() {
       try {
-        const formData = this.form
-        const formCheckResult = this.formCheck()
+        const formData = this.form;
+        const formCheckResult = this.formCheck();
         if (!formCheckResult) {
           return;
         }
-        const res = await authorizationAPI.signUp(formData)
-        const { data } = res
+        const res = await authorizationAPI.signUp(formData);
+        const { data } = res;
         if (data.status !== "success") {
-          throw new Error(data)
+          throw new Error(data);
         }
         Toast.fire({
           icon: "success",
           title: "註冊成功！",
-        })
+        });
 
-        this.$router.push("/login")
+        this.$router.push("/login");
       } catch (error) {
         Toast.fire({
           icon: "error",
-          title: error.response.data.message
-        })
+          title: error.response.data.message,
+        });
       }
     },
     async handleSaveSetting() {
       try {
-        const formData = this.form
-        const formCheckResult = this.formCheck()
+        const formData = this.form;
+        const formCheckResult = this.formCheck();
         if (!formCheckResult) {
           return;
         }
-        const { data } = await usersAPI.updateInfo(
-          { userId: this.currentUserid, formData })
-          //check email and account
-          if(data.message === '此帳號已被使用') {
-            Toast.fire({
+        const { data } = await usersAPI.updateInfo({
+          userId: this.currentUserid,
+          formData,
+        });
+        //check email and account
+        if (data.message === "此帳號已被使用") {
+          Toast.fire({
             icon: "error",
             title: "此帳號已被使用，請改試其他帳號",
-            })
-            return
-          }
-          if(data.message === '此信箱已被使用') {
-            Toast.fire({
+          });
+          return;
+        }
+        if (data.message === "此信箱已被使用") {
+          Toast.fire({
             icon: "error",
             title: "此信箱已被使用，請改試其他帳號",
-            })
-            return
-          }
-          Toast.fire({
-            icon: "success",
-            title: "資料修改成功！",
+          });
+          return;
+        }
+        Toast.fire({
+          icon: "success",
+          title: "資料修改成功！",
         });
-        this.isSaved = true
-        this.userChanged = true
-        this.form.password = ""
-        this.form.confirmPassword = ""
+        this.isSaved = true;
+        this.userChanged = true;
+        this.form.password = "";
+        this.form.confirmPassword = "";
 
         this.$store.commit("setCurrentUser", {
           ...this.currentUser,
-          ...data[0]
-        })
+          ...data[0],
+        });
       } catch (error) {
         Toast.fire({
           icon: "error",
           title: "無法儲存使用者資訊，請稍候再試！",
-        })
+        });
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -310,7 +300,7 @@ form {
   font-size: 15px;
   display: block;
   width: 100%;
-  background-color: #F5F8FA;
+  background-color: #f5f8fa;
   width: 642px;
   height: 20px;
 }
@@ -323,8 +313,9 @@ form {
   border: none;
   border-bottom: 2px solid #657786;
 }
-input:focus,textarea:focus {
-    outline: none
+input:focus,
+textarea:focus {
+  outline: none;
 }
 .note {
   font-size: 13px;
@@ -368,14 +359,6 @@ button.update {
   right: 0;
   width: 122px;
   font-size: 18px;
-}
-
-.default {
-  width: 30px;
-  font-size: 19px;
-  background-color: #f5f8fa;
-  border-bottom: 2px solid #657786;
-  text-align: right;
 }
 
 </style>

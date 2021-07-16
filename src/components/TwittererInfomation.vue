@@ -38,7 +38,7 @@
       </div>
       <div class="info-container mb-4">
         <p class="name">{{ user.name }}</p>
-        <p class="account">@{{ user.account }}</p>
+        <p class="account">{{ user.account }}</p>
         <p class="bio my-2">{{ user.bio }}</p>
         <div class="follow-container">
           <router-link 

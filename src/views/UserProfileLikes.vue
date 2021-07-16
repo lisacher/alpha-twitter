@@ -148,7 +148,6 @@ export default {
           this.likes = []
           return
         }
-
         // 先只抓喜歡的推文
 
         data.map(like => {
@@ -156,6 +155,7 @@ export default {
           if(like.Tweet) {
             this.likes.push({
               id: like.id,
+              createdAt:like.createdAt,
               data: like.Tweet
             })
             return
@@ -163,6 +163,7 @@ export default {
           } else if(like.Reply) {
             this.likes.push({
               id: like.id,
+              createdAt:like.createdAt,
               data: like.Reply
             })
             return
@@ -170,8 +171,8 @@ export default {
         })
 
         this.likes.sort((a, b) => {
-          const aDate = new Date(a.data.createdAt)
-          const bDate = new Date(b.data.createdAt)
+          const aDate = new Date(a.createdAt)
+          const bDate = new Date(b.createdAt)
           return bDate.getTime() - aDate.getTime()
         })
       } catch(error) {
