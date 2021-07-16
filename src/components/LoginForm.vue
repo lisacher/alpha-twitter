@@ -74,7 +74,8 @@ export default {
           throw new Error(data.message);
         }
         localStorage.setItem("token", data.token);
-        this.$store.commit("setCurrentUser", data.user);
+
+        this.fetchCurrentUser()
         this.$router.push("/tweets");
       } catch (error) {
         Toast.fire({
@@ -83,6 +84,17 @@ export default {
         });
       }
     },
+    async fetchCurrentUser() {
+      try {
+        const { data } = await authorizationAPI.getCurrentUser()
+        this.$store.commit("setCurrentUser", data);
+      } catch(error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得資料，請稍候再試。'
+        })
+      }
+    }
   },
 };
 </script>
