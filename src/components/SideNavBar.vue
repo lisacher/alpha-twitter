@@ -17,6 +17,34 @@
           </li>
           <li class="nav-item mb-4">
             <router-link
+              to="/users/reply"
+              class="nav-link d-flex"
+            >
+              <div class="notice-image"></div>
+              <div class="nav-item-text">通知</div>
+            </router-link>
+          </li>
+          <li class="nav-item mb-4">
+            <router-link
+              to="/chat"
+              class="nav-link d-flex"
+            >
+              <div class="message-image"></div>
+              <div class="nav-item-text">公開聊天室</div>
+            </router-link>
+          </li>
+          <li class="nav-item mb-4">
+            <router-link
+              to="/message"
+              class="nav-link d-flex"
+            >
+              <div class="message-image"></div>
+              <div class="nav-item-text">私人訊息</div>
+            </router-link>
+          </li>
+
+          <li class="nav-item mb-4">
+            <router-link
               :to="{ name: 'user', params: { id: currentUser.id } }"
               class="nav-link d-flex"
             >
@@ -210,6 +238,20 @@ img {
 .active .home-image {
   background-image: url(./../assets/home-hover@2x.png);
 }
+.notice-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 18px;
+  width: 18px;
+  background-image: url(./../assets/notice.svg);
+}
+
+.active .notice-image,
+.part-active .notice-image {
+  background-image: url(./../assets/notice-hover.svg);
+}
 
 .profile-image {
   display: inline-block;
@@ -224,6 +266,21 @@ img {
 .active .profile-image,
 .part-active .profile-image {
   background-image: url(./../assets/profile-hover@2x.png);
+}
+
+.message-image {
+  display: inline-block;
+  margin-right: 15px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 18px;
+  width: 18px;
+  background-image: url(./../assets/message.svg);
+}
+
+.active .message-image,
+.part-active .message-image {
+  background-image: url(./../assets/message-hover.svg);
 }
 
 .setting-image {
@@ -258,6 +315,12 @@ img {
 }
 .nav-item:hover .setting-image {
   background-image: url(./../assets/setting-hover@2x.png);
+}
+.nav-item:hover .message-image {
+  background-image: url(./../assets/message-hover.svg);
+}
+.nav-item:hover .notice-image {
+  background-image: url(./../assets/notice-hover.svg);
 }
 
 .modal-body {
