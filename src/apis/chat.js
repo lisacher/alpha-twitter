@@ -1,13 +1,7 @@
-import axios from 'axios'
-
-const getToken = () => localStorage.getItem("token")
+import { apiHelper } from './../utils/helpers'
 
 export default {
   getChatMessage () {
-    return axios.get('https://twittertest8111009.herokuapp.com/api/chat', {
-      headers: {
-        Authorization: `Bearer ${getToken()}`
-      }
-    })
+    return apiHelper.get('/chat')
   }
 }

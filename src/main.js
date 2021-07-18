@@ -17,7 +17,7 @@ const options = { extraHeaders: { Authorization: `Bearer ${getToken()}` }}
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection:SocketIO('https://twittertest8111009.herokuapp.com',options),
+  connection:SocketIO('https://twitter-api-for-2021.herokuapp.com',options),
   
 }))
 

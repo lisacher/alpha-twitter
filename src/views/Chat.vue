@@ -77,7 +77,6 @@ export default {
   sockets: {
     // 登入/登出
     joinRoom(msg) {
-      console.log("msg", msg);
       this.messages.push({
         id: uuidv4(),
         content: msg,
@@ -85,7 +84,6 @@ export default {
       });
     },
     leaveRoom(msg) {
-      console.log("msg", msg);
       this.messages.push({
         id: uuidv4(),
         content: msg,
@@ -93,7 +91,6 @@ export default {
       });
     },
     chatMessage(msg) {
-      console.log('msg',msg);
       // 發送訊息
       const message = msg[0];
       const User = msg[1]
@@ -108,7 +105,6 @@ export default {
     },
     totalUser(users) {
       this.onlineUsers = users
-      console.log('totaluser',users);
     }
   },
 };
