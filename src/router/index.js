@@ -115,9 +115,23 @@ const routes = [
     beforeEnter: authorizeIsUser
   },
   {
-    path: '/notification/:id',
+    path: '/notification',
     name: 'notification',
-    component: () => import('./../views/Notification.vue')
+    component: () => import('./../views/Notification.vue'),
+    beforeEnter: authorizeIsUser
+
+  },
+  {
+    path: '/chat/:id',
+    name: 'chat',
+    component: () => import('./../views/Chat.vue'),
+    beforeEnter: authorizeIsUser
+  },
+  {
+    path: '/message',
+    name: 'private-message',
+    component: () => import('./../views/PrivateMessage.vue'),
+    beforeEnter: authorizeIsUser
   },
   {
     path: '/admin/tweets',
