@@ -76,7 +76,6 @@ export default {
         localStorage.setItem("token", data.token);
 
         this.fetchCurrentUser()
-        this.$socket.open()
         this.$router.push("/tweets");
       } catch (error) {
         Toast.fire({

@@ -15,6 +15,11 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 
+import VueSocketIO from 'vue-socket.io'
+import SocketIO from 'socket.io-client'
+import Vue from 'vue'
+
+
 import SideNavBar from "./../components/SideNavBar.vue";
 import MessageBoard from "./../components/MessageBoard.vue";
 import UserOnlineList from "./../components/UserOnlineList.vue";
@@ -22,13 +27,22 @@ import { emptyImageFilter } from "../utils/mixins";
 import { mapState } from "vuex";
 import chatsAPI from "./../apis/chat";
 
+const getToken = () => localStorage.getItem('token')
+const options = { extraHeaders: { Authorization: `Bearer ${getToken()}` }}
+
+
+Vue.use(new VueSocketIO({
+  debug: false,
+  connection:SocketIO('https://twitter-api-for-2021.herokuapp.com',options),
+}))
+
 export default {
   name: "chat",
   components: { SideNavBar, MessageBoard, UserOnlineList },
   mixins: [emptyImageFilter],
- created() {
+  created() {
     this.fetchMessage();
-    this.login()
+    this.login();
   },
   destroyed() {
     this.logout();
@@ -41,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentUser"]),
+    ...mapState(["currentUser, token"]),
   },
   methods: {
     async fetchMessage() {
@@ -68,10 +82,12 @@ export default {
       });
     },
     login() {
+      this.$socket.connect();
       this.$socket.emit("login", this.currentUser);
     },
     logout() {
       this.$socket.emit("logout", this.currentUser);
+      this.$socket.disconnect();
     },
   },
   sockets: {
@@ -93,7 +109,7 @@ export default {
     chatMessage(msg) {
       // 發送訊息
       const message = msg[0];
-      const User = msg[1]
+      const User = msg[1];
 
       this.messages.push({
         id: uuidv4(),
@@ -104,8 +120,8 @@ export default {
       });
     },
     totalUser(users) {
-      this.onlineUsers = users
-    }
+      this.onlineUsers = users;
+    },
   },
 };
 </script>

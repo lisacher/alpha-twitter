@@ -174,6 +174,7 @@ export default {
         this.$router.push("/admin");
         return
       }
+      this.$socket.close()
       this.$router.push("/login");
     },
   },

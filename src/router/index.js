@@ -6,6 +6,7 @@ import Register from '../views/Register.vue'
 import AdminLogin from './../views/AdminLogin.vue'
 import store from './../store'
 
+
 import { Toast } from './../utils/helpers'
 
 Vue.use(VueRouter)
@@ -37,6 +38,7 @@ const authorizeIsUser = (to, from, next) => {
   }
   next()
 }
+
 
 const routes = [
   {
@@ -125,7 +127,7 @@ const routes = [
     path: '/chat/:id',
     name: 'chat',
     component: () => import('./../views/Chat.vue'),
-    beforeEnter: authorizeIsUser
+    beforeEnter:authorizeIsUser
   },
   {
     path: '/message',
