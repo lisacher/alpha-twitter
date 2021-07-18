@@ -1,39 +1,48 @@
 <template>
   <div class="messageBoard border-end">
-    <div class="title ">
+    <div class="title">
       <h1>公開聊天室</h1>
     </div>
-    <div class="container border-top">
+    <div class="container border-top" id="chat-container">
       <ul class="messageList">
-        <div class="check-online">
-          <div class="online-box">Apple 上線</div>
-          <div class="offline-box">Debbie 離線</div>
+        <div class="showMore">
+          <div class="btn" v-show="!more" @click="more = !more">顯示更多</div>
         </div>
-        <!-- send message-->
-        <li class="messageItem">
-          <div class="mainContent">
-            <div class="avatar">
-              <img :src="'' | emptyImage" alt="" />
-            </div>
-            <div class="textContainer">
-              <div class="text">
-                Hello~
+        <li
+          v-for="(message, index) in messages"
+          v-show="!(!more && index < 10)"
+          :key="message.id"
+          class="messageItem"
+        >
+          <template v-if="message.type === 'chat'">
+            <template v-if="message.User.id !== currentUser.id">
+              <div class="mainContent">
+                <div class="avatar">
+                  <img :src="message.User.avatar | emptyImage" alt="" />
+                </div>
+                <div class="textContainer">
+                  <div class="text">{{ message.content }}</div>
+                </div>
               </div>
+              <div class="textTime">{{ message.createdAt | fromNow }}</div>
+            </template>
+            <template v-else>
+              <div class="userContent">
+                <div class="textContainer">
+                  <div class="reply">{{ message.content }}</div>
+                </div>
+              </div>
+              <div class="replyTextTime">{{ message.createdAt | fromNow }}</div>
+            </template>
+          </template>
+          <template v-else>
+            <div class="check-online">
+              <div class="online-box">{{ message.content }}</div>
             </div>
-          </div>
-          <div class="textTime">下午6:01</div>
+          </template>
         </li>
+
         <!-- reply message -->
-        <li class="messageItem">
-          <div class="userContent">
-            <div class="textContainer">
-              <div class="reply">
-                hi 你好啊～
-              </div>
-            </div>
-          </div>
-          <div class="replyTextTime">下午6:03</div>
-        </li>
       </ul>
     </div>
     <div class="meesagePanel border-top">
@@ -43,8 +52,13 @@
         type="text"
         maxlength="140"
         required
+        v-model="text"
       />
-      <button type="submit" class="btn sendBtn">
+      <button
+        type="submit"
+        class="btn sendBtn"
+        @click.prevent.stop="handleSubmit"
+      >
         <img src="../assets/send.svg" alt="" />
       </button>
     </div>
@@ -62,10 +76,57 @@ export default {
   computed: {
     ...mapState(["currentUser"]),
   },
+  props: {
+    initialMessages: {
+      type: Array,
+      required: true,
+    },
+  },
+  watch: {
+    initialMessages: {
+      handler: function(newValue) {
+        this.messages = newValue;
+      },
+      deep: true,
+    },
+  },
+  updated() {
+    const chatContainer = document.querySelector("#chat-container");
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  },
+  created() {
+    this.fetchMessages();
+  },
+  // updated() {
+  //   const chatContainer = document.querySelector("#chat-container");
+  //   chatContainer.scrollTop = chatContainer.scrollHeight;
+  // },
+  data() {
+    return {
+      messages: [],
+      text: "",
+      more: false,
+    };
+  },
+  methods: {
+    fetchMessages() {
+      this.messages = this.initialMessages;
+    },
+    handleSubmit() {
+      // 向socket 發出事件，傳送聊天訊息
+      this.$socket.emit("chatMessage", this.text);
+      // 清空輸入欄
+      this.text = "";
+    },
+  },
 };
 </script>
 
 <style scoped>
+.row > * {
+  padding-right: 0px;
+  padding-left: 0px;
+}
 .messageBoard {
   flex: 2;
 }
@@ -113,13 +174,24 @@ export default {
   max-width: 60%;
   margin: 10px 10px 0 0px;
   display: flex;
-  align-items: flex-end;
 }
 .userContent {
   max-width: 60%;
-  margin: 10px 0px 0 300px;
+  margin: 10px 0 0 160px;
   display: flex;
-  align-items: flex-start;
+  justify-content: flex-end;
+}
+.textTime {
+  font-size: 12px;
+  margin-left: 70px;
+  color: #777;
+  font-weight: 500;
+}
+.replyTextTime {
+  font-size: 12px;
+  margin-left: 380px;
+  color: #777;
+  font-weight: 500;
 }
 .check-online {
   display: flex;
@@ -137,16 +209,6 @@ export default {
   font-size: 13px;
   text-align: center;
   color: #777;
-}
-.textTime {
-  margin-left: 70px;
-  color: #777;
-  font-weight: 500;
-}
-.replyTextTime {
-  margin-left: 350px;
-  color: #777;
-  font-weight: 500;
 }
 .messageItem .avatar {
   min-width: 50px;
@@ -199,5 +261,15 @@ export default {
 }
 .sendBtn img {
   transform: rotate(45deg);
+}
+.showMore {
+  text-align: center;
+  margin-top: 30px;
+}
+.showMore .btn {
+  padding: 0;
+  font-size: 14px;
+  color: #777;
+  font-weight: 400;
 }
 </style>

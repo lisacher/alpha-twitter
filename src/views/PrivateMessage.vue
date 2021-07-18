@@ -5,22 +5,22 @@
       <!-- mainSection -->
       <PrivateBox class="col-4" />
       <!-- messageBox -->
-      <MessageBoard class="col-5" />
+      <PrivateBoxReply class="col-5" />
     </div>
   </div>
 </template>
 
 <script>
-import MessageBoard from "./../components/MessageBoard.vue";
 import SideNavBar from "./../components/SideNavBar.vue";
 import PrivateBox from "../components/PrivateBox.vue";
+import PrivateBoxReply from "../components/PrivateBoxReply.vue";
 
 export default {
   name: "privateMessage",
   components: {
-    MessageBoard,
     SideNavBar,
     PrivateBox,
+    PrivateBoxReply,
   },
 };
 </script>

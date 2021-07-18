@@ -46,6 +46,10 @@ export default {
 </script>
 
 <style scoped>
+.row > * {
+  padding-right: 0px;
+  padding-left: 0px;
+}
 .box {
   display: flex;
 }
@@ -129,6 +133,7 @@ export default {
   background-color: #f7f7f7;
 }
 .avatar {
+  margin-right: 10px;
   min-width: 50px;
   width: 50px;
   height: 50px;
@@ -185,7 +190,6 @@ export default {
 .previewMessage p {
   line-height: 25px;
   width: 100%;
-  padding-left: 10px;
 }
 /*/////////////////// message box ///////////////////*/
 .messageBox .container {

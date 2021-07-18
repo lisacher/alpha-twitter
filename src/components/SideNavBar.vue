@@ -15,6 +15,34 @@
               <div class="nav-item-text">首頁</div>
             </router-link>
           </li>
+          <!-- <li class="nav-item mb-4">
+            <router-link
+              to="/notification"
+              class="nav-link d-flex"
+            >
+              <div class="notice-image"></div>
+              <div class="nav-item-text">通知</div>
+            </router-link>
+          </li> -->
+          <li class="nav-item mb-4">
+            <router-link
+              :to="{ name: 'chat', params: { id: currentUser.id}}"
+              class="nav-link d-flex"
+            >
+              <div class="message-image"></div>
+              <div class="nav-item-text">公開聊天室</div>
+            </router-link>
+          </li>
+          <!-- <li class="nav-item mb-4">
+            <router-link
+              to="/message"
+              class="nav-link d-flex"
+            >
+              <div class="message-image"></div>
+              <div class="nav-item-text">私人訊息</div>
+            </router-link>
+          </li> -->
+
           <li class="nav-item mb-4">
             <router-link
               to="/users/reply"

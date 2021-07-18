@@ -3,20 +3,20 @@
     <div class="mainSection border-start">
       <div class="usersOnline">
         <div class="title">
-          <h1>上線使用者 (1)</h1>
+          <h1>上線使用者 ({{ onlineUsers.length }})</h1>
         </div>
-        <div class="container">
+        <div v-for="user in onlineUsers" :key="user.id" class="container">
           <!-- other users -->
           <li class="userItem">
             <div class="userContainer">
               <div class="avatar">
-                <img :src="'' | emptyImage" alt="" />
+                <img :src="user.avatar | emptyImage" alt="" />
               </div>
               <div class="userName">
-                <p>apple</p>
+                <p>{{ user.name }}</p>
               </div>
               <div class="userAccount">
-                <p>@apple</p>
+                <p>{{ user.account }}</p>
               </div>
             </div>
           </li>
@@ -29,10 +29,23 @@
 <script>
 import { emptyImageFilter } from "../utils/mixins";
 export default {
+  name: "UserOnlineList",
+  props: {
+    onlineUsers: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+  },
   mixins: [emptyImageFilter],
 };
 </script>
 <style scoped>
+.row > * {
+  padding-right: 0px;
+  padding-left: 0px;
+}
 .chat {
   display: flex;
 }
@@ -46,6 +59,8 @@ export default {
 .usersOnline {
   border-right: 1px solid #e6ecf0;
   flex: 1;
+  height: calc(100vh - 20px);
+  overflow-y: scroll;
 }
 .usersOnline .title {
   border-bottom: 1px solid #e6ecf0;
