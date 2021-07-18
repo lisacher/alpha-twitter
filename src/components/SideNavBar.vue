@@ -26,13 +26,38 @@
           </li> -->
           <li class="nav-item mb-4">
             <router-link
-              :to="{ name: 'chat', params: { id: currentUser.id}}"
+              :to="{ name: 'chat', params: { id: currentUser.id } }"
               class="nav-link d-flex"
             >
               <div class="message-image"></div>
               <div class="nav-item-text">公開聊天室</div>
             </router-link>
           </li>
+          <!-- <li class="nav-item mb-4">
+            <router-link
+              to="/message"
+              class="nav-link d-flex"
+            >
+              <div class="message-image"></div>
+              <div class="nav-item-text">私人訊息</div>
+            </router-link>
+          </li> -->
+
+          <!-- <li class="nav-item mb-4">
+            <router-link
+              to="/users/reply"
+              class="nav-link d-flex"
+            >
+              <div class="notice-image"></div>
+              <div class="nav-item-text">通知</div>
+            </router-link>
+          </li> -->
+          <!-- <li class="nav-item mb-4">
+            <router-link to="/chat" class="nav-link d-flex">
+              <div class="message-image"></div>
+              <div class="nav-item-text">公開聊天室</div>
+            </router-link>
+          </li> -->
           <!-- <li class="nav-item mb-4">
             <router-link
               to="/message"
@@ -140,7 +165,7 @@
 
 <script>
 import CreatedTweetModal from "./CreateTweetModal.vue";
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
   name: "SideNavBar",
@@ -152,11 +177,11 @@ export default {
   },
   data() {
     return {
-      comments: [],   
+      comments: [],
     };
   },
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(["currentUser"]),
   },
   components: {
     CreatedTweetModal,
@@ -165,14 +190,14 @@ export default {
     afterCreateTweet({ description, id }) {
       this.$emit("after-create-tweet", {
         description,
-        id
+        id,
       });
     },
     logOut() {
-      this.$store.commit('revokeAuthentication')
+      this.$store.commit("revokeAuthentication");
       if (this.isAdmin) {
         this.$router.push("/admin");
-        return
+        return;
       }
       this.$socket.close()
       this.$router.push("/login");

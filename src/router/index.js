@@ -148,6 +148,16 @@ const routes = [
     beforeEnter: authorizeIsAdmin
   },
   {
+    path: '/chat',
+    name: 'chat',
+    component: () => import('./../views/Chat.vue'),
+  },
+  {
+    path: '/message',
+    name: 'private-message',
+    component: () => import('./../views/PrivateMessage.vue'),
+  },
+  {
     path: '*',
     name: 'not-found',
     component: () => import('./../views/NotFound.vue')
