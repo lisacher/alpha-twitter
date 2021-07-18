@@ -16,7 +16,7 @@
         >
           <template v-if="message.type === 'chat'">
             <template v-if="message.User.id !== currentUser.id">
-              <div class="name">{{ message.User.name }} 說:</div>
+              <div class="name">{{ message.User.name }}</div>
               <div class="mainContent">
                 <router-link
                   :to="{ name: 'user', params: { id: message.User.id } }"
@@ -28,16 +28,17 @@
                 <div class="textContainer">
                   <div class="text">{{ message.content }}</div>
                 </div>
+                <div class="textTime">{{ message.createdAt | fromNow }}</div>
               </div>
-              <div class="textTime">{{ message.createdAt | fromNow }}</div>
             </template>
             <template v-else>
-              <div class="userContent">
+              <div class="userContent d-flex ms-auto me-3 mb-4">
+                <div class="replyTextTime">{{ message.createdAt | fromNow }}</div>
                 <div class="textContainer">
                   <div class="reply">{{ message.content }}</div>
                 </div>
+
               </div>
-              <div class="replyTextTime">{{ message.createdAt | fromNow }}</div>
             </template>
           </template>
           <template v-else>
@@ -58,7 +59,7 @@
         maxlength="140"
         required
         v-model="text"
-        v-on:keyup.enter="handleSubmit"
+        @keypress.enter="handleSubmit"
       />
       <button
         type="submit"
@@ -75,6 +76,7 @@
 import { fromNowFilter } from "../utils/mixins";
 import { emptyImageFilter } from "../utils/mixins";
 import { mapState } from "vuex";
+import { Toast } from "../utils/helpers";
 
 export default {
   name: "MessageBoard",
@@ -90,7 +92,7 @@ export default {
   },
   watch: {
     initialMessages: {
-      handler: function(newValue) {
+      handler: function (newValue) {
         this.messages = newValue;
       },
       deep: true,
@@ -103,10 +105,6 @@ export default {
   created() {
     this.fetchMessages();
   },
-  // updated() {
-  //   const chatContainer = document.querySelector("#chat-container");
-  //   chatContainer.scrollTop = chatContainer.scrollHeight;
-  // },
   data() {
     return {
       messages: [],
@@ -119,6 +117,13 @@ export default {
       this.messages = this.initialMessages;
     },
     handleSubmit() {
+      if (!this.text.trim()) {
+        Toast.fire({
+          icon: "error",
+          title: "請輸入內容！",
+        });
+        return;
+      }
       // 向socket 發出事件，傳送聊天訊息
       this.$socket.emit("chatMessage", this.text);
       // 清空輸入欄
@@ -163,7 +168,8 @@ export default {
   font-size: 13px;
   font-weight: 900;
   color: rgb(75, 74, 74);
-  margin-top: 10px;
+  margin-left: 65px;
+  margin-top: 5px;
 }
 .avatar {
   width: 50px;
@@ -183,25 +189,27 @@ export default {
   margin-left: -10px;
 }
 .mainContent {
-  max-width: 60%;
-  margin: 10px 10px 0 0px;
+  max-width: 80%;
+  margin: 5px 10px 15px 0px;
   display: flex;
+  align-items: center;
 }
 .userContent {
   max-width: 60%;
-  margin: 10px 0 0 160px;
-  display: flex;
   justify-content: flex-end;
 }
 .textTime {
   font-size: 12px;
-  margin-left: 70px;
+  margin-left: 10px;
+  margin-bottom: 10px;
   color: #777;
   font-weight: 500;
+  align-self:flex-end;
 }
-.replyTextTime {
+.replyTextTime { 
   font-size: 12px;
-  margin-left: 380px;
+  text-align: end;
+  align-self: flex-end;
   color: #777;
   font-weight: 500;
 }
@@ -228,8 +236,12 @@ export default {
 }
 .messageItem .textContainer {
   word-break: break-all;
+  max-width: 80%;
   margin-left: 10px;
   height: 100%;
+}
+.messageItem .mainContent .textContainer {
+  max-width: 60%;
 }
 .messageItem .textContainer .text {
   padding: 10px 15px;
