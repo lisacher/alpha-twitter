@@ -9,9 +9,11 @@
           <!-- other users -->
           <li class="userItem">
             <div class="userContainer">
-              <div class="avatar">
-                <img :src="user.avatar | emptyImage" alt="" />
-              </div>
+              <router-link :to="{ name: 'user', params: { id: user.id } }">
+                <div class="avatar">
+                  <img :src="user.avatar | emptyImage" alt="" />
+                </div>
+              </router-link>
               <div class="userName">
                 <p>{{ user.name }}</p>
               </div>
@@ -87,9 +89,9 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
+  cursor: pointer;
 }
 .userItem:hover {
-  cursor: pointer;
   background-color: #f7f7f7;
 }
 .avatar {

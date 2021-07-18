@@ -16,10 +16,15 @@
         >
           <template v-if="message.type === 'chat'">
             <template v-if="message.User.id !== currentUser.id">
+              <div class="name">{{ message.User.name }} 說:</div>
               <div class="mainContent">
-                <div class="avatar">
-                  <img :src="message.User.avatar | emptyImage" alt="" />
-                </div>
+                <router-link
+                  :to="{ name: 'user', params: { id: message.User.id } }"
+                >
+                  <div class="avatar">
+                    <img :src="message.User.avatar | emptyImage" alt="" />
+                  </div>
+                </router-link>
                 <div class="textContainer">
                   <div class="text">{{ message.content }}</div>
                 </div>
@@ -53,6 +58,7 @@
         maxlength="140"
         required
         v-model="text"
+        v-on:keyup.enter="handleSubmit"
       />
       <button
         type="submit"
@@ -152,6 +158,12 @@ export default {
   flex-direction: column;
   height: calc(100vh - 120px);
   overflow-y: scroll;
+}
+.name {
+  font-size: 13px;
+  font-weight: 900;
+  color: rgb(75, 74, 74);
+  margin-top: 10px;
 }
 .avatar {
   width: 50px;
